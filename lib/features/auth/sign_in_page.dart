@@ -1,18 +1,18 @@
 import 'package:cashio/core/widgets/ct_button.dart';
-import 'package:cashio/features/auth/sign_in_page.dart';
+import 'package:cashio/features/auth/sign_up_page.dart';
 import 'package:cashio/features/auth/widgets/custom_text_field.dart';
 import 'package:cashio/features/auth/widgets/other_login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<SignInPage> createState() => _SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _SignUpPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController usernameController = TextEditingController();
@@ -29,14 +29,16 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
-  void _signUp() {
+  void _signIn() {
     if (_formKey.currentState!.validate()) {
       setState(() => isLoading = true);
+
+      // TODO: Call signIp API / Supabase auth here
+
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() => isLoading = false);
+      });
     }
-    // TODO: Call signUp API / Supabase auth here
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() => isLoading = false);
-    });
   }
 
   @override
@@ -53,11 +55,12 @@ class _SignUpPageState extends State<SignUpPage> {
               children: [
                 const SizedBox(height: 20),
 
+                // header
                 Column(
                   spacing: 8,
                   children: [
                     Text(
-                      'Join and take control of your money',
+                      'Welcome back! Let’s track your spending',
                       style: GoogleFonts.outfit(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
@@ -65,29 +68,15 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       textAlign: TextAlign.center,
                     ),
+                    Text(
+                      'Access your account and stay in control of your money.',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.outfit(fontSize: 14),
+                    ),
                   ],
                 ),
 
-                Text(
-                  'Set up your account for seamless access to financial tools.',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.outfit(fontSize: 14),
-                ),
-
                 const SizedBox(height: 10),
-
-                CustomTextField(
-                  icon: Icons.person,
-                  hint: 'Create Username',
-                  controller: usernameController,
-                  isPassword: false,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Username is required';
-                    }
-                    return null;
-                  },
-                ),
 
                 CustomTextField(
                   icon: Icons.email,
@@ -108,15 +97,12 @@ class _SignUpPageState extends State<SignUpPage> {
 
                 CustomTextField(
                   icon: Icons.lock,
-                  hint: 'Create Password',
+                  hint: 'Enter Password',
                   controller: passwordController,
                   isPassword: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Password is required';
-                    }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
                     }
                     return null;
                   },
@@ -125,15 +111,16 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(
                   width: double.infinity,
                   child: CtButton(
-                    text: isLoading ? 'Creating Account...' : 'Create Account',
-                    onPressed: isLoading ? null : _signUp,
+                    text: isLoading ? 'Signing In...' : 'Sign in',
+                    onPressed: isLoading ? null : _signIn,
                   ),
                 ),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Already have an account? ",
+                      "Don't have an account? ",
                       style: GoogleFonts.outfit(fontSize: 14),
                     ),
                     GestureDetector(
@@ -141,7 +128,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const SignInPage(),
+                            builder: (context) => const SignUpPage(),
                           ),
                         );
                       },
@@ -156,7 +143,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ],
                 ),
-                OtherLoginProvider(otherProviderLabel: 'or sign up with'),
+                OtherLoginProvider(otherProviderLabel: 'or sign in with'),
               ],
             ),
           ),

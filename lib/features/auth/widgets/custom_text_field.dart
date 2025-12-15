@@ -41,7 +41,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           fontSize: 14,
         ),
 
-        errorStyle: GoogleFonts.outfit(fontSize: 12, color: Colors.red),
+        errorStyle: GoogleFonts.outfit(fontSize: 12, color: AppColors.error),
 
         filled: true,
         fillColor: AppColors.border,
@@ -53,11 +53,23 @@ class _CustomTextFieldState extends State<CustomTextField> {
               )
             : null,
 
+        suffixIcon: widget.controller.text.isNotEmpty
+            ? IconButton(
+                icon: const Icon(Icons.clear, size: 14),
+                onPressed: () {
+                  widget.controller.clear();
+                  setState(() {});
+                },
+              )
+            : null,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 25,
           vertical: 18,
         ),
-
+        floatingLabelStyle: GoogleFonts.outfit(
+          color: AppColors.textSecondary,
+          fontSize: 14,
+        ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(35),
           borderSide: BorderSide.none,

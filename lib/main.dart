@@ -1,6 +1,7 @@
-import 'package:cashio/features/auth/sign_up_page.dart';
+import 'package:cashio/auth_gate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
@@ -8,20 +9,17 @@ Future<void> main() async {
   await dotenv.load(fileName: ".env");
 
   await Supabase.initialize(
-    url: 'https://yulavmwyixzhkjfodtpj.supabase.co',
+    url: 'https://ibwdzfckngmbtmmtgorg.supabase.co',
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(body: SignUpPage()),
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MaterialApp(debugShowCheckedModeBanner: false, home: AuthGate());
   }
 }

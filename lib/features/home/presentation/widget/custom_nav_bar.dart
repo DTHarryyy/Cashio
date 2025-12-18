@@ -12,28 +12,36 @@ class CustomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationBar(
-      backgroundColor: AppColors.background,
-      indicatorColor: AppColors.primary,
-      selectedIndex: selectedIndex,
-      onDestinationSelected: ontap,
-      destinations: const [
-        NavigationDestination(
-          icon: Icon(Icons.home),
-          selectedIcon: Icon(Icons.home, color: AppColors.background),
-          label: 'Home',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.home),
-          selectedIcon: Icon(Icons.home, color: AppColors.background),
-          label: 'Home',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.home),
-          selectedIcon: Icon(Icons.home, color: AppColors.background),
-          label: 'Home',
-        ),
-      ],
+    return SafeArea(
+      bottom: true,
+      child: NavigationBar(
+        elevation: 0,
+
+        surfaceTintColor: Colors.transparent,
+
+        backgroundColor: AppColors.background,
+        indicatorColor: AppColors.primary,
+        selectedIndex: selectedIndex,
+        onDestinationSelected: ontap,
+
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home),
+            selectedIcon: Icon(Icons.home, color: AppColors.background),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.home),
+            selectedIcon: Icon(Icons.home, color: AppColors.background),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.home),
+            selectedIcon: Icon(Icons.home, color: AppColors.background),
+            label: 'Home',
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,8 +1,9 @@
+import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
+import 'package:cashio/features/home/presentation/widget/custom_drawer.dart';
 import 'package:cashio/features/home/presentation/widget/custom_home_app_bar.dart';
 import 'package:cashio/features/home/presentation/widget/custom_nav_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -19,18 +20,14 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final profile = ref.watch(profileProvider);
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarIconBrightness: Brightness.dark,
-      ),
-    );
 
     return Scaffold(
       key: _scaffoldKey,
-      drawerEnableOpenDragGesture: false,
-      drawer: Drawer(child: ListView(children: [Text('drawer')])),
+      drawer: CustomDrawer(),
+
       appBar: CustomHomeAppBar(scaffoldKey: _scaffoldKey),
+
+      backgroundColor: AppColors.background,
       body: Center(
         child: profile.when(
           data: (user) => Text(user.username ?? 'a'),

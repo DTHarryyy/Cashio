@@ -129,7 +129,6 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                             final email = emailController.text.trim();
                             final password = passwordController.text.trim();
                             try {
-                              // TODO: add sign up with supabase
                               await ref
                                   .read(signUpProvider)
                                   .call(username, email, password);

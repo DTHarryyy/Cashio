@@ -1,4 +1,5 @@
 import 'package:cashio/core/constant/app_colors.dart';
+import 'package:cashio/core/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -9,9 +10,21 @@ class CustomHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      title: Text(
+        'Cashio',
+        style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+      ),
+      centerTitle: true,
       titleSpacing: 0,
-      leading: SizedBox(width: 15),
-      leadingWidth: 15,
+
+      leading: Center(
+        child: GestureDetector(
+          onTap: () {
+            scaffoldKey.currentState?.openDrawer();
+          },
+          child: Avatar(),
+        ),
+      ),
       actionsPadding: const EdgeInsets.only(right: 10),
       actions: [
         // TODO: integrate notifications
@@ -23,35 +36,6 @@ class CustomHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ],
-      title: Row(
-        spacing: 15,
-        children: [
-          GestureDetector(
-            onTap: () {
-              scaffoldKey.currentState?.openDrawer();
-            },
-            child: Container(
-              height: 35,
-              width: 35,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: AppColors.border,
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadiusGeometry.circular(100),
-                child: Image.asset(
-                  'assets/images/default_icon.jpg',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          Text(
-            'Cashio',
-            style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
-          ),
-        ],
-      ),
     );
   }
 

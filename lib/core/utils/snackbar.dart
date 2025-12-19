@@ -49,7 +49,7 @@ class AppSnackBar {
       ..showSnackBar(
         SnackBar(
           backgroundColor: backgroundColor,
-          behavior: SnackBarBehavior.floating,
+          behavior: SnackBarBehavior.fixed,
           content: Row(
             children: [
               Icon(icon, color: Colors.white),

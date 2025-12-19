@@ -1,7 +1,7 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/widgets/avatar.dart';
-import 'package:cashio/features/auth/provider/auth_provider.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
+import 'package:cashio/features/home/presentation/widget/logout_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -55,7 +55,13 @@ class CustomDrawer extends ConsumerWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => ref.read(signOutProvider).call(),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => LogoutDialog(),
+                      );
+                    },
                     child: Icon(Icons.logout, size: 25),
                   ),
                 ],

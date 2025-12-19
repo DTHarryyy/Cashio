@@ -8,31 +8,15 @@ class Avatar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(profileProvider);
-    // TODO: change this to custom loadding animation
-    // TODO:throw the erro to error page
-    return user.when(
-      loading: () => CircularProgressIndicator(),
-      error: (e, _) => Text('There must be an error'),
-      data: (user) {
-        return Container(
-          height: 35,
-          width: 35,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            color: AppColors.border,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadiusGeometry.circular(100),
-            child: user.avatarUrl == null
-                ? Image.asset(
-                    'assets/images/default_icon.jpg',
-                    fit: BoxFit.cover,
-                  )
-                : Image.network(user.avatarUrl!, fit: BoxFit.cover),
-          ),
-        );
-      },
+    final profileAsync = ref.watch(profileProvider);
+    final user = profileAsync.value;
+    return CircleAvatar(
+      radius: 20,
+      backgroundColor: AppColors.border,
+      backgroundImage: user?.avatarUrl != null
+          ? NetworkImage(user!.avatarUrl!)
+          : const AssetImage('assets/images/default_icon.jpg') as ImageProvider,
+      child: ClipRRect(borderRadius: BorderRadiusGeometry.circular(100)),
     );
   }
 }

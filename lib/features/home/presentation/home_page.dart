@@ -3,6 +3,7 @@ import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/home/presentation/widget/custom_drawer.dart';
 import 'package:cashio/features/home/presentation/widget/custom_home_app_bar.dart';
 import 'package:cashio/features/home/presentation/widget/custom_nav_bar.dart';
+import 'package:cashio/features/home/presentation/widget/add_expenses_savings_bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,7 +31,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       backgroundColor: AppColors.background,
       body: Center(
         child: profile.when(
-          data: (user) => Text(user.username ?? 'a'),
+          data: (user) => Text(user.username ?? ''),
           // TODO: Handle this error correctly
           error: (e, _) => Text(e.toString()),
           loading: () => Text('Loading...'),
@@ -41,6 +42,19 @@ class _HomePageState extends ConsumerState<HomePage> {
         ontap: (value) {
           setState(() => index = value);
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        shape: CircleBorder(),
+        backgroundColor: AppColors.primary,
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return AddExpensesSavingsBottomsheet();
+            },
+          );
+        },
+        child: Icon(Icons.add_rounded, color: AppColors.background),
       ),
     );
   }

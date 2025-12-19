@@ -1,0 +1,9 @@
+import 'package:cashio/features/auth/repository/auth_repository.dart';
+
+class SignOut {
+  final AuthRepository repo;
+
+  SignOut(this.repo);
+
+  Future<void> call() => repo.signOut();
+}

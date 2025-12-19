@@ -112,6 +112,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     if (value.length < 6) {
                       return 'Password must be at least 6 characters';
                     }
+                    // TODO: Add a whoel validation for signup password
                     return null;
                   },
                 ),

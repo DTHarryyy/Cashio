@@ -3,6 +3,7 @@ import 'package:cashio/core/widgets/ct_button.dart';
 import 'package:cashio/features/auth/presentation/sign_up_page.dart';
 import 'package:cashio/features/auth/presentation/widgets/custom_text_field.dart';
 import 'package:cashio/features/auth/presentation/widgets/other_login_provider.dart';
+import 'package:cashio/features/auth/provider/auth_provider.dart';
 import 'package:cashio/features/home/presentation/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -110,7 +111,12 @@ class _SignUpPageState extends ConsumerState<SignInPage> {
                               setState(() => isLoading = true);
 
                               try {
-                                // TODO: add sign in  with supabase
+                                await ref
+                                    .read(signInProvider)
+                                    .call(
+                                      email: emailController.text.trim(),
+                                      password: passwordController.text.trim(),
+                                    );
                                 if (!context.mounted) return;
                                 Navigator.push(
                                   context,
@@ -119,10 +125,7 @@ class _SignUpPageState extends ConsumerState<SignInPage> {
                                   ),
                                 );
                               } catch (e) {
-                                AppSnackBar.error(
-                                  context,
-                                  'There must be an error in sining in your account',
-                                );
+                                AppSnackBar.error(context, 'Error: $e/');
                               }
 
                               Future.delayed(const Duration(seconds: 2), () {

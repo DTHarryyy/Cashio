@@ -13,7 +13,7 @@ class OtherLoginProvider extends StatefulWidget {
 }
 
 class _OtherLoginProviderState extends State<OtherLoginProvider> {
-  // TODO: Implement signUp method with clean arrchiotecture and fix google auth with supabase
+  // TODO: Implement signUp method with clean arrchiotecture and fix google auth with supabase and facebook login
   Future<void> continueWithGoogle() async {
     try {
       await Supabase.instance.client.auth.signInWithOAuth(

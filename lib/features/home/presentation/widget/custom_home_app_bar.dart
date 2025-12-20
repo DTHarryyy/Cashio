@@ -10,6 +10,7 @@ class CustomHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: AppColors.surface,
       title: Text(
         'Cashio',
         style: GoogleFonts.outfit(fontWeight: FontWeight.w600),

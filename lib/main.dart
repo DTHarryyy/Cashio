@@ -32,12 +32,19 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        navigationBarTheme: const NavigationBarThemeData(
+        useMaterial3: true,
+        appBarTheme: const AppBarTheme(
           elevation: 0,
           surfaceTintColor: Colors.transparent,
+
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+            statusBarBrightness: Brightness.light,
+          ),
         ),
       ),
-      home: AuthGate(),
+      home: const AuthGate(),
     );
   }
 }

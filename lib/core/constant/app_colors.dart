@@ -7,7 +7,7 @@ class AppColors {
   static const Color secondary = Color(0xFF22C55E); // Soft Green
 
   // Backgrounds
-  static const Color background = Color(0xFFFEF7FF);
+  static const Color background = Color(0xFFF5F6FA);
 
   // Light Gray
   static const Color surface = Color(0xFFFFFFFF); // Cards

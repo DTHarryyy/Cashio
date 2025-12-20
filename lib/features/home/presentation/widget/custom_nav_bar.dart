@@ -17,7 +17,7 @@ class CustomNavBar extends StatelessWidget {
 
       surfaceTintColor: Colors.transparent,
 
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.surface,
       indicatorColor: AppColors.primary,
       selectedIndex: selectedIndex,
       onDestinationSelected: ontap,

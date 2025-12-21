@@ -57,75 +57,69 @@ class _HomePageState extends ConsumerState<HomePage> {
           spacing: 10,
           children: [
             Container(
-              height: 150,
+              height: 170,
               decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(12),
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.primary,
+                    AppColors.primary.withOpacity(0.85),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 10,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Balance',
-                        style: GoogleFonts.outfit(color: AppColors.border),
-                      ),
-                      Text(
-                        '₱199,999.03',
-                        style: GoogleFonts.outfit(
-                          fontSize: 36,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textWhite,
-                          height: 1,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    'Total Balance',
+                    style: GoogleFonts.outfit(
+                      color: AppColors.border,
+                      fontSize: 14,
+                    ),
                   ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '₱199,999.03',
+                    style: GoogleFonts.outfit(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      height: 1.1,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
 
                   Expanded(
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        /// Income / Expense
                         Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.arrow_drop_up_rounded,
-                                  color: AppColors.success,
-                                ),
-                                Text(
-                                  '₱199,999',
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 16,
-                                    color: AppColors.border,
-                                  ),
-                                ),
-                              ],
+                            _StatRow(
+                              icon: Icons.arrow_upward,
+                              color: AppColors.success,
+                              label: 'Income',
+                              value: '₱199,999',
                             ),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.arrow_drop_down_rounded,
-                                  color: AppColors.error,
-                                ),
-                                Text(
-                                  '₱199,999',
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 16,
-                                    color: AppColors.border,
-                                  ),
-                                ),
-                              ],
+                            const SizedBox(height: 6),
+                            _StatRow(
+                              icon: Icons.arrow_downward,
+                              color: AppColors.error,
+                              label: 'Expense',
+                              value: '₱199,999',
                             ),
                           ],
                         ),
-                        Expanded(child: BarGraph()),
+
+                        const SizedBox(width: 12),
+
+                        /// Chart
+                        const Expanded(child: BarGraph()),
                       ],
                     ),
                   ),
@@ -150,6 +144,54 @@ class _HomePageState extends ConsumerState<HomePage> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _StatRow extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final String label;
+  final String value;
+
+  const _StatRow({
+    required this.icon,
+    required this.color,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: color.withAlpha(15),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, size: 16, color: color),
+        ),
+        const SizedBox(width: 8),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: GoogleFonts.outfit(fontSize: 12, color: AppColors.border),
+            ),
+            Text(
+              value,
+              style: GoogleFonts.outfit(
+                fontSize: 14,
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

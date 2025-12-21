@@ -12,72 +12,75 @@ class ExpensesWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(profileProvider).value;
-    if (user == null) return Text(' There must be an erorir');
+    final profileAsync = ref.watch(profileProvider);
 
-    final expensesAsync = ref.watch(getExpensesProvider(user.userId));
+    return profileAsync.when(
+      error: (error, stackTrace) => Center(
+        child: Text('Failed To load expenses', style: GoogleFonts.outfit()),
+      ),
+      // TODO: change to custom widget loadfing aniamtion
+      loading: () => Center(child: CircularProgressIndicator()),
+      data: (user) {
+        final expensesAsync = ref.watch(getExpensesProvider(user.userId));
 
-    return expensesAsync.when(
-      data: (expenses) {
-        if (expenses.isEmpty) {
-          return const Text('no expenses yet');
-        }
-        return ListView.separated(
-          reverse: true,
-          shrinkWrap: true,
-          physics: const ScrollPhysics(),
+        return expensesAsync.when(
+          data: (expenses) {
+            if (expenses.isEmpty) {
+              return const Text('no expenses yet');
+            }
+            return ListView.separated(
+              itemCount: expenses.length,
+              itemBuilder: (context, index) {
+                final expense = expenses[index];
+                final name = expense.name.toUpperCase();
+                final amount = expense.amount.toString();
+                final category = expense.category;
+                final date = DateFormat(
+                  'MMM dd yyyy',
+                ).format(expense.expensesDate).toString();
 
-          itemCount: expenses.length,
-          itemBuilder: (context, index) {
-            final expense = expenses[index];
-            final name = expense.name.toUpperCase();
-            final amount = expense.amount.toString();
-            final category = expense.category;
-            final date = DateFormat(
-              'MMM dd yyyy',
-            ).format(expense.expensesDate).toString();
+                return Material(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(8),
+                  child: ListTile(
+                    leading: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: CategoryUtils.color(category).withAlpha(40),
+                      ),
 
-            return Material(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(8),
-              child: ListTile(
-                leading: Container(
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: CategoryUtils.color(category).withAlpha(40),
-                  ),
-
-                  child: Icon(
-                    CategoryUtils.icon(category),
-                    color: CategoryUtils.color(category),
-                  ),
-                ),
-                title: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        name,
-                        style: GoogleFonts.outfit(
-                          fontWeight: FontWeight.w600,
-                          height: 1,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+                      child: Icon(
+                        CategoryUtils.icon(category),
+                        color: CategoryUtils.color(category),
                       ),
                     ),
-                    Text('₱$amount', style: GoogleFonts.outfit()),
-                  ],
-                ),
-                subtitle: Row(children: [Text(date)]),
-              ),
+                    title: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            name,
+                            style: GoogleFonts.outfit(
+                              fontWeight: FontWeight.w600,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Text('₱$amount', style: GoogleFonts.outfit()),
+                      ],
+                    ),
+                    subtitle: Row(children: [Text(date)]),
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) => SizedBox(height: 5),
             );
           },
-          separatorBuilder: (context, index) => SizedBox(height: 5),
+          error: (e, _) => Text('There must be an error'),
+          loading: () => Container(color: AppColors.surface),
         );
       },
-      error: (e, _) => Text('There must be an error'),
-      loading: () => CircularProgressIndicator(),
     );
   }
 }

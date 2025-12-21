@@ -32,6 +32,8 @@ class ExpensesRepository {
         .from('expenses')
         .stream(primaryKey: ['id'])
         .eq('user_id', userId)
+        .order('created_at', ascending: false)
+        .limit(10)
         .map((data) => data.map((e) => Expenses.fromMap(e)).toList())
         .handleError(
           (error, stackTrace) => debugPrint('Supabase Stream error: $error'),

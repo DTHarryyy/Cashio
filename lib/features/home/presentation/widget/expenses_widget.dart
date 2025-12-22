@@ -1,7 +1,7 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/utils/category_utils.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
-import 'package:cashio/features/home/provider/expenses_provider.dart';
+import 'package:cashio/features/home/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,23 +21,24 @@ class ExpensesWidget extends ConsumerWidget {
       // TODO: change to custom widget loadfing aniamtion
       loading: () => Center(child: CircularProgressIndicator()),
       data: (user) {
-        final expensesAsync = ref.watch(getExpensesProvider(user.userId));
+        final expensesAsync = ref.watch(getTransactionsProvider(user.userId));
 
         return expensesAsync.when(
-          data: (expenses) {
-            if (expenses.isEmpty) {
+          data: (transactions) {
+            if (transactions.isEmpty) {
               return const Text('no expenses yet');
             }
             return ListView.separated(
-              itemCount: expenses.length,
+              itemCount: transactions.length,
               itemBuilder: (context, index) {
-                final expense = expenses[index];
-                final name = expense.name.toUpperCase();
-                final amount = expense.amount.toString();
-                final category = expense.category;
+                final transaction = transactions[index];
+                final name = transaction.name.toUpperCase();
+                final amount = transaction.amount.toString();
+                // final note = transaction.note;
+                final category = 'd';
                 final date = DateFormat(
                   'MMM dd yyyy',
-                ).format(expense.expensesDate).toString();
+                ).format(transaction.transactionDate).toString();
 
                 return Material(
                   color: AppColors.surface,

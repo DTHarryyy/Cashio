@@ -1,3 +1,4 @@
+import 'package:cashio/features/home/model/monthly_total.dart';
 import 'package:cashio/features/home/model/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -38,6 +39,8 @@ class TransactionsRepository {
     return categoryRes['id'];
   }
 
+  // get all transactiosn of user
+
   Future<void> addTransaction({
     required String transactionName,
     required String userId,
@@ -60,6 +63,8 @@ class TransactionsRepository {
     }
   }
 
+  // get all transactiosn of user
+
   Stream<List<Transactions>> getTransactions(String userId) {
     return supabase
         .from('transactions')
@@ -70,6 +75,7 @@ class TransactionsRepository {
         .map((data) => data.map((e) => Transactions.fromMap(e)).toList());
   }
 
+  // get total expenses / income
   Future<double> getTotalByType(String userId, String categoryType) async {
     try {
       final response = await supabase.rpc(
@@ -82,4 +88,27 @@ class TransactionsRepository {
       return 0;
     }
   }
+
+  // get last 3 months monthly total
+
+  Future<List<MonthlyTotal>> getMonthlyTotal(String userId) async {
+    try {
+      final response = await supabase.rpc(
+        'last_3_months_by_type',
+        params: {'p_user_id': userId},
+      );
+
+      if (response == null) return [];
+      print(response);
+      return (response as List)
+          .map((e) => MonthlyTotal.fromMap(e as Map<String, dynamic>))
+          .toList();
+    } catch (e, st) {
+      debugPrint('Error fetching monthly totals: $e');
+      debugPrintStack(stackTrace: st);
+      return [];
+    }
+  }
+
+  // get  last 3 months total by expenses and income
 }

@@ -99,7 +99,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     return null;
                   },
                 ),
-
+                // TODO: validation to this pass word must contains 1 special char, upper, lowwe , and greater than 8
                 CustomTextField(
                   icon: Icons.lock,
                   hint: 'Create Password',
@@ -109,7 +109,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     if (value == null || value.isEmpty) {
                       return 'Password is required';
                     }
-                    if (value.length < 6) {
+                    if (value.length < 8) {
                       return 'Password must be at least 6 characters';
                     }
                     // TODO: Add a whoel validation for signup password

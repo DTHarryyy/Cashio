@@ -1,22 +1,26 @@
 import 'package:cashio/core/constant/app_colors.dart';
+import 'package:cashio/features/home/model/monthly_total.dart';
 import 'package:cashio/features/home/presentation/widget/bar_graph.dart';
 import 'package:cashio/features/home/presentation/widget/stat_row.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class BalanceCard extends StatelessWidget {
+class BalanceCard extends ConsumerWidget {
   final double income;
   final double expenses;
   final double totalBalance;
+  final List<MonthlyTotal> monthlyTotal;
   const BalanceCard({
     super.key,
     required this.income,
     required this.expenses,
     required this.totalBalance,
+    required this.monthlyTotal,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       height: 170,
       decoration: BoxDecoration(
@@ -74,7 +78,7 @@ class BalanceCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 // Chart
-                const Expanded(child: BarGraph()),
+                Expanded(child: BarGraph(monthlyTotal: monthlyTotal)),
               ],
             ),
           ),

@@ -2,13 +2,9 @@ import 'package:cashio/core/constant/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomNavBar extends StatelessWidget {
-  final int selectedIndex;
-  final ValueChanged<int> ontap;
-  const CustomNavBar({
-    super.key,
-    required this.selectedIndex,
-    required this.ontap,
-  });
+  final int? selectedIndex;
+  final ValueChanged<int>? ontap;
+  const CustomNavBar({super.key, this.selectedIndex, this.ontap});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +15,7 @@ class CustomNavBar extends StatelessWidget {
 
       backgroundColor: AppColors.surface,
       indicatorColor: AppColors.primary,
-      selectedIndex: selectedIndex,
+      // selectedIndex: selectedIndex,
       onDestinationSelected: ontap,
 
       destinations: const [

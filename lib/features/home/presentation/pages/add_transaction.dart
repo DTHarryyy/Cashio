@@ -200,13 +200,19 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                             note: _noteController.text.trim(),
                             transactionDate: _date,
                           );
+                      ref.invalidate(combinedTransactionsProvider(user.userId));
                       ref.invalidate(
                         totalTransactionsProvider((
                           userId: user.userId,
-                          categoryType: _selectedType.name,
+                          categoryType: 'income',
                         )),
                       );
-                      ref.invalidate(getTransactionsProvider(user.userId));
+                      ref.invalidate(
+                        totalTransactionsProvider((
+                          userId: user.userId,
+                          categoryType: 'expense',
+                        )),
+                      );
                       if (!context.mounted) return;
                       AppSnackBar.success(
                         context,

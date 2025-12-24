@@ -41,7 +41,6 @@ class BarGraph extends ConsumerWidget {
         .toList();
 
     return List.generate(monthsWithData.length, (index) {
-      final monthKey = monthsWithData[index].key;
       final income = monthsWithData[index].value['income']!;
       final expense = monthsWithData[index].value['expense']!;
 
@@ -122,8 +121,9 @@ class BarGraph extends ConsumerWidget {
               showTitles: true,
               getTitlesWidget: (value, _) {
                 final index = value.toInt();
-                if (index < 0 || index >= months.length)
+                if (index < 0 || index >= months.length) {
                   return const SizedBox.shrink();
+                }
                 return Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: Text(

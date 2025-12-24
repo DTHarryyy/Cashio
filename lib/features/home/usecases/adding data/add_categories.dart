@@ -11,5 +11,6 @@ class AddCategories {
     String name,
     String transactionType,
     IconData icon,
-  ) => repo.addCategory(userId, name, transactionType, icon);
+    Color color,
+  ) => repo.addCategory(userId, name, transactionType, icon, color);
 }

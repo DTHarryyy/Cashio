@@ -1,12 +1,14 @@
 import 'package:cashio/core/provider/supabase_provider.dart';
+import 'package:cashio/features/home/model/category.dart';
 import 'package:cashio/features/home/model/monthly_total.dart';
 import 'package:cashio/features/home/model/transactions.dart';
 import 'package:cashio/features/home/repository/transactions_repository.dart';
-import 'package:cashio/features/home/usecases/add_categories.dart';
-import 'package:cashio/features/home/usecases/add_transaction.dart';
-import 'package:cashio/features/home/usecases/get_last_3months_total.dart';
-import 'package:cashio/features/home/usecases/get_transaction.dart';
-import 'package:cashio/features/home/usecases/get_total_expenses.dart';
+import 'package:cashio/features/home/usecases/adding%20data/add_categories.dart';
+import 'package:cashio/features/home/usecases/adding%20data/add_transaction.dart';
+import 'package:cashio/features/home/usecases/getting%20data/get_categories.dart';
+import 'package:cashio/features/home/usecases/getting%20data/get_last_3months_total.dart';
+import 'package:cashio/features/home/usecases/getting%20data/get_transaction.dart';
+import 'package:cashio/features/home/usecases/getting%20data/get_total_expenses.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // transactions repository provider
@@ -75,3 +77,10 @@ final monthlyTotalProvider = FutureProvider.family<List<MonthlyTotal>, String>((
   final usecase = GetLast3monthsTotal(ref.watch(transactionsRepoProvider));
   return usecase.call(userId);
 });
+
+// get categories
+final getCategoriesProvider =
+    FutureProvider.family<List<CategoryModel>, String>((ref, userId) {
+      final usecase = GetCategories(ref.watch(transactionsRepoProvider));
+      return usecase.call(userId);
+    });

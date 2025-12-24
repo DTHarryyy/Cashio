@@ -2,7 +2,7 @@ class Transactions {
   final String userId;
   final String name;
   final double amount;
-  final String category;
+  final String categoryId;
   final String? note;
   final DateTime transactionDate;
 
@@ -10,7 +10,7 @@ class Transactions {
     required this.userId,
     required this.name,
     required this.amount,
-    required this.category,
+    required this.categoryId,
     required this.note,
     required this.transactionDate,
   });
@@ -18,7 +18,7 @@ class Transactions {
   factory Transactions.fromMap(Map<String, dynamic> map) {
     return Transactions(
       userId: map['user_id'] as String,
-      category: map['category_id'] as String,
+      categoryId: map['category_id'] as String,
       name: map['transaction_name'] as String,
       amount: (map['amount'] as num).toDouble(),
       note: map['note'] as String?,

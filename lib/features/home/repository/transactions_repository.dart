@@ -1,3 +1,4 @@
+import 'package:cashio/features/home/model/category.dart';
 import 'package:cashio/features/home/model/monthly_total.dart';
 import 'package:cashio/features/home/model/transactions.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +8,14 @@ class TransactionsRepository {
   final SupabaseClient supabase;
   TransactionsRepository(this.supabase);
 
+  // get all transactiosn of user
+
   Future<String> addCategory(
     String userId,
     String name,
     String transactionType,
     IconData icon,
+    Color color,
   ) async {
     final existing = await supabase
         .from('categories')
@@ -32,6 +36,7 @@ class TransactionsRepository {
           'name': name,
           'type': transactionType,
           'icon': icon.codePoint,
+          'color': color.toARGB32(),
         })
         .select()
         .single();
@@ -110,5 +115,21 @@ class TransactionsRepository {
     }
   }
 
-  // get  last 3 months total by expenses and income
+  // get categories of transaction
+  Future<List<CategoryModel>> getCategories(String userId) async {
+    try {
+      final data = await supabase
+          .from('categories')
+          .select('id, user_id, name, type, icon, color')
+          .eq('user_id', userId);
+
+      if (data.isEmpty) return [];
+
+      return data.map<CategoryModel>((e) => CategoryModel.fromJson(e)).toList();
+    } catch (e, st) {
+      debugPrint('Error fetching categories: $e');
+      debugPrintStack(stackTrace: st);
+      return [];
+    }
+  }
 }

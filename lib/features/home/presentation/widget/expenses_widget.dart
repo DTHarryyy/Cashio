@@ -1,4 +1,5 @@
 import 'package:cashio/core/constant/app_colors.dart';
+import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/features/auth/model/app_user.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/home/model/category.dart';
@@ -20,8 +21,7 @@ class ExpensesWidget extends ConsumerWidget {
       error: (error, stackTrace) => Center(
         child: Text('Failed To load expenses', style: GoogleFonts.outfit()),
       ),
-      // TODO: change to custom widget loadfing aniamtion
-      loading: () => Center(child: CircularProgressIndicator()),
+      loading: () => Center(child: CustomLoading()),
       data: (user) {
         // transactions  provider
         final transactionAsync = ref.watch(
@@ -106,7 +106,7 @@ class ExpensesWidget extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  isIncome ? '₱$amount' : '-₱$amount',
+                  isIncome ? '+₱$amount' : '-₱$amount',
                   style: GoogleFonts.outfit(
                     color: isIncome ? AppColors.success : AppColors.error,
                   ),

@@ -3,9 +3,9 @@ import 'package:cashio/core/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CustomHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-  const CustomHomeAppBar({super.key, required this.scaffoldKey});
+  const CustomAppBar({super.key, required this.scaffoldKey});
 
   @override
   Widget build(BuildContext context) {

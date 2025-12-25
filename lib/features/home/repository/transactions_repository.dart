@@ -104,7 +104,6 @@ class TransactionsRepository {
       );
 
       if (response == null) return [];
-      print(response);
       return (response as List)
           .map((e) => MonthlyTotal.fromMap(e as Map<String, dynamic>))
           .toList();

@@ -1,11 +1,12 @@
 import 'package:cashio/core/constant/app_colors.dart';
+import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/features/auth/model/app_user.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/home/model/monthly_total.dart';
 import 'package:cashio/features/home/presentation/widget/balance_card.dart';
 import 'package:cashio/features/home/presentation/widget/custom_drawer.dart';
-import 'package:cashio/features/home/presentation/widget/custom_home_app_bar.dart';
-import 'package:cashio/features/home/presentation/widget/custom_nav_bar.dart';
+import 'package:cashio/core/widgets/custom_home_app_bar.dart';
+import 'package:cashio/core/widgets/custom_nav_bar.dart';
 import 'package:cashio/features/home/presentation/pages/add_transaction.dart';
 import 'package:cashio/features/home/presentation/widget/expenses_widget.dart';
 import 'package:cashio/features/home/provider/transactions_provider.dart';
@@ -37,17 +38,15 @@ class _HomePageState extends ConsumerState<HomePage> {
         return totalPerMonthsAsync.when(
           error: (e, _) =>
               Scaffold(body: Center(child: Text('throw to error page'))),
-          loading: () =>
-              Scaffold(body: Center(child: CircularProgressIndicator())),
+          loading: () => Scaffold(body: Center(child: CustomLoading())),
 
           data: (monthlyTotal) {
             final transactionAsync = ref.watch(
               combinedTransactionsProvider(user.userId),
             );
             return transactionAsync.when(
-              loading: () => const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              ),
+              loading: () =>
+                  const Scaffold(body: Center(child: CustomLoading())),
               error: (e, _) => const Center(
                 child: Scaffold(
                   body: Center(child: Text('Error loading transactions')),
@@ -75,13 +74,13 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 }
 
-class HomePageContents extends ConsumerWidget {
+class HomePageContents extends ConsumerStatefulWidget {
   final AppUser user;
   final double expense;
   final double income;
   final double totalBalance;
   final List<MonthlyTotal> monthlyTotal;
-  HomePageContents({
+  const HomePageContents({
     super.key,
     required this.user,
     required this.expense,
@@ -90,16 +89,21 @@ class HomePageContents extends ConsumerWidget {
     required this.monthlyTotal,
   });
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomePageContents> createState() => _HomePageContentsState();
+}
+
+class _HomePageContentsState extends ConsumerState<HomePageContents> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       key: _scaffoldKey,
       drawer: const CustomDrawer(),
       backgroundColor: AppColors.background,
-      appBar: CustomHomeAppBar(scaffoldKey: _scaffoldKey),
-      bottomNavigationBar: CustomNavBar(selectedIndex: 1, ontap: (value) => {}),
+      appBar: CustomAppBar(scaffoldKey: _scaffoldKey),
+      bottomNavigationBar: CustomNavBar(),
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
         backgroundColor: AppColors.primary,
@@ -118,10 +122,10 @@ class HomePageContents extends ConsumerWidget {
           spacing: 10,
           children: [
             BalanceCard(
-              income: income,
-              expenses: expense,
-              totalBalance: totalBalance,
-              monthlyTotal: monthlyTotal,
+              income: widget.income,
+              expenses: widget.expense,
+              totalBalance: widget.totalBalance,
+              monthlyTotal: widget.monthlyTotal,
             ),
 
             Row(

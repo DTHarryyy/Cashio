@@ -8,18 +8,20 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // or AppColors.background
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: AppColors.surface,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ),
+  );
+
   await dotenv.load(fileName: ".env");
 
   await Supabase.initialize(
     url: 'https://ibwdzfckngmbtmmtgorg.supabase.co',
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
-  );
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      systemNavigationBarColor: AppColors.background,
-      systemNavigationBarDividerColor: Colors.transparent,
-      systemNavigationBarIconBrightness: Brightness.dark,
-    ),
   );
   runApp(ProviderScope(child: const MyApp()));
 }
@@ -36,12 +38,6 @@ class MyApp extends ConsumerWidget {
         appBarTheme: const AppBarTheme(
           elevation: 0,
           surfaceTintColor: Colors.transparent,
-
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.dark,
-            statusBarBrightness: Brightness.light,
-          ),
         ),
       ),
       home: const AuthGate(),

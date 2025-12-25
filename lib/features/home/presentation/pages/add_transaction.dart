@@ -2,7 +2,6 @@ import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/utils/list_categories.dart';
 import 'package:cashio/core/widgets/custom_date_picker.dart';
 import 'package:cashio/features/home/presentation/widget/segmented_button.dart';
-import 'package:cashio/features/home/usecases/getting%20data/get_last_3months_total.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cashio/core/utils/snackbar.dart';

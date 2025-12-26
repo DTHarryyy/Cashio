@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Transactions {
   final String userId;
   final String name;
@@ -5,6 +7,10 @@ class Transactions {
   final String categoryId;
   final String? note;
   final DateTime transactionDate;
+  final String categoryName;
+  final String categoryType;
+  final IconData categoryIcon;
+  final Color categoryColor;
 
   Transactions({
     required this.userId,
@@ -13,6 +19,10 @@ class Transactions {
     required this.categoryId,
     required this.note,
     required this.transactionDate,
+    required this.categoryName,
+    required this.categoryType,
+    required this.categoryIcon,
+    required this.categoryColor,
   });
 
   factory Transactions.fromMap(Map<String, dynamic> map) {
@@ -23,6 +33,10 @@ class Transactions {
       amount: (map['amount'] as num).toDouble(),
       note: map['note'] as String?,
       transactionDate: DateTime.parse(map['transaction_date'] as String),
+      categoryName: map['category_name'] as String,
+      categoryType: map['category_type'] as String,
+      categoryIcon: IconData(map['category_icon'], fontFamily: 'MaterialIcons'),
+      categoryColor: Color(map['category_color'] as int),
     );
   }
 }

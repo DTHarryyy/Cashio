@@ -2,7 +2,6 @@ import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/features/auth/model/app_user.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
-import 'package:cashio/features/home/model/category.dart';
 import 'package:cashio/features/home/model/transactions.dart';
 import 'package:cashio/features/home/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class ExpensesWidget extends ConsumerWidget {
-  const ExpensesWidget({super.key});
+class RecentTransactions extends ConsumerWidget {
+  const RecentTransactions({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,7 +18,7 @@ class ExpensesWidget extends ConsumerWidget {
 
     return profileAsync.when(
       error: (error, stackTrace) => Center(
-        child: Text('Failed To load expenses', style: GoogleFonts.outfit()),
+        child: Text('youre not logged in', style: GoogleFonts.outfit()),
       ),
       loading: () => Center(child: CustomLoading()),
       data: (user) {
@@ -28,27 +27,14 @@ class ExpensesWidget extends ConsumerWidget {
           getTransactionsProvider(user.userId),
         );
 
-        final categoryAsync = ref.watch(getCategoriesProvider(user.userId));
-
         return transactionAsync.when(
-          error: (e, _) => Text('There must be an error'),
+          error: (e, _) => Text('There must be an errorr'),
           loading: () => Container(color: AppColors.surface),
           data: (transactions) {
             if (transactions.isEmpty) {
               return const Text('no expenses yet');
             }
-            return categoryAsync.when(
-              error: (e, _) => Text('There must be an error'),
-              loading: () => Text('Loadingggggg'),
-              data: (categories) {
-                return _transactionsContent(
-                  context,
-                  transactions,
-                  user,
-                  categories,
-                );
-              },
-            );
+            return _transactionsContent(context, transactions, user);
           },
         );
       },
@@ -59,27 +45,21 @@ class ExpensesWidget extends ConsumerWidget {
     BuildContext context,
     List<Transactions> transactions,
     AppUser user,
-    List<CategoryModel> categories,
   ) {
-    final categoryMap = {for (final c in categories) c.id: c};
-
     return ListView.separated(
       itemCount: transactions.length,
       itemBuilder: (context, index) {
         final transaction = transactions[index];
         final name = transaction.name.toUpperCase();
         final amount = transaction.amount.toString();
-        // final note = transaction.note;
-        final category = categoryMap[transaction.categoryId];
-        final date = DateFormat(
-          'MMM dd yyyy',
-        ).format(transaction.transactionDate).toString();
 
-        //
-        final categoryType = category?.type ?? '';
-        final categoryName = category?.name ?? '';
-        final categoryIcon = category?.icon ?? Icons.help_outline_outlined;
-        final categoryColor = category?.color ?? AppColors.primary;
+        final formatter = DateFormat('MMM dd yyyy ');
+        final date = formatter.format(transaction.transactionDate);
+
+        final categoryType = transaction.categoryType;
+        final categoryName = transaction.categoryName;
+        final categoryIcon = transaction.categoryIcon;
+        final categoryColor = transaction.categoryColor;
 
         final isIncome = categoryType == 'income';
         return Material(

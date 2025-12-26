@@ -3,12 +3,13 @@ import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/features/auth/model/app_user.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/home/model/monthly_total.dart';
+import 'package:cashio/features/home/presentation/pages/all_transactions.dart';
 import 'package:cashio/features/home/presentation/widget/balance_card.dart';
 import 'package:cashio/features/home/presentation/widget/custom_drawer.dart';
 import 'package:cashio/core/widgets/custom_home_app_bar.dart';
 import 'package:cashio/core/widgets/custom_nav_bar.dart';
 import 'package:cashio/features/home/presentation/pages/add_transaction.dart';
-import 'package:cashio/features/home/presentation/widget/expenses_widget.dart';
+import 'package:cashio/features/home/presentation/widget/recent_transactions.dart';
 import 'package:cashio/features/home/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -138,10 +139,19 @@ class _HomePageContentsState extends ConsumerState<HomePageContents> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                Text('see all', style: GoogleFonts.outfit(fontSize: 14)),
+                GestureDetector(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AllTransactions()),
+                  ),
+                  child: Text(
+                    'see all',
+                    style: GoogleFonts.outfit(fontSize: 14),
+                  ),
+                ),
               ],
             ),
-            const Expanded(child: ExpensesWidget()),
+            const Expanded(child: RecentTransactions()),
           ],
         ),
       ),

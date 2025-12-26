@@ -22,7 +22,7 @@ class BalanceCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      height: 170,
+      height: 200,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [

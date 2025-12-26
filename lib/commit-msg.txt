@@ -1,0 +1,6 @@
+Add "See All" Transactions page with filtering functionality and improved UI
+
+- Added a dedicated page to view all transactions.
+- Implemented filtering options for transactions (e.g., by date, type, status).
+- Enhanced the UI/UX for a cleaner and more visually appealing transaction list.
+- Ensured smooth navigation from the main transaction summary to the full list.

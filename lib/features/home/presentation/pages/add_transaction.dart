@@ -8,7 +8,7 @@ import 'package:cashio/core/utils/snackbar.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/home/provider/transactions_provider.dart';
 
-enum TransactionType { income, expense }
+enum TransactionType { income, expenses }
 
 class AddTransactionPage extends ConsumerStatefulWidget {
   const AddTransactionPage({super.key});
@@ -82,11 +82,11 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                     },
                   ),
                   CustomSegmentButton(
-                    label: 'Expense',
-                    selected: _selectedType == TransactionType.expense,
+                    label: 'Expenses',
+                    selected: _selectedType == TransactionType.expenses,
                     onTap: () {
                       setState(() {
-                        _selectedType = TransactionType.expense;
+                        _selectedType = TransactionType.expenses;
                       });
                     },
                   ),
@@ -105,7 +105,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                   autofocus: false,
                   controller: _transactionNameController,
                   decoration: InputDecoration(
-                    hintText: 'Expense name',
+                    hintText: 'Expenses name',
                     filled: true,
                     fillColor: AppColors.border,
                     border: InputBorder.none,
@@ -213,7 +213,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                       ref.invalidate(
                         totalTransactionsProvider((
                           userId: user.userId,
-                          categoryType: 'expense',
+                          categoryType: 'expenses',
                         )),
                       );
                       if (!context.mounted) return;

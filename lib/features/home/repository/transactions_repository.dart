@@ -68,16 +68,26 @@ class TransactionsRepository {
     }
   }
 
-  // get all transactiosn of user
-
-  Stream<List<Transactions>> getTransactions(String userId) {
+  // get all transactions of user
+  Stream<List<Transactions>> getAllTransactions(String userId) {
     return supabase
-        .from('transactions')
-        .stream(primaryKey: ['id'])
+        .from('transactions_with_category')
+        .stream(primaryKey: ['transaction_id'])
         .eq('user_id', userId)
         .order('created_at', ascending: false)
-        .limit(10)
         .map((data) => data.map((e) => Transactions.fromMap(e)).toList());
+  }
+  // get 10 recent transactiosn of user
+
+  Future<List<Transactions>> getRecentTransactions(String userId) async {
+    final data = await supabase
+        .from('transactions_with_category')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', ascending: false)
+        .limit(2);
+
+    return data.map((e) => Transactions.fromMap(e)).toList();
   }
 
   // get total expenses / income

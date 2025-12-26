@@ -1,11 +1,11 @@
 import 'package:cashio/features/home/model/transactions.dart';
 import 'package:cashio/features/home/repository/transactions_repository.dart';
 
-class GetTransaction {
+class GetAllTransactions {
   final TransactionsRepository repo;
 
-  GetTransaction(this.repo);
+  GetAllTransactions(this.repo);
 
-  Stream<List<Transactions>> call({required String userId}) =>
-      repo.getTransactions(userId);
+  Stream<List<Transactions>> call(String userId) =>
+      repo.getAllTransactions(userId);
 }

@@ -1,4 +1,4 @@
-import 'package:cashio/features/home/model/category.dart';
+import 'package:cashio/features/home/model/category_model.dart';
 import 'package:cashio/features/home/model/monthly_total.dart';
 import 'package:cashio/features/home/model/transactions.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +85,7 @@ class TransactionsRepository {
         .select('*')
         .eq('user_id', userId)
         .order('created_at', ascending: false)
-        .limit(2);
+        .limit(10);
 
     return data.map((e) => Transactions.fromMap(e)).toList();
   }

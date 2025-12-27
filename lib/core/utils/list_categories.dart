@@ -1,89 +1,158 @@
 import 'package:flutter/material.dart';
 
-class Category {
+// Your model
+class CategoryList {
   final String name;
   final IconData icon;
   final Color color;
 
-  Category({required this.name, required this.icon, required this.color});
+  CategoryList({required this.name, required this.icon, required this.color});
 }
 
-class ListCategories {
-  final List<Category> categories = [
-    Category(
-      name: 'Housing',
-      icon: Icons.home,
-      color: Color(0xFF6C5CE7), // vibrant purple
-    ),
-    Category(
+// ----------------- EXPENSE CATEGORIES -----------------
+class ExpenseCategories {
+  final List<CategoryList> categories = [
+    CategoryList(name: 'Housing', icon: Icons.home, color: Color(0xFF6C5CE7)),
+    CategoryList(
       name: 'Utilities',
       icon: Icons.lightbulb,
-      color: Color(0xFFFFB142), // amber
+      color: Color(0xFFFFB142),
     ),
-    Category(
+    CategoryList(
       name: 'Food & Dining',
       icon: Icons.fastfood,
-      color: Color(0xFFFF6B6B), // coral red
+      color: Color(0xFFFF6B6B),
     ),
-    Category(
+    CategoryList(
       name: 'Transport',
       icon: Icons.directions_car,
-      color: Color(0xFF4BCFFA), // cyan
+      color: Color(0xFF4BCFFA),
     ),
-    Category(
+    CategoryList(
       name: 'Shopping',
       icon: Icons.shopping_bag,
-      color: Color(0xFFFD79A8), // pink
+      color: Color(0xFFFD79A8),
     ),
-    Category(
+    CategoryList(
       name: 'Health & Fitness',
       icon: Icons.health_and_safety,
-      color: Color(0xFF00B894), // mint green
+      color: Color(0xFF00B894),
     ),
-    Category(
+    CategoryList(
       name: 'Education',
       icon: Icons.school,
-      color: Color(0xFF0984E3), // bright blue
+      color: Color(0xFF0984E3),
     ),
-    Category(
+    CategoryList(
       name: 'Entertainment',
       icon: Icons.movie,
-      color: Color(0xFFFF9F43), // orange
+      color: Color(0xFFFF9F43),
     ),
-    Category(
-      name: 'Travel',
-      icon: Icons.flight,
-      color: Color(0xFF00CEC9), // teal
-    ),
-    Category(
+    CategoryList(name: 'Travel', icon: Icons.flight, color: Color(0xFF00CEC9)),
+    CategoryList(
       name: 'Subscriptions',
       icon: Icons.subscriptions,
-      color: Color(0xFFD980FA), // pastel purple
+      color: Color(0xFFD980FA),
     ),
-    Category(
+    CategoryList(
       name: 'Personal Care',
       icon: Icons.person,
-      color: Color(0xFFFF7675), // soft red
+      color: Color(0xFFFF7675),
     ),
-    Category(
+    CategoryList(
       name: 'Insurance & Security',
       icon: Icons.policy,
-      color: Color(0xFFA29BFE), // lavender
+      color: Color(0xFFA29BFE),
     ),
-    Category(
+    CategoryList(
       name: 'Gifts & Donations',
       icon: Icons.card_giftcard,
-      color: Color(0xFFFFD32A), // yellow
+      color: Color(0xFFFFD32A),
     ),
-    Category(
-      name: 'Taxes',
-      icon: Icons.receipt,
-      color: Color(0xFF636E72), // grey
-    ),
-    Category(
+    CategoryList(name: 'Taxes', icon: Icons.receipt, color: Color(0xFF636E72)),
+    CategoryList(
       name: 'Miscellaneous',
       icon: Icons.more_horiz,
-      color: Color(0xFFB2BEC3), // light grey
+      color: Color(0xFFB2BEC3),
+    ),
+  ];
+}
+
+// ----------------- INCOME CATEGORIES -----------------
+class IncomeCategories {
+  final List<CategoryList> categories = [
+    CategoryList(
+      name: 'Salary',
+      icon: Icons.attach_money,
+      color: Color(0xFF0984E3),
+    ),
+    CategoryList(
+      name: 'Business / Freelance',
+      icon: Icons.work,
+      color: Color(0xFF6C5CE7),
+    ),
+    CategoryList(
+      name: 'Investments',
+      icon: Icons.show_chart,
+      color: Color(0xFF00B894),
+    ),
+    CategoryList(
+      name: 'Gifts',
+      icon: Icons.card_giftcard,
+      color: Color(0xFFFFD32A),
+    ),
+    CategoryList(
+      name: 'Refunds',
+      icon: Icons.money_off,
+      color: Color(0xFFFF6B6B),
+    ),
+    CategoryList(
+      name: 'Other',
+      icon: Icons.more_horiz,
+      color: Color(0xFFB2BEC3),
+    ),
+  ];
+}
+
+// ----------------- BUDGET CATEGORIES -----------------
+class BudgetCategories {
+  final List<CategoryList> categories = [
+    CategoryList(
+      name: 'Groceries / Food',
+      icon: Icons.fastfood,
+      color: Color(0xFFFF6B6B),
+    ),
+    CategoryList(name: 'Housing', icon: Icons.home, color: Color(0xFF6C5CE7)),
+    CategoryList(
+      name: 'Utilities',
+      icon: Icons.lightbulb,
+      color: Color(0xFFFFB142),
+    ),
+    CategoryList(
+      name: 'Transportation',
+      icon: Icons.directions_car,
+      color: Color(0xFF4BCFFA),
+    ),
+    CategoryList(
+      name: 'Entertainment / Hobbies',
+      icon: Icons.movie,
+      color: Color(0xFFFF9F43),
+    ),
+    CategoryList(
+      name: 'Savings / Investments',
+      icon: Icons.savings,
+      color: Color(0xFF00B894),
+    ),
+    CategoryList(name: 'Travel', icon: Icons.flight, color: Color(0xFF00CEC9)),
+    CategoryList(
+      name: 'Subscriptions',
+      icon: Icons.subscriptions,
+      color: Color(0xFFD980FA),
+    ),
+    CategoryList(
+      name: 'Personal / Miscellaneous',
+      icon: Icons.more_horiz,
+      color: Color(0xFFB2BEC3),
     ),
   ];
 }

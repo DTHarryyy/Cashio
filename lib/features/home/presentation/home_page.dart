@@ -1,5 +1,6 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
+import 'package:cashio/core/widgets/custom_speed_dial.dart';
 import 'package:cashio/features/auth/model/app_user.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/home/model/monthly_total.dart';
@@ -8,7 +9,6 @@ import 'package:cashio/features/home/presentation/widget/balance_card.dart';
 import 'package:cashio/features/home/presentation/widget/custom_drawer.dart';
 import 'package:cashio/core/widgets/custom_home_app_bar.dart';
 import 'package:cashio/core/widgets/custom_nav_bar.dart';
-import 'package:cashio/features/home/presentation/pages/add_transaction.dart';
 import 'package:cashio/features/home/presentation/widget/recent_transactions.dart';
 import 'package:cashio/features/home/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
@@ -105,17 +105,7 @@ class _HomePageContentsState extends ConsumerState<HomePageContents> {
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(scaffoldKey: _scaffoldKey),
       bottomNavigationBar: CustomNavBar(),
-      floatingActionButton: FloatingActionButton(
-        shape: const CircleBorder(),
-        backgroundColor: AppColors.primary,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const AddTransactionPage()),
-          );
-        },
-        child: const Icon(Icons.add_rounded, color: AppColors.background),
-      ),
+      floatingActionButton: CustomSpeedDial(),
       body: Padding(
         padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
         child: Column(

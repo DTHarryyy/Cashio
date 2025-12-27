@@ -1,5 +1,5 @@
 import 'package:cashio/core/provider/supabase_provider.dart';
-import 'package:cashio/features/home/model/category.dart';
+import 'package:cashio/features/home/model/category_model.dart';
 import 'package:cashio/features/home/model/monthly_total.dart';
 import 'package:cashio/features/home/model/transactions.dart';
 import 'package:cashio/features/home/repository/transactions_repository.dart';
@@ -41,7 +41,7 @@ final getAllTransactionsProvider =
 final getTransactionsUseCaseProvider = Provider(
   (ref) => GetRecentTransaction(ref.read(transactionsRepoProvider)),
 );
-final getTransactionsProvider =
+final getRecentTransactionsProvider =
     FutureProvider.family<List<Transactions>, String>((ref, userId) {
       final getTransactions = ref.read(getTransactionsUseCaseProvider);
       return getTransactions(userId: userId);

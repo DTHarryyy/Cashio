@@ -7,8 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cashio/core/utils/snackbar.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/home/provider/transactions_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-enum TransactionType { income, expenses }
+enum TransactionType { expenses, income }
 
 class AddTransactionPage extends ConsumerStatefulWidget {
   const AddTransactionPage({super.key});
@@ -24,15 +25,17 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
   final TextEditingController _noteController = TextEditingController();
   DateTime? _date;
 
-  TransactionType _selectedType = TransactionType.income;
-  late Category _selectedCategory;
-
-  final listCategories = ListCategories();
+  TransactionType _selectedType = TransactionType.expenses;
+  late CategoryList _selectedCategory;
+  late List<CategoryList> _currentSelectedCategory;
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
-
-    _selectedCategory = listCategories.categories.first;
+    _currentSelectedCategory = _selectedType == TransactionType.expenses
+        ? ExpenseCategories().categories
+        : IncomeCategories().categories;
+    _selectedCategory = _currentSelectedCategory.first;
   }
 
   @override
@@ -73,20 +76,26 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CustomSegmentButton(
-                    label: 'Income',
-                    selected: _selectedType == TransactionType.income,
-                    onTap: () {
-                      setState(() {
-                        _selectedType = TransactionType.income;
-                      });
-                    },
-                  ),
-                  CustomSegmentButton(
                     label: 'Expenses',
                     selected: _selectedType == TransactionType.expenses,
                     onTap: () {
                       setState(() {
                         _selectedType = TransactionType.expenses;
+                        _currentSelectedCategory =
+                            ExpenseCategories().categories;
+                        _selectedCategory = _currentSelectedCategory.first;
+                      });
+                    },
+                  ),
+                  CustomSegmentButton(
+                    label: 'Income',
+                    selected: _selectedType == TransactionType.income,
+                    onTap: () {
+                      setState(() {
+                        _selectedType = TransactionType.income;
+                        _currentSelectedCategory =
+                            IncomeCategories().categories;
+                        _selectedCategory = _currentSelectedCategory.first;
                       });
                     },
                   ),
@@ -105,7 +114,9 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                   autofocus: false,
                   controller: _transactionNameController,
                   decoration: InputDecoration(
-                    hintText: 'Expenses name',
+                    hintText: _selectedType == TransactionType.income
+                        ? 'Income'
+                        : 'Expenses',
                     filled: true,
                     fillColor: AppColors.border,
                     border: InputBorder.none,
@@ -136,15 +147,15 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                DropdownButtonFormField<Category>(
+                DropdownButtonFormField<CategoryList>(
                   initialValue: _selectedCategory,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: AppColors.border,
                     border: InputBorder.none,
                   ),
-                  items: listCategories.categories.map((category) {
-                    return DropdownMenuItem<Category>(
+                  items: _currentSelectedCategory.map((category) {
+                    return DropdownMenuItem<CategoryList>(
                       value: category,
                       child: Text(category.name),
                     );
@@ -171,6 +182,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                     backgroundColor: AppColors.primary,
                   ),
                   onPressed: () async {
+                    setState(() => isLoading = true);
                     try {
                       double? amount = double.tryParse(_amountController.text);
                       if (amount == null) {
@@ -216,17 +228,27 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                           categoryType: 'expenses',
                         )),
                       );
+                      ref.invalidate(
+                        getRecentTransactionsProvider(user.userId),
+                      );
                       if (!context.mounted) return;
                       AppSnackBar.success(
                         context,
                         'Transaction added successfully',
                       );
                       Navigator.pop(context);
+                      setState(() => isLoading = false);
                     } catch (e) {
                       AppSnackBar.error(context, 'Error: $e');
                     }
                   },
-                  child: const Text('Add Transaction'),
+                  child: Text(
+                    isLoading ? 'Adding Transaction...' : 'Add Transaction',
+                    style: GoogleFonts.outfit(
+                      color: AppColors.textWhite,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ],
             ),

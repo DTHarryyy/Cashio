@@ -1,4 +1,4 @@
-import 'package:cashio/features/home/model/category.dart';
+import 'package:cashio/features/home/model/category_model.dart';
 import 'package:cashio/features/home/repository/transactions_repository.dart';
 
 class GetCategories {

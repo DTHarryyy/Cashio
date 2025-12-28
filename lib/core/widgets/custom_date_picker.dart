@@ -34,7 +34,7 @@ class _DatePickerState extends State<CustomDatePicker> {
       onPressed: _selectDate,
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

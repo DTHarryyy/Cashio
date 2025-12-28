@@ -1,5 +1,5 @@
 import 'package:cashio/core/constant/app_colors.dart';
-import 'package:cashio/features/budgets/pages/add_budget_page.dart';
+import 'package:cashio/features/budgets/presentation/pages/add_budget_page.dart';
 import 'package:cashio/features/home/presentation/pages/add_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';

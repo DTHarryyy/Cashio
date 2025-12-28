@@ -1,6 +1,6 @@
 import 'package:cashio/core/widgets/custom_home_app_bar.dart';
 import 'package:cashio/core/widgets/custom_nav_bar.dart';
-import 'package:cashio/features/budgets/widget/budget_card.dart';
+import 'package:cashio/features/budgets/presentation/widget/budget_card.dart';
 import 'package:flutter/material.dart';
 
 class BudgetPage extends StatelessWidget {

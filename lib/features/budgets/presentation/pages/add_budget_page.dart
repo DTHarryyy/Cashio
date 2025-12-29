@@ -1,6 +1,6 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/utils/list_categories.dart';
-import 'package:cashio/core/widgets/custom_date_picker.dart';
+import 'package:cashio/core/utils/snackbar.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/budgets/model/budget_model.dart';
@@ -18,14 +18,13 @@ class AddBudgetPage extends ConsumerStatefulWidget {
 }
 
 class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
-  final List errorMsg = [];
   TextEditingController titleController = TextEditingController();
   TextEditingController amountController = TextEditingController();
   TextEditingController notesController = TextEditingController();
 
   List<CategoryList> budgetCategoryList = BudgetCategories().categories;
 
-  late CategoryList selectedCategory;
+  CategoryList selectedCategory = BudgetCategories().categories.first;
 
   @override
   void initState() {
@@ -37,8 +36,6 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
   Widget build(BuildContext context) {
     final addBudget = ref.read(addNewBudgetProvider);
     final userAsync = ref.watch(profileProvider);
-
-    final double? amountValue = double.tryParse(amountController.text);
 
     return userAsync.when(
       // TODO: Throw to error page run time error page
@@ -85,33 +82,39 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
                   isNumber: false,
                   controller: notesController,
                 ),
-                CustomDatePicker(ondateSelected: (value) {}),
                 // TODO: INTEGRATE FUNCTIONALITY FOR THIS ADDING BUDGET
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                   ),
                   onPressed: () async {
-                    if (amountValue == null) {
-                      return errorMsg.add('You must input valid amount');
-                    }
-                    final categoryId = await ref
-                        .read(addCategoriesProvider)
-                        .call(
-                          user.userId,
-                          selectedCategory.name,
-                          'budget',
-                          selectedCategory.icon,
-                          selectedCategory.color,
-                        );
-                    await addBudget.call(
-                      BudgetModel(
-                        userId: user.userId,
-                        title: titleController.text.trim(),
-                        amount: amountValue,
-                        categoryId: categoryId,
-                      ),
+                    final double? amountValue = double.tryParse(
+                      amountController.text,
                     );
+                    try {
+                      final categoryId = await ref
+                          .read(addCategoriesProvider)
+                          .call(
+                            user.userId,
+                            selectedCategory.name,
+                            'budget',
+                            selectedCategory.icon,
+                            selectedCategory.color,
+                          );
+                      await addBudget.call(
+                        BudgetModel(
+                          userId: user.userId,
+                          title: titleController.text.trim(),
+                          amount: amountValue!,
+                          categoryId: categoryId,
+                        ),
+                      );
+                      if (!context.mounted) return;
+                      AppSnackBar.success(context, 'Budget added successfully');
+                      Navigator.pop(context);
+                    } catch (e) {
+                      debugPrint("AddBudget error $e");
+                    }
                   },
                   child: Text(
                     'Add',

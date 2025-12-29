@@ -8,7 +8,7 @@ class TransactionsRepository {
   final SupabaseClient supabase;
   TransactionsRepository(this.supabase);
 
-  // get all transactiosn of user
+  // add category
 
   Future<String> addCategory(
     String userId,

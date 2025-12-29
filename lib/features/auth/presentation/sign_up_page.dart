@@ -99,7 +99,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     return null;
                   },
                 ),
-                // TODO: validation to this pass word must contains 1 special char, upper, lowwe , and greater than 8
+                // TODO: validation to this pass word must contains 1 special char, upper, lowwer , and greater than 8
                 CustomTextField(
                   icon: Icons.lock,
                   hint: 'Create Password',

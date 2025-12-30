@@ -1,4 +1,5 @@
 import 'package:cashio/features/budgets/model/budget_model.dart';
+import 'package:cashio/features/budgets/model/budget_with_category_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class BudgetsRepository {
@@ -10,7 +11,19 @@ class BudgetsRepository {
       'user_id': budget.userId,
       'title': budget.title,
       'category_id': budget.categoryId,
-      'amount': budget.amount,
+      'budget_limit': budget.amount,
     });
+  }
+
+  Stream<List<BudgetWithCategoryModel>> getAllBudgets(String userId) {
+    return supabase
+        .from('budget_with_categories_display')
+        .stream(primaryKey: ['id'])
+        .eq('user_id', userId)
+        .order('created_at', ascending: false)
+        .map(
+          (data) =>
+              data.map((e) => BudgetWithCategoryModel.fromMap(e)).toList(),
+        );
   }
 }

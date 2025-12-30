@@ -22,9 +22,9 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
   TextEditingController amountController = TextEditingController();
   TextEditingController notesController = TextEditingController();
 
-  List<CategoryList> budgetCategoryList = BudgetCategories().categories;
+  List<Category> budgetCategoryList = AppCategories.categories;
 
-  CategoryList selectedCategory = BudgetCategories().categories.first;
+  Category selectedCategory = AppCategories.categories.first;
 
   @override
   void initState() {
@@ -67,7 +67,9 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
                 ),
                 CustomDropDown(
                   selectedCategory: selectedCategory,
-                  onChange: (value) {},
+                  onChange: (value) {
+                    selectedCategory = value!;
+                  },
                   budgetCategoryList: budgetCategoryList,
                 ),
                 CustomInputField(
@@ -97,7 +99,7 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
                           .call(
                             user.userId,
                             selectedCategory.name,
-                            'budget',
+                            'expense',
                             selectedCategory.icon,
                             selectedCategory.color,
                           );
@@ -131,9 +133,9 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
 }
 
 class CustomDropDown extends StatelessWidget {
-  final CategoryList? selectedCategory;
-  final ValueChanged<CategoryList?> onChange;
-  final List<CategoryList> budgetCategoryList;
+  final Category? selectedCategory;
+  final ValueChanged<Category?> onChange;
+  final List<Category> budgetCategoryList;
 
   const CustomDropDown({
     super.key,
@@ -144,7 +146,7 @@ class CustomDropDown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<CategoryList>(
+    return DropdownButtonFormField<Category>(
       decoration: InputDecoration(
         suffixIcon: Icon(
           Icons.arrow_drop_down_rounded,
@@ -159,7 +161,7 @@ class CustomDropDown extends StatelessWidget {
       ),
       initialValue: selectedCategory,
       items: budgetCategoryList.map((category) {
-        return DropdownMenuItem<CategoryList>(
+        return DropdownMenuItem<Category>(
           value: category,
           child: Text(category.name, style: GoogleFonts.outfit()),
         );

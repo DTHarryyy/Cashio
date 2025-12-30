@@ -9,7 +9,7 @@ import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/home/provider/transactions_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-enum TransactionType { expenses, income }
+enum TransactionType { expense, income }
 
 class AddTransactionPage extends ConsumerStatefulWidget {
   const AddTransactionPage({super.key});
@@ -25,16 +25,16 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
   final TextEditingController _noteController = TextEditingController();
   DateTime? _date;
 
-  TransactionType _selectedType = TransactionType.expenses;
-  late CategoryList _selectedCategory;
-  late List<CategoryList> _currentSelectedCategory;
+  TransactionType _selectedType = TransactionType.expense;
+  late Category _selectedCategory;
+  late List<Category> _currentSelectedCategory;
   bool isLoading = false;
   @override
   void initState() {
     super.initState();
-    _currentSelectedCategory = _selectedType == TransactionType.expenses
-        ? ExpenseCategories().categories
-        : IncomeCategories().categories;
+    _currentSelectedCategory = _selectedType == TransactionType.expense
+        ? AppCategories.categories
+        : IncomeCategories.categories;
     _selectedCategory = _currentSelectedCategory.first;
   }
 
@@ -77,12 +77,11 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                 children: [
                   CustomSegmentButton(
                     label: 'Expenses',
-                    selected: _selectedType == TransactionType.expenses,
+                    selected: _selectedType == TransactionType.expense,
                     onTap: () {
                       setState(() {
-                        _selectedType = TransactionType.expenses;
-                        _currentSelectedCategory =
-                            ExpenseCategories().categories;
+                        _selectedType = TransactionType.expense;
+                        _currentSelectedCategory = AppCategories.categories;
                         _selectedCategory = _currentSelectedCategory.first;
                       });
                     },
@@ -93,8 +92,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                     onTap: () {
                       setState(() {
                         _selectedType = TransactionType.income;
-                        _currentSelectedCategory =
-                            IncomeCategories().categories;
+                        _currentSelectedCategory = IncomeCategories.categories;
                         _selectedCategory = _currentSelectedCategory.first;
                       });
                     },
@@ -147,7 +145,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                DropdownButtonFormField<CategoryList>(
+                DropdownButtonFormField<Category>(
                   initialValue: _selectedCategory,
                   decoration: InputDecoration(
                     filled: true,
@@ -155,7 +153,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                     border: InputBorder.none,
                   ),
                   items: _currentSelectedCategory.map((category) {
-                    return DropdownMenuItem<CategoryList>(
+                    return DropdownMenuItem<Category>(
                       value: category,
                       child: Text(category.name),
                     );

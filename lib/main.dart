@@ -18,7 +18,6 @@ Future<void> main() async {
   );
 
   await dotenv.load(fileName: ".env");
-
   await Supabase.initialize(
     url: 'https://ibwdzfckngmbtmmtgorg.supabase.co',
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,

@@ -36,7 +36,7 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
     super.initState();
     selectedCategory = budgetCategoryList.first;
     startDate = now;
-    startDate = DateTime(now.year, now.month + 2);
+    endDate = DateTime(now.year, now.month + 2);
   }
 
   @override
@@ -58,84 +58,91 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
               style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
             ),
           ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 10,
-              children: [
-                CustomInputField(
-                  hint: 'Title',
-                  icon: Icons.title_rounded,
-                  isNumber: false,
-                  controller: titleController,
-                ),
-                CustomDropDown(
-                  selectedCategory: selectedCategory,
-                  onChange: (value) {
-                    selectedCategory = value!;
-                  },
-                  budgetCategoryList: budgetCategoryList,
-                ),
-                CustomInputField(
-                  hint: 'Amount',
-                  icon: Icons.attach_money_rounded,
-                  isNumber: true,
-                  controller: amountController,
-                ),
-                CustomInputField(
-                  hint: 'Notes(optional)',
-                  icon: Icons.notes_rounded,
-                  isNumber: false,
-                  controller: notesController,
-                ),
-                CustomDatePicker(ondateSelected: (value) => startDate = value),
-                CustomDatePicker(ondateSelected: (value) => endDate = value),
-                // TODO: INTEGRATE FUNCTIONALITY FOR THIS ADDING BUDGET
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 10,
+                children: [
+                  CustomInputField(
+                    hint: 'Title',
+                    icon: Icons.title_rounded,
+                    isNumber: false,
+                    controller: titleController,
                   ),
-                  onPressed: () async {
-                    final double? amountValue = double.tryParse(
-                      amountController.text,
-                    );
-                    try {
-                      final categoryId = await ref
-                          .read(addCategoriesProvider)
-                          .call(
-                            user.userId,
-                            selectedCategory.name,
-                            'expense',
-                            selectedCategory.icon,
-                            selectedCategory.color,
-                          );
-                      await addBudget.call(
-                        Budget(
-                          userId: user.userId,
-                          name: titleController.text.trim(),
-                          totalAmount: amountValue!,
-                          startDate: startDate,
-                          endDate: endDate,
-                          categoryId: categoryId,
-                        ),
+                  CustomDropDown(
+                    selectedCategory: selectedCategory,
+                    onChange: (value) {
+                      selectedCategory = value!;
+                    },
+                    budgetCategoryList: budgetCategoryList,
+                  ),
+                  CustomInputField(
+                    hint: 'Amount',
+                    icon: Icons.attach_money_rounded,
+                    isNumber: true,
+                    controller: amountController,
+                  ),
+                  CustomInputField(
+                    hint: 'Notes(optional)',
+                    icon: Icons.notes_rounded,
+                    isNumber: false,
+                    controller: notesController,
+                  ),
+                  CustomDatePicker(
+                    ondateSelected: (value) => startDate = value,
+                  ),
+                  CustomDatePicker(ondateSelected: (value) => endDate = value),
+                  // TODO: INTEGRATE FUNCTIONALITY FOR THIS ADDING BUDGET
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                    ),
+                    onPressed: () async {
+                      final double? amountValue = double.tryParse(
+                        amountController.text,
                       );
+                      try {
+                        final categoryId = await ref
+                            .read(addCategoriesProvider)
+                            .call(
+                              user.userId,
+                              selectedCategory.name,
+                              'expense',
+                              selectedCategory.icon,
+                              selectedCategory.color,
+                            );
+                        await addBudget.call(
+                          Budget(
+                            userId: user.userId,
+                            name: titleController.text.trim(),
+                            totalAmount: amountValue!,
+                            startDate: startDate,
+                            endDate: endDate,
+                            categoryId: categoryId,
+                          ),
+                        );
 
-                      if (!context.mounted) return;
-                      AppSnackBar.success(context, 'Budget added successfully');
-                      Navigator.pop(context);
-                    } catch (e) {
-                      debugPrint("AddBudget error $e");
-                    }
-                  },
-                  child: Text(
-                    'Add',
-                    style: GoogleFonts.outfit(color: AppColors.textWhite),
+                        if (!context.mounted) return;
+                        AppSnackBar.success(
+                          context,
+                          'Budget added successfully',
+                        );
+                        Navigator.pop(context);
+                      } catch (e) {
+                        debugPrint("AddBudget error $e");
+                      }
+                    },
+                    child: Text(
+                      'Add',
+                      style: GoogleFonts.outfit(color: AppColors.textWhite),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

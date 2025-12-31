@@ -1,4 +1,4 @@
-import 'package:cashio/features/home/model/category_model.dart';
+import 'package:cashio/core/model/category_model.dart';
 import 'package:cashio/features/home/model/monthly_total.dart';
 import 'package:cashio/features/home/model/transaction.dart';
 import 'package:cashio/features/home/model/transactions.dart';
@@ -12,32 +12,18 @@ class TransactionsRepository {
   // add category
 
   Future<String> addCategory(
-    String userId,
     String name,
     String transactionType,
     IconData icon,
     Color color,
   ) async {
-    final existing = await supabase
-        .from('categories')
-        .select()
-        .eq('user_id', userId)
-        .eq('name', name)
-        .eq('type', transactionType)
-        .maybeSingle();
-
-    if (existing != null) {
-      return existing['id'];
-    }
-
     final categoryRes = await supabase
         .from('categories')
         .insert({
-          'user_id': userId,
-          'name': name,
-          'type': transactionType,
-          'icon': icon.codePoint,
+          'category_name': name,
+          'category_icon': icon.codePoint,
           'color': color.toARGB32(),
+          'type': transactionType,
         })
         .select()
         .single();

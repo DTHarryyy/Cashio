@@ -1,4 +1,3 @@
-import 'package:cashio/features/budgets/model/budget_with_category_model.dart';
 import 'package:cashio/features/budgets/repository/budgets_repository.dart';
 
 class GetAllBudgets {

@@ -2,8 +2,6 @@ import 'package:cashio/core/widgets/custom_home_app_bar.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/core/widgets/custom_nav_bar.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
-import 'package:cashio/features/budgets/presentation/widget/budget_cards.dart';
-import 'package:cashio/features/budgets/provider/budget_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,15 +11,19 @@ class BudgetPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userAsync = ref.watch(profileProvider);
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     return userAsync.when(
       error: (e, _) => Scaffold(body: Center(child: Text('budgets error: $e'))),
       loading: () => Scaffold(body: Center(child: CustomLoading())),
       data: (user) {
-        return Scaffold(body: Center(child: Text('dsada')));
+        return Scaffold(
+          key: scaffoldKey,
+          appBar: CustomAppBar(scaffoldKey: scaffoldKey),
+          bottomNavigationBar: CustomNavBar(),
+          body: Center(child: Text('Budget page')),
+        );
         // final budgetsAsync = ref.watch(getAllbudgetProvider(user.userId));
-
-        // final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
         // return budgetsAsync.when(
         //   error: (e, _) =>

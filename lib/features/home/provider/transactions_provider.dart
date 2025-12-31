@@ -1,5 +1,5 @@
 import 'package:cashio/core/provider/supabase_provider.dart';
-import 'package:cashio/features/home/model/category_model.dart';
+import 'package:cashio/core/model/category_model.dart';
 import 'package:cashio/features/home/model/monthly_total.dart';
 import 'package:cashio/features/home/model/transactions.dart';
 import 'package:cashio/features/home/repository/transactions_repository.dart';

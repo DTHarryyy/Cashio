@@ -1,230 +1,226 @@
-import 'package:cashio/core/constant/app_colors.dart';
-import 'package:cashio/core/utils/list_categories.dart';
-import 'package:cashio/core/utils/snackbar.dart';
-import 'package:cashio/core/widgets/custom_date_picker.dart';
-import 'package:cashio/core/widgets/custom_loading.dart';
-import 'package:cashio/features/auth/provider/user_profile_provider.dart';
-import 'package:cashio/features/budgets/model/budget.dart';
-import 'package:cashio/features/budgets/provider/budget_provider.dart';
-import 'package:cashio/features/home/provider/transactions_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:cashio/core/constant/app_colors.dart';
+// import 'package:cashio/core/utils/list_categories.dart';
+// import 'package:cashio/core/utils/snackbar.dart';
+// import 'package:cashio/core/widgets/custom_date_picker.dart';
+// import 'package:cashio/core/widgets/custom_loading.dart';
+// import 'package:cashio/features/auth/provider/user_profile_provider.dart';
+// import 'package:cashio/features/budgets/model/budget.dart';
+// import 'package:cashio/features/budgets/provider/budget_provider.dart';
+// import 'package:cashio/features/home/model/category_model.dart';
+// import 'package:cashio/features/home/provider/transactions_provider.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
-class AddBudgetPage extends ConsumerStatefulWidget {
-  const AddBudgetPage({super.key});
+// class AddBudgetPage extends ConsumerStatefulWidget {
+//   const AddBudgetPage({super.key});
 
-  @override
-  ConsumerState<AddBudgetPage> createState() => _AddBudgetPageState();
-}
+//   @override
+//   ConsumerState<AddBudgetPage> createState() => _AddBudgetPageState();
+// }
 
-class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController amountController = TextEditingController();
-  TextEditingController notesController = TextEditingController();
+// class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
+//   TextEditingController titleController = TextEditingController();
+//   TextEditingController amountController = TextEditingController();
+//   TextEditingController notesController = TextEditingController();
 
-  List<Category> budgetCategoryList = AppCategories.categories;
+//   List<Category> budgetCategoryList = AppCategories.categories;
 
-  Category selectedCategory = AppCategories.categories.first;
+//   Category selectedCategory = AppCategories.categories.first;
 
-  DateTime now = DateTime.now();
+//   DateTime now = DateTime.now();
 
-  late DateTime startDate;
-  late DateTime endDate;
-  @override
-  void initState() {
-    super.initState();
-    selectedCategory = budgetCategoryList.first;
-    startDate = now;
-    endDate = DateTime(now.year, now.month + 2);
-  }
+//   late DateTime startDate;
+//   late DateTime endDate;
+//   @override
+//   void initState() {
+//     super.initState();
+//     selectedCategory = budgetCategoryList.first;
+//     startDate = now;
+//     endDate = DateTime(now.year, now.month + 2);
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    final addBudget = ref.read(addNewBudgetProvider);
-    final userAsync = ref.watch(profileProvider);
+//   @override
+//   Widget build(BuildContext context) {
+//     final addBudget = ref.read(addNewBudgetProvider);
+//     final userAsync = ref.watch(profileProvider);
 
-    return userAsync.when(
-      // TODO: Throw to error page run time error page
-      error: (e, _) =>
-          Scaffold(body: Center(child: Text('There must be an error'))),
-      loading: () => Scaffold(body: Center(child: CustomLoading())),
-      data: (user) {
-        return Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text(
-              'Add new budget',
-              style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
-            ),
-          ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 10,
-                children: [
-                  CustomInputField(
-                    hint: 'Title',
-                    icon: Icons.title_rounded,
-                    isNumber: false,
-                    controller: titleController,
-                  ),
-                  CustomDropDown(
-                    selectedCategory: selectedCategory,
-                    onChange: (value) {
-                      selectedCategory = value!;
-                    },
-                    budgetCategoryList: budgetCategoryList,
-                  ),
-                  CustomInputField(
-                    hint: 'Amount',
-                    icon: Icons.attach_money_rounded,
-                    isNumber: true,
-                    controller: amountController,
-                  ),
-                  CustomInputField(
-                    hint: 'Notes(optional)',
-                    icon: Icons.notes_rounded,
-                    isNumber: false,
-                    controller: notesController,
-                  ),
-                  CustomDatePicker(
-                    ondateSelected: (value) => startDate = value,
-                  ),
-                  CustomDatePicker(ondateSelected: (value) => endDate = value),
-                  // TODO: INTEGRATE FUNCTIONALITY FOR THIS ADDING BUDGET
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                    ),
-                    onPressed: () async {
-                      final double? amountValue = double.tryParse(
-                        amountController.text,
-                      );
-                      try {
-                        final categoryId = await ref
-                            .read(addCategoriesProvider)
-                            .call(
-                              user.userId,
-                              selectedCategory.name,
-                              'expense',
-                              selectedCategory.icon,
-                              selectedCategory.color,
-                            );
-                        await addBudget.call(
-                          Budget(
-                            userId: user.userId,
-                            name: titleController.text.trim(),
-                            totalAmount: amountValue!,
-                            startDate: startDate,
-                            endDate: endDate,
-                            categoryId: categoryId,
-                          ),
-                        );
+//     return userAsync.when(
+//       // TODO: Throw to error page run time error page
+//       error: (e, _) =>
+//           Scaffold(body: Center(child: Text('There must be an error'))),
+//       loading: () => Scaffold(body: Center(child: CustomLoading())),
+//       data: (user) {
+//         return Scaffold(
+//           appBar: AppBar(
+//             centerTitle: true,
+//             title: Text(
+//               'Add new budget',
+//               style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+//             ),
+//           ),
+//           body: SingleChildScrollView(
+//             child: Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+//               child: Column(
+//                 mainAxisSize: MainAxisSize.min,
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 spacing: 10,
+//                 children: [
+//                   CustomInputField(
+//                     hint: 'Title',
+//                     icon: Icons.title_rounded,
+//                     isNumber: false,
+//                     controller: titleController,
+//                   ),
+//                   CustomDropDown(
+//                     selectedCategory: selectedCategory,
+//                     onChange: (value) {
+//                       selectedCategory = value!;
+//                     },
+//                     budgetCategoryList: budgetCategoryList,
+//                   ),
+//                   CustomInputField(
+//                     hint: 'Amount',
+//                     icon: Icons.attach_money_rounded,
+//                     isNumber: true,
+//                     controller: amountController,
+//                   ),
+//                   CustomInputField(
+//                     hint: 'Notes(optional)',
+//                     icon: Icons.notes_rounded,
+//                     isNumber: false,
+//                     controller: notesController,
+//                   ),
+//                   CustomDatePicker(
+//                     initialDate: now,
+//                     onDateSelected: (value) => endDate = value,
+//                   ),
+//                   CustomDatePicker(
+//                     initialDate: endDate,
+//                     onDateSelected: (value) => endDate = value,
+//                   ),
+//                   // TODO: INTEGRATE FUNCTIONALITY FOR THIS ADDING BUDGET
+//                   ElevatedButton(
+//                     style: ElevatedButton.styleFrom(
+//                       backgroundColor: AppColors.primary,
+//                     ),
+//                     onPressed: () async {
+//                       final double? amountValue = double.tryParse(
+//                         amountController.text,
+//                       );
+//                       try {
+//                         // await addBudget.call(
+//                         //   Budget(
+//                         //     userId: user.userId,
+//                         //     name: titleController.text.trim(),
+//                         //     totalAmount: amountValue!,
+//                         //     startDate: startDate,
+//                         //     endDate: endDate,
+//                         //     categoryId: ,
+//                         //   ),
+//                         // );
 
-                        if (!context.mounted) return;
-                        AppSnackBar.success(
-                          context,
-                          'Budget added successfully',
-                        );
-                        Navigator.pop(context);
-                      } catch (e) {
-                        debugPrint("AddBudget error $e");
-                      }
-                    },
-                    child: Text(
-                      'Add',
-                      style: GoogleFonts.outfit(color: AppColors.textWhite),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
+//                         if (!context.mounted) return;
+//                         AppSnackBar.success(
+//                           context,
+//                           'Budget added successfully',
+//                         );
+//                         Navigator.pop(context);
+//                       } catch (e) {
+//                         debugPrint("AddBudget error $e");
+//                       }
+//                     },
+//                     child: Text(
+//                       'Add',
+//                       style: GoogleFonts.outfit(color: AppColors.textWhite),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
 
-class CustomDropDown extends StatelessWidget {
-  final Category? selectedCategory;
-  final ValueChanged<Category?> onChange;
-  final List<Category> budgetCategoryList;
+// class CustomDropDown extends StatelessWidget {
+//   final Category? selectedCategory;
+//   final ValueChanged<Category?> onChange;
+//   final List<Category> budgetCategoryList;
 
-  const CustomDropDown({
-    super.key,
-    required this.selectedCategory,
-    required this.onChange,
-    required this.budgetCategoryList,
-  });
+//   const CustomDropDown({
+//     super.key,
+//     required this.selectedCategory,
+//     required this.onChange,
+//     required this.budgetCategoryList,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButtonFormField<Category>(
-      decoration: InputDecoration(
-        suffixIcon: Icon(
-          Icons.arrow_drop_down_rounded,
-          size: 28,
-          color: AppColors.primary,
-        ),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide(color: AppColors.primary),
-        ),
-      ),
-      initialValue: selectedCategory,
-      items: budgetCategoryList.map((category) {
-        return DropdownMenuItem<Category>(
-          value: category,
-          child: Text(category.name, style: GoogleFonts.outfit()),
-        );
-      }).toList(),
-      onChanged: onChange,
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return DropdownButtonFormField<Category>(
+//       decoration: InputDecoration(
+//         suffixIcon: Icon(
+//           Icons.arrow_drop_down_rounded,
+//           size: 28,
+//           color: AppColors.primary,
+//         ),
+//         border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+//         focusedBorder: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(30),
+//           borderSide: BorderSide(color: AppColors.primary),
+//         ),
+//       ),
+//       initialValue: selectedCategory,
+//       items: budgetCategoryList.map((category) {
+//         return DropdownMenuItem<Category>(
+//           value: category,
+//           child: Text(category.name, style: GoogleFonts.outfit()),
+//         );
+//       }).toList(),
+//       onChanged: onChange,
+//     );
+//   }
+// }
 
-class CustomInputField extends StatelessWidget {
-  final String hint;
-  final IconData icon;
-  final bool isNumber;
-  final TextEditingController controller;
+// class CustomInputField extends StatelessWidget {
+//   final String hint;
+//   final IconData icon;
+//   final bool isNumber;
+//   final TextEditingController controller;
 
-  const CustomInputField({
-    super.key,
-    required this.hint,
-    required this.icon,
-    required this.isNumber,
-    required this.controller,
-  });
+//   const CustomInputField({
+//     super.key,
+//     required this.hint,
+//     required this.icon,
+//     required this.isNumber,
+//     required this.controller,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      keyboardType: isNumber
-          ? TextInputType.numberWithOptions(decimal: true)
-          : null,
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(horizontal: 15),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25),
-          borderSide: BorderSide(color: AppColors.primary),
-        ),
-        label: Text(hint, style: GoogleFonts.outfit(fontSize: 16)),
-        floatingLabelStyle: GoogleFonts.outfit(
-          fontSize: 13,
-          color: AppColors.textPrimary,
-        ),
-        suffixIcon: Icon(icon, color: AppColors.primary),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return TextField(
+//       controller: controller,
+//       keyboardType: isNumber
+//           ? TextInputType.numberWithOptions(decimal: true)
+//           : null,
+//       decoration: InputDecoration(
+//         contentPadding: EdgeInsets.symmetric(horizontal: 15),
+//         border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
+//         focusedBorder: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(25),
+//           borderSide: BorderSide(color: AppColors.primary),
+//         ),
+//         label: Text(hint, style: GoogleFonts.outfit(fontSize: 16)),
+//         floatingLabelStyle: GoogleFonts.outfit(
+//           fontSize: 13,
+//           color: AppColors.textPrimary,
+//         ),
+//         suffixIcon: Icon(icon, color: AppColors.primary),
+//       ),
+//     );
+//   }
+// }

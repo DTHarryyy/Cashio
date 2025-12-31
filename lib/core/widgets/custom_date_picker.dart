@@ -4,27 +4,43 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class CustomDatePicker extends StatefulWidget {
-  final ValueChanged<DateTime> ondateSelected;
-  const CustomDatePicker({super.key, required this.ondateSelected});
+  final DateTime initialDate;
+  final ValueChanged<DateTime> onDateSelected;
+  final DateTime? firstDate; // optional
+  final DateTime? lastDate; // optional
+
+  const CustomDatePicker({
+    super.key,
+    required this.initialDate,
+    required this.onDateSelected,
+    this.firstDate,
+    this.lastDate,
+  });
+
   @override
-  State<CustomDatePicker> createState() => _DatePickerState();
+  State<CustomDatePicker> createState() => _CustomDatePickerState();
 }
 
-class _DatePickerState extends State<CustomDatePicker> {
-  DateTime? dateSelected;
+class _CustomDatePickerState extends State<CustomDatePicker> {
+  late DateTime dateSelected;
+
+  @override
+  void initState() {
+    super.initState();
+    dateSelected = widget.initialDate; // initialize
+  }
+
   Future<void> _selectDate() async {
     final now = DateTime.now();
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: dateSelected ?? now,
-      firstDate: DateTime(now.year - 5),
-      lastDate: DateTime(now.year + 1),
+      initialDate: dateSelected,
+      firstDate: widget.firstDate ?? DateTime(now.year - 5),
+      lastDate: widget.lastDate ?? DateTime(now.year + 5),
     );
     if (pickedDate != null) {
-      setState(() {
-        dateSelected = pickedDate;
-      });
-      widget.ondateSelected(pickedDate);
+      setState(() => dateSelected = pickedDate);
+      widget.onDateSelected(pickedDate);
     }
   }
 
@@ -40,9 +56,7 @@ class _DatePickerState extends State<CustomDatePicker> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            dateSelected == null
-                ? 'DD / MMM / YYYY'
-                : DateFormat('dd / MMM / yyyy').format(dateSelected!),
+            DateFormat('dd / MMM / yyyy').format(dateSelected),
             style: GoogleFonts.outfit(
               fontSize: 16,
               color: AppColors.textSecondary,

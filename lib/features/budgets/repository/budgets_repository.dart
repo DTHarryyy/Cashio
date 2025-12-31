@@ -1,5 +1,4 @@
 import 'package:cashio/features/budgets/model/budget.dart';
-import 'package:cashio/features/budgets/model/budget_with_category_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class BudgetsRepository {

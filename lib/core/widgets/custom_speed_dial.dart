@@ -1,6 +1,4 @@
 import 'package:cashio/core/constant/app_colors.dart';
-import 'package:cashio/features/budgets/presentation/pages/add_budget_page.dart';
-import 'package:cashio/features/home/presentation/pages/add_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,10 +30,10 @@ class CustomSpeedDial extends StatelessWidget {
             style: GoogleFonts.outfit(),
           ),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AddTransactionPage()),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => AddTransactionPage()),
+            // );
           },
         ),
 
@@ -59,10 +57,10 @@ class CustomSpeedDial extends StatelessWidget {
           child: Icon(Icons.pie_chart_rounded),
           labelWidget: Text('budget   ', style: GoogleFonts.outfit()),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AddBudgetPage()),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => AddBudgetPage()),
+            // );
           },
         ),
       ],

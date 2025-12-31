@@ -7,10 +7,9 @@ class AddCategories {
   AddCategories(this.repo);
 
   Future<String> call(
-    String userId,
     String name,
     String transactionType,
     IconData icon,
     Color color,
-  ) => repo.addCategory(userId, name, transactionType, icon, color);
+  ) => repo.addCategory(name, transactionType, icon, color);
 }

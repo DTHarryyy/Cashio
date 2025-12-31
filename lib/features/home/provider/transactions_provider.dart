@@ -32,7 +32,7 @@ final getAllTransactionUseCaseProvider = Provider(
   (ref) => GetAllTransactions(ref.watch(transactionsRepoProvider)),
 );
 final getAllTransactionsProvider =
-    StreamProvider.family<List<Transactions>, String>((ref, userId) {
+    StreamProvider.family<List<TransactionsDisplay>, String>((ref, userId) {
       final getTransaction = ref.read(getAllTransactionUseCaseProvider);
       return getTransaction(userId);
     });
@@ -42,7 +42,7 @@ final getTransactionsUseCaseProvider = Provider(
   (ref) => GetRecentTransaction(ref.read(transactionsRepoProvider)),
 );
 final getRecentTransactionsProvider =
-    FutureProvider.family<List<Transactions>, String>((ref, userId) {
+    FutureProvider.family<List<TransactionsDisplay>, String>((ref, userId) {
       final getTransactions = ref.read(getTransactionsUseCaseProvider);
       return getTransactions(userId: userId);
     });

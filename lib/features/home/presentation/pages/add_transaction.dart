@@ -1,6 +1,7 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/utils/list_categories.dart';
 import 'package:cashio/core/widgets/custom_date_picker.dart';
+import 'package:cashio/features/home/model/transaction.dart';
 import 'package:cashio/features/home/presentation/widget/segmented_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -166,6 +167,27 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                     }
                   },
                 ),
+                DropdownButtonFormField<Category>(
+                  initialValue: _selectedCategory,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: AppColors.border,
+                    border: InputBorder.none,
+                  ),
+                  items: _currentSelectedCategory.map((category) {
+                    return DropdownMenuItem<Category>(
+                      value: category,
+                      child: Text(category.name),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        _selectedCategory = value;
+                      });
+                    }
+                  },
+                ),
 
                 const SizedBox(height: 12),
                 CustomDatePicker(
@@ -200,17 +222,20 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                             _selectedCategory.color,
                           );
 
-                      await ref
-                          .read(addTransactionsProvider)
-                          .call(
-                            transactionName: _transactionNameController.text
-                                .trim(),
-                            userId: user.userId,
-                            amount: amount,
-                            categoryId: categoryId,
-                            note: _noteController.text.trim(),
-                            transactionDate: _date,
-                          );
+                      // await ref
+                      //     .read(addTransactionsProvider)
+                      //     .call(
+                      //       Transaction(
+                      //         transactionName: _transactionNameController.text
+                      //             .trim(),
+                      //         userId: user.userId,
+                      //         cateoryId: categoryId,
+                      //         budgetId: budgetId,
+                      //         amount: amount,
+                      //         type: _selectedType.name,
+                      //         description: _noteController.text.trim(),
+                      //       ),
+                      //     );
                       ref.invalidate(combinedTransactionsProvider(user.userId));
                       ref.invalidate(getCategoriesProvider(user.userId));
                       ref.invalidate(monthlyTotalProvider(user.userId));

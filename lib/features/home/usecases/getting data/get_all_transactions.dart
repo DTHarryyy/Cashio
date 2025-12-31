@@ -6,6 +6,6 @@ class GetAllTransactions {
 
   GetAllTransactions(this.repo);
 
-  Stream<List<Transactions>> call(String userId) =>
+  Stream<List<TransactionsDisplay>> call(String userId) =>
       repo.getAllTransactions(userId);
 }

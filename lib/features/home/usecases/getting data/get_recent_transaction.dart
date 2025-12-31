@@ -6,6 +6,6 @@ class GetRecentTransaction {
 
   GetRecentTransaction(this.repo);
 
-  Future<List<Transactions>> call({required String userId}) =>
+  Future<List<TransactionsDisplay>> call({required String userId}) =>
       repo.getRecentTransactions(userId);
 }

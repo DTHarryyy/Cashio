@@ -1,9 +1,9 @@
 import 'package:cashio/features/budgets/model/budget.dart';
 import 'package:cashio/features/budgets/repository/budgets_repository.dart';
 
-class AddBudget {
+class GetBudgets {
   final BudgetsRepository repo;
-  AddBudget(this.repo);
+  GetBudgets(this.repo);
 
-  Future<void> call(Budget budget) => repo.addNewBudget(budget);
+  Stream<List<Budget>> call(String userId) => repo.getBudget(userId);
 }

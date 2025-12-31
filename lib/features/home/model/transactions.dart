@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Transactions {
+class TransactionsDisplay {
   final String userId;
   final String name;
   final double amount;
@@ -12,7 +12,7 @@ class Transactions {
   final IconData categoryIcon;
   final Color categoryColor;
 
-  Transactions({
+  TransactionsDisplay({
     required this.userId,
     required this.name,
     required this.amount,
@@ -25,8 +25,8 @@ class Transactions {
     required this.categoryColor,
   });
 
-  factory Transactions.fromMap(Map<String, dynamic> map) {
-    return Transactions(
+  factory TransactionsDisplay.fromMap(Map<String, dynamic> map) {
+    return TransactionsDisplay(
       userId: map['user_id'] as String,
       categoryId: map['category_id'] as String,
       name: map['transaction_name'] as String,

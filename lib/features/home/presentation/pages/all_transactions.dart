@@ -102,7 +102,7 @@ class _AllTransactionsState extends ConsumerState<AllTransactions> {
 }
 
 class FilteredTransactionContent extends StatelessWidget {
-  final List<Transactions> filteredTransaction;
+  final List<TransactionsDisplay> filteredTransaction;
   const FilteredTransactionContent({
     super.key,
     required this.filteredTransaction,

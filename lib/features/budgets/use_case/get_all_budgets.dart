@@ -5,6 +5,6 @@ class GetAllBudgets {
   final BudgetsRepository repo;
   GetAllBudgets(this.repo);
 
-  Stream<List<BudgetWithCategoryModel>> call(String userId) =>
-      repo.getAllBudgets(userId);
+  // Stream<List<BudgetWithCategoryModel>> call(String userId) =>
+  //     repo.getAllBudgets(userId);
 }

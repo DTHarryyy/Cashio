@@ -1,5 +1,6 @@
 import 'package:cashio/features/home/model/category_model.dart';
 import 'package:cashio/features/home/model/monthly_total.dart';
+import 'package:cashio/features/home/model/transaction.dart';
 import 'package:cashio/features/home/model/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -46,22 +47,17 @@ class TransactionsRepository {
 
   // get all transactiosn of user
 
-  Future<void> addTransaction({
-    required String transactionName,
-    required String userId,
-    required double amount,
-    required String categoryId,
-    required String note,
-    required DateTime? transactionDate,
-  }) async {
+  Future<void> addTransaction(Transaction transac) async {
     try {
       await supabase.from('transactions').insert({
-        'transaction_name': transactionName,
-        'user_id': userId,
-        'category_id': categoryId,
-        'amount': amount,
-        'note': note,
-        'transaction_date': transactionDate?.toIso8601String(),
+        'transaction_name': transac.transactionName,
+        'user_id': transac.userId,
+        'category_id': transac.cateoryId,
+        'budget_id': transac.budgetId,
+        'amount': transac.amount,
+        'type': transac.type,
+        'description': transac.description,
+        'transaction_date': transac.transactionDate ?? DateTime.now(),
       });
     } on PostgrestException catch (e) {
       throw ('Failed to add expense: ${e.message}');
@@ -69,17 +65,19 @@ class TransactionsRepository {
   }
 
   // get all transactions of user
-  Stream<List<Transactions>> getAllTransactions(String userId) {
+  Stream<List<TransactionsDisplay>> getAllTransactions(String userId) {
     return supabase
         .from('transactions_with_category')
         .stream(primaryKey: ['transaction_id'])
         .eq('user_id', userId)
         .order('created_at', ascending: false)
-        .map((data) => data.map((e) => Transactions.fromMap(e)).toList());
+        .map(
+          (data) => data.map((e) => TransactionsDisplay.fromMap(e)).toList(),
+        );
   }
   // get 10 recent transactiosn of user
 
-  Future<List<Transactions>> getRecentTransactions(String userId) async {
+  Future<List<TransactionsDisplay>> getRecentTransactions(String userId) async {
     final data = await supabase
         .from('transactions_with_category')
         .select('*')
@@ -87,7 +85,7 @@ class TransactionsRepository {
         .order('created_at', ascending: false)
         .limit(10);
 
-    return data.map((e) => Transactions.fromMap(e)).toList();
+    return data.map((e) => TransactionsDisplay.fromMap(e)).toList();
   }
 
   // get total expenses / income

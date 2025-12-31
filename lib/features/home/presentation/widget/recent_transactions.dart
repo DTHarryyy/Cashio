@@ -43,7 +43,7 @@ class RecentTransactions extends ConsumerWidget {
 
   Widget _transactionsContent(
     BuildContext context,
-    List<Transactions> transactions,
+    List<TransactionsDisplay> transactions,
     AppUser user,
   ) {
     return ListView.separated(

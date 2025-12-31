@@ -1,9 +1,10 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/utils/list_categories.dart';
 import 'package:cashio/core/utils/snackbar.dart';
+import 'package:cashio/core/widgets/custom_date_picker.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
-import 'package:cashio/features/budgets/model/budget_model.dart';
+import 'package:cashio/features/budgets/model/budget.dart';
 import 'package:cashio/features/budgets/provider/budget_provider.dart';
 import 'package:cashio/features/home/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +27,16 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
 
   Category selectedCategory = AppCategories.categories.first;
 
+  DateTime now = DateTime.now();
+
+  late DateTime startDate;
+  late DateTime endDate;
   @override
   void initState() {
     super.initState();
     selectedCategory = budgetCategoryList.first;
+    startDate = now;
+    startDate = DateTime(now.year, now.month + 2);
   }
 
   @override
@@ -84,6 +91,8 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
                   isNumber: false,
                   controller: notesController,
                 ),
+                CustomDatePicker(ondateSelected: (value) => startDate = value),
+                CustomDatePicker(ondateSelected: (value) => endDate = value),
                 // TODO: INTEGRATE FUNCTIONALITY FOR THIS ADDING BUDGET
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -104,13 +113,16 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
                             selectedCategory.color,
                           );
                       await addBudget.call(
-                        BudgetModel(
+                        Budget(
                           userId: user.userId,
-                          title: titleController.text.trim(),
-                          amount: amountValue!,
+                          name: titleController.text.trim(),
+                          totalAmount: amountValue!,
+                          startDate: startDate,
+                          endDate: endDate,
                           categoryId: categoryId,
                         ),
                       );
+
                       if (!context.mounted) return;
                       AppSnackBar.success(context, 'Budget added successfully');
                       Navigator.pop(context);

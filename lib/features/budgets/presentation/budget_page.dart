@@ -18,30 +18,31 @@ class BudgetPage extends ConsumerWidget {
       error: (e, _) => Scaffold(body: Center(child: Text('budgets error: $e'))),
       loading: () => Scaffold(body: Center(child: CustomLoading())),
       data: (user) {
-        final budgetsAsync = ref.watch(getAllbudgetProvider(user.userId));
+        return Scaffold(body: Center(child: Text('dsada')));
+        // final budgetsAsync = ref.watch(getAllbudgetProvider(user.userId));
 
-        final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+        // final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-        return budgetsAsync.when(
-          error: (e, _) =>
-              Scaffold(body: Center(child: Text('budgets error: $e'))),
-          loading: () =>
-              Scaffold(body: Center(child: CircularProgressIndicator())),
-          data: (budgets) {
-            return Scaffold(
-              key: scaffoldKey,
-              appBar: CustomAppBar(scaffoldKey: scaffoldKey),
-              bottomNavigationBar: CustomNavBar(),
-              body: Container(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                child: Column(
-                  spacing: 10,
-                  children: [BudgetCards(budgets: budgets)],
-                ),
-              ),
-            );
-          },
-        );
+        // return budgetsAsync.when(
+        //   error: (e, _) =>
+        //       Scaffold(body: Center(child: Text('budgets error: $e'))),
+        //   loading: () =>
+        //       Scaffold(body: Center(child: CircularProgressIndicator())),
+        //   data: (budgets) {
+        //     return Scaffold(
+        //       key: scaffoldKey,
+        //       appBar: CustomAppBar(scaffoldKey: scaffoldKey),
+        //       bottomNavigationBar: CustomNavBar(),
+        //       body: Container(
+        //         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        //         child: Column(
+        //           spacing: 10,
+        //           children: [BudgetCards(budgets: budgets)],
+        //         ),
+        //       ),
+        //     );
+        //   },
+        // );
       },
     );
   }

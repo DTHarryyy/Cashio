@@ -10,15 +10,15 @@ class BudgetsRepository {
       'user_id': budget.userId,
       'name': budget.name,
       'total_amount': budget.totalAmount,
-      'start_date': budget.startDate,
-      'end_date': budget.endDate,
-      'category_id': budget.categoryId,
+      'start_date': budget.startDate.toIso8601String(),
+      'end_date': budget.endDate.toIso8601String(),
+      'category_uuid': budget.categoryId,
     });
   }
 
   Stream<List<Budget>> getBudget(String userId) {
     return supabase
-        .from('categories')
+        .from('budgets')
         .stream(primaryKey: ['id'])
         .eq('user_id', userId)
         .order('created_at', ascending: false)

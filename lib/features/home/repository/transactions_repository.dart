@@ -1,4 +1,3 @@
-import 'package:cashio/core/model/category_model.dart';
 import 'package:cashio/features/home/model/monthly_total.dart';
 import 'package:cashio/features/home/model/transaction.dart';
 import 'package:cashio/features/home/model/transactions.dart';
@@ -43,7 +42,7 @@ class TransactionsRepository {
         'amount': transac.amount,
         'type': transac.type,
         'description': transac.description,
-        'transaction_date': transac.transactionDate ?? DateTime.now(),
+        'transaction_date': transac.transactionDate?.toIso8601String(),
       });
     } on PostgrestException catch (e) {
       throw ('Failed to add expense: ${e.message}');
@@ -103,24 +102,6 @@ class TransactionsRepository {
           .toList();
     } catch (e, st) {
       debugPrint('Error fetching monthly totals: $e');
-      debugPrintStack(stackTrace: st);
-      return [];
-    }
-  }
-
-  // get categories of transaction
-  Future<List<CategoryModel>> getCategories(String userId) async {
-    try {
-      final data = await supabase
-          .from('categories')
-          .select('id, user_id, name, type, icon, color')
-          .eq('user_id', userId);
-
-      if (data.isEmpty) return [];
-
-      return data.map<CategoryModel>((e) => CategoryModel.fromJson(e)).toList();
-    } catch (e, st) {
-      debugPrint('Error fetching categories: $e');
       debugPrintStack(stackTrace: st);
       return [];
     }

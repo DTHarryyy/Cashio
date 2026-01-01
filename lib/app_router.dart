@@ -1,4 +1,4 @@
-import 'package:cashio/core/widgets/add_category_page.dart';
+import 'package:cashio/features/home/presentation/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cashio/core/provider/page_index_provider.dart';
@@ -13,7 +13,7 @@ class AppRouter extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     const pages = [
-      AddCategoryPage(),
+      HomePage(),
       AnalyticsPage(),
       BudgetPage(),
       SavingsPage(),

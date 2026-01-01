@@ -26,7 +26,7 @@ class _AllTransactionsState extends ConsumerState<AllTransactions> {
       loading: () => CustomLoading(),
       data: (user) {
         final transactionsAsync = ref.watch(
-          getAllTransactionsProvider(user.userId),
+          getAllTransactionsProvider(user!.userId),
         );
         // TODO: chaneg error message and trhrow to error page
         return transactionsAsync.when(

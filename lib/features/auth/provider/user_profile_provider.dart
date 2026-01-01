@@ -8,7 +8,7 @@ final profileRepositoryProvider = Provider(
   (ref) => ProfileRepository(ref.read(supabaseProvider)),
 );
 
-final profileProvider = FutureProvider<AppUser>((ref) async {
+final profileProvider = FutureProvider<AppUser?>((ref) async {
   final authState = await ref.watch(authStateProvider.future);
   final session = authState.session;
   if (session == null) throw Exception('Not logged in');

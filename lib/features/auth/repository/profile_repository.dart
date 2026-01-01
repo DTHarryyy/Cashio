@@ -6,12 +6,14 @@ class ProfileRepository {
 
   ProfileRepository(this.supabase);
 
-  Future<AppUser> getMyProfile(String uid) async {
+  Future<AppUser?> getMyProfile(String uid) async {
     final data = await supabase
         .from('profiles')
         .select()
         .eq('user_id', uid)
-        .single();
+        .maybeSingle();
+    if (data == null) return null;
+
     return AppUser.fromMap(data);
   }
 }

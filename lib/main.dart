@@ -10,7 +10,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, // or AppColors.background
+      statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: AppColors.surface,
       systemNavigationBarIconBrightness: Brightness.dark,
@@ -22,6 +22,7 @@ Future<void> main() async {
     url: 'https://ibwdzfckngmbtmmtgorg.supabase.co',
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
+  // Supabase.instance.client.auth.signOut();
   runApp(ProviderScope(child: const MyApp()));
 }
 

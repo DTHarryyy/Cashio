@@ -2,6 +2,7 @@ import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/core/widgets/custom_speed_dial.dart';
 import 'package:cashio/features/auth/model/app_user.dart';
+import 'package:cashio/features/auth/presentation/sign_in_page.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/home/model/monthly_total.dart';
 import 'package:cashio/features/home/presentation/pages/all_transactions.dart';
@@ -28,10 +29,12 @@ class _HomePageState extends ConsumerState<HomePage> {
     final userAsync = ref.watch(profileProvider);
 
     return userAsync.when(
-      error: (e, error) => const Center(child: Text('There must be an error')),
+      error: (e, error) =>
+          Scaffold(body: Center(child: Text('There must be an error $e'))),
       loading: () =>
           const Scaffold(body: Center(child: CircularProgressIndicator())),
       data: (user) {
+        if (user == null) return SignInPage();
         final totalPerMonthsAsync = ref.watch(
           monthlyTotalProvider(user.userId),
         );

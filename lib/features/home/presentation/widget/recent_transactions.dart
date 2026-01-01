@@ -24,7 +24,7 @@ class RecentTransactions extends ConsumerWidget {
       data: (user) {
         // transactions  provider
         final transactionAsync = ref.watch(
-          getRecentTransactionsProvider(user.userId),
+          getRecentTransactionsProvider(user!.userId),
         );
 
         return transactionAsync.when(

@@ -149,6 +149,7 @@ class _AddCategoryPageState extends ConsumerState<AddCategoryPage> {
                     _selectedIcon,
                     _selectedColor,
                   );
+                  if (!context.mounted) return;
                   AppSnackBar.success(context, 'added sucessfully');
                 } catch (e) {
                   AppSnackBar.error(context, 'Eror: $e');

@@ -5,6 +5,7 @@ import 'package:cashio/features/home/presentation/widget/stat_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class BalanceCard extends ConsumerWidget {
   final double income;
@@ -21,6 +22,11 @@ class BalanceCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currencyFormatter = NumberFormat.currency(
+      locale: 'en_PH',
+      symbol: '₱',
+      decimalDigits: 2,
+    );
     return Container(
       height: 200,
       decoration: BoxDecoration(
@@ -44,7 +50,7 @@ class BalanceCard extends ConsumerWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '₱${totalBalance.toString()}',
+            currencyFormatter.format(totalBalance).toString(),
             style: GoogleFonts.outfit(
               fontSize: 36,
               fontWeight: FontWeight.w600,
@@ -65,14 +71,14 @@ class BalanceCard extends ConsumerWidget {
                       icon: Icons.arrow_upward,
                       color: AppColors.success,
                       label: 'income',
-                      value: '₱${income.toString()}',
+                      value: currencyFormatter.format(income).toString(),
                     ),
                     const SizedBox(height: 6),
                     StatRow(
                       icon: Icons.arrow_downward,
                       color: AppColors.error,
                       label: 'Expense',
-                      value: '₱${expenses.toString()}',
+                      value: currencyFormatter.format(expenses).toString(),
                     ),
                   ],
                 ),

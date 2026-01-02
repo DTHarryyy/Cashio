@@ -6,7 +6,7 @@ class Budget {
   final DateTime startDate;
   final DateTime endDate;
   final String categoryId;
-
+  final DateTime? createdAt;
   Budget({
     this.budgetId,
     required this.userId,
@@ -15,6 +15,7 @@ class Budget {
     required this.startDate,
     required this.endDate,
     required this.categoryId,
+    this.createdAt,
   });
 
   /// From Supabase JSON
@@ -27,18 +28,7 @@ class Budget {
       startDate: DateTime.parse(data['start_date']),
       endDate: DateTime.parse(data['end_date']),
       categoryId: data['category_uuid'].toString(),
+      createdAt: DateTime.parse(data['created_at']),
     );
-  }
-
-  /// To Supabase JSON — must convert DateTime to String!
-  Map<String, dynamic> toJson() {
-    return {
-      'user_id': userId,
-      'name': name,
-      'total_amount': totalAmount,
-      'start_date': startDate.toIso8601String(), // ✅ convert
-      'end_date': endDate.toIso8601String(), // ✅ convert
-      'category_uuid': categoryId,
-    };
   }
 }

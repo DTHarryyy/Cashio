@@ -127,6 +127,11 @@ class FilteredTransactionContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currencyFormatter = NumberFormat.currency(
+      locale: 'en_PH',
+      symbol: '₱',
+      decimalDigits: 2,
+    );
     return Expanded(
       child: ListView.separated(
         separatorBuilder: (context, index) => SizedBox(height: 5),
@@ -137,9 +142,9 @@ class FilteredTransactionContent extends StatelessWidget {
 
           final category = categoryMap[transaction.cateoryId];
 
-          final amount = transaction.amount;
+          final amount = currencyFormatter.format(transaction.amount);
           final name = transaction.transactionName;
-          final categoryName = category?.name ?? 'No Category ';
+          final categoryName = category?.name ?? 'Other';
           final categoryColor =
               category?.color ?? const Color.fromARGB(255, 221, 158, 135);
           final categoryIcon = category?.icon ?? Icons.help;

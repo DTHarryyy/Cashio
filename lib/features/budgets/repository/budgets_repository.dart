@@ -24,16 +24,4 @@ class BudgetsRepository {
         .order('created_at', ascending: false)
         .map((data) => data.map((e) => Budget.fromJson(e)).toList());
   }
-
-  // Stream<List<BudgetWithCategoryModel>> getAllBudgets(String userId) {
-  //   return supabase
-  //       .from('budget_with_categories_display')
-  //       .stream(primaryKey: ['id'])
-  //       .eq('user_id', userId)
-  //       .order('created_at', ascending: false)
-  //       .map(
-  //         (data) =>
-  //             data.map((e) => BudgetWithCategoryModel.fromMap(e)).toList(),
-  //       );
-  // }
 }

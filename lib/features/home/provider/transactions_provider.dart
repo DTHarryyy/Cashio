@@ -1,5 +1,6 @@
 import 'package:cashio/core/provider/supabase_provider.dart';
 import 'package:cashio/features/home/model/monthly_total.dart';
+import 'package:cashio/features/home/model/transaction.dart';
 import 'package:cashio/features/home/model/transactions.dart';
 import 'package:cashio/features/home/repository/transactions_repository.dart';
 import 'package:cashio/features/home/usecases/adding%20data/add_categories.dart';
@@ -30,7 +31,7 @@ final getAllTransactionUseCaseProvider = Provider(
   (ref) => GetAllTransactions(ref.watch(transactionsRepoProvider)),
 );
 final getAllTransactionsProvider =
-    StreamProvider.family<List<TransactionsDisplay>, String>((ref, userId) {
+    StreamProvider.family<List<Transaction>, String>((ref, userId) {
       final getTransaction = ref.read(getAllTransactionUseCaseProvider);
       return getTransaction(userId);
     });

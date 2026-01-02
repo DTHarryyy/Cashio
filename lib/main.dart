@@ -22,7 +22,6 @@ Future<void> main() async {
     url: 'https://ibwdzfckngmbtmmtgorg.supabase.co',
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
-  // Supabase.instance.client.auth.signOut();
   runApp(ProviderScope(child: const MyApp()));
 }
 

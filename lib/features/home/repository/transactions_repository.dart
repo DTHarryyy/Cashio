@@ -50,15 +50,13 @@ class TransactionsRepository {
   }
 
   // get all transactions of user
-  Stream<List<TransactionsDisplay>> getAllTransactions(String userId) {
+  Stream<List<Transaction>> getAllTransactions(String userId) {
     return supabase
-        .from('transactions_with_category')
-        .stream(primaryKey: ['transaction_id'])
+        .from('transactions')
+        .stream(primaryKey: ['id'])
         .eq('user_id', userId)
         .order('created_at', ascending: false)
-        .map(
-          (data) => data.map((e) => TransactionsDisplay.fromMap(e)).toList(),
-        );
+        .map((data) => data.map((e) => Transaction.fromJson(e)).toList());
   }
   // get 10 recent transactiosn of user
 

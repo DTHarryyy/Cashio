@@ -36,7 +36,7 @@ class TransactionsRepository {
       await supabase.from('transactions').insert({
         'transaction_name': transac.transactionName,
         'user_id': transac.userId,
-        'category_id': transac.cateoryId,
+        'category_id': transac.categoryId,
         'budget_id': transac.budgetId,
         'amount': transac.amount,
         'type': transac.type,

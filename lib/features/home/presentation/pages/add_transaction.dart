@@ -30,7 +30,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
       TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
-  DateTime? _date;
+  DateTime? _date = DateTime.now();
 
   TransactionType _selectedType = TransactionType.expense;
 
@@ -273,8 +273,8 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                                           _transactionNameController.text
                                               .trim(),
                                       userId: user.userId,
-                                      cateoryId: _selectedCategory!.id!,
-                                      budgetId: _selectedBudget!.budgetId!,
+                                      categoryId: _selectedCategory!.id!,
+                                      budgetId: _selectedBudget?.budgetId,
                                       amount: amount,
                                       type: _selectedType.name,
                                       transactionDate: _date,

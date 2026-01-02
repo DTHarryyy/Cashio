@@ -39,7 +39,7 @@ class RecentTransactions extends ConsumerWidget {
           loading: () => Scaffold(body: Center(child: CustomLoading())),
           data: (categoryData) {
             return transactionAsync.when(
-              error: (e, _) => Text('There must be an errorr'),
+              error: (e, _) => Text('There must be an error $e'),
               loading: () => Container(color: AppColors.surface),
               data: (transactions) {
                 if (transactions.isEmpty) {
@@ -70,7 +70,7 @@ class RecentTransactions extends ConsumerWidget {
       itemBuilder: (context, index) {
         final categoryMap = {for (var c in categoryData) c.id: c};
         final transaction = transactions[index];
-        final category = categoryMap[transaction.cateoryId];
+        final category = categoryMap[transaction.categoryId];
         final name = transaction.transactionName.toUpperCase();
         final amount = transaction.amount.toString();
 

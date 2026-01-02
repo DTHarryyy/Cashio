@@ -65,10 +65,12 @@ class BudgetPage extends ConsumerWidget {
                         child: Column(
                           spacing: 10,
                           children: [
-                            BudgetCards(
-                              transactions: transaction,
-                              categoriesData: categoryData,
-                              budgets: budgets,
+                            Expanded(
+                              child: BudgetCards(
+                                transactions: transaction,
+                                categoriesData: categoryData,
+                                budgets: budgets,
+                              ),
                             ),
                           ],
                         ),

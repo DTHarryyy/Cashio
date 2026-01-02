@@ -2,7 +2,7 @@ class Transaction {
   final String? id;
   final String transactionName;
   final String userId;
-  final String cateoryId;
+  final String categoryId;
   final String? budgetId;
   final double amount;
   final String type;
@@ -13,7 +13,7 @@ class Transaction {
     this.id,
     required this.transactionName,
     required this.userId,
-    required this.cateoryId,
+    required this.categoryId,
     this.budgetId,
     required this.amount,
     required this.type,
@@ -26,11 +26,11 @@ class Transaction {
       id: map['id'] as String,
       transactionName: map['transaction_name'] as String,
       userId: map['user_id'] as String,
-      cateoryId: map['category_id'] as String,
-      budgetId: map['budget_id'] as String,
+      categoryId: map['category_id'] as String,
+      budgetId: map['budget_id']?.toString(),
       amount: (map['amount'] as num).toDouble(),
       type: map['type'] as String,
-      description: map['note'] as String?,
+      description: map['note']?.toString(),
       transactionDate: DateTime.parse(map['transaction_date'] as String),
     );
   }

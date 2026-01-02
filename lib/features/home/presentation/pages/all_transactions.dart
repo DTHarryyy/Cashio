@@ -140,7 +140,7 @@ class FilteredTransactionContent extends StatelessWidget {
           final categoryMap = {for (var c in categoryData) c.id: c};
           final transaction = filteredTransaction[index];
 
-          final category = categoryMap[transaction.cateoryId];
+          final category = categoryMap[transaction.categoryId];
 
           final amount = currencyFormatter.format(transaction.amount);
           final name = transaction.transactionName;

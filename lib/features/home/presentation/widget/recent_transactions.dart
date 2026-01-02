@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:cashio/core/constant/app_colors.dart';
+import 'package:cashio/core/model/category_model.dart';
+import 'package:cashio/core/provider/category_provider.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/features/auth/model/app_user.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
-import 'package:cashio/features/home/model/transactions.dart';
+import 'package:cashio/features/home/model/transaction.dart';
 import 'package:cashio/features/home/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,17 +28,31 @@ class RecentTransactions extends ConsumerWidget {
       data: (user) {
         // transactions  provider
         final transactionAsync = ref.watch(
-          getRecentTransactionsProvider(user!.userId),
+          getAllTransactionsProvider(user!.userId),
         );
 
-        return transactionAsync.when(
-          error: (e, _) => Text('There must be an errorr'),
-          loading: () => Container(color: AppColors.surface),
-          data: (transactions) {
-            if (transactions.isEmpty) {
-              return const Text('no expenses yet');
-            }
-            return _transactionsContent(context, transactions, user);
+        final categoryAsync = ref.watch(getCategoriesProvider);
+
+        return categoryAsync.when(
+          error: (e, _) =>
+              Scaffold(body: Center(child: Text('category error: $e'))),
+          loading: () => Scaffold(body: Center(child: CustomLoading())),
+          data: (categoryData) {
+            return transactionAsync.when(
+              error: (e, _) => Text('There must be an errorr'),
+              loading: () => Container(color: AppColors.surface),
+              data: (transactions) {
+                if (transactions.isEmpty) {
+                  return const Text('no expenses yet');
+                }
+                return _transactionsContent(
+                  context,
+                  categoryData,
+                  transactions,
+                  user,
+                );
+              },
+            );
           },
         );
       },
@@ -43,23 +61,27 @@ class RecentTransactions extends ConsumerWidget {
 
   Widget _transactionsContent(
     BuildContext context,
-    List<TransactionsDisplay> transactions,
+    List<CategoryModel> categoryData,
+    List<Transaction> transactions,
     AppUser user,
   ) {
     return ListView.separated(
-      itemCount: transactions.length,
+      itemCount: min(transactions.length, 10),
       itemBuilder: (context, index) {
+        final categoryMap = {for (var c in categoryData) c.id: c};
         final transaction = transactions[index];
-        final name = transaction.name.toUpperCase();
+        final category = categoryMap[transaction.cateoryId];
+        final name = transaction.transactionName.toUpperCase();
         final amount = transaction.amount.toString();
 
-        final formatter = DateFormat('MMM dd yyyy ');
-        final date = formatter.format(transaction.transactionDate);
+        final formatter = DateFormat('MMM dd yyyy');
+        final date = formatter.format(transaction.transactionDate!);
+        final categoryType = transaction.type;
 
-        final categoryType = transaction.categoryType;
-        final categoryName = transaction.categoryName;
-        final categoryIcon = transaction.categoryIcon;
-        final categoryColor = transaction.categoryColor;
+        final categoryName = category?.name ?? 'dsasd';
+        final categoryIcon = category?.icon ?? Icons.help_rounded;
+        final categoryColor =
+            category?.color ?? const Color.fromARGB(255, 221, 158, 135);
 
         final isIncome = categoryType == 'income';
         return Material(

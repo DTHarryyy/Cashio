@@ -1,6 +1,5 @@
 import 'package:cashio/features/home/model/monthly_total.dart';
 import 'package:cashio/features/home/model/transaction.dart';
-import 'package:cashio/features/home/model/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -30,7 +29,7 @@ class TransactionsRepository {
     return categoryRes['id'];
   }
 
-  // get all transactiosn of user
+  // add atransactiosn of user
 
   Future<void> addTransaction(Transaction transac) async {
     try {
@@ -57,18 +56,6 @@ class TransactionsRepository {
         .eq('user_id', userId)
         .order('created_at', ascending: false)
         .map((data) => data.map((e) => Transaction.fromJson(e)).toList());
-  }
-  // get 10 recent transactiosn of user
-
-  Future<List<TransactionsDisplay>> getRecentTransactions(String userId) async {
-    final data = await supabase
-        .from('transactions_with_category')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', ascending: false)
-        .limit(10);
-
-    return data.map((e) => TransactionsDisplay.fromMap(e)).toList();
   }
 
   // get total expenses / income

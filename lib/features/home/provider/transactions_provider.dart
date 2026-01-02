@@ -1,13 +1,11 @@
 import 'package:cashio/core/provider/supabase_provider.dart';
 import 'package:cashio/features/home/model/monthly_total.dart';
 import 'package:cashio/features/home/model/transaction.dart';
-import 'package:cashio/features/home/model/transactions.dart';
 import 'package:cashio/features/home/repository/transactions_repository.dart';
 import 'package:cashio/features/home/usecases/adding%20data/add_categories.dart';
 import 'package:cashio/features/home/usecases/adding%20data/add_transaction.dart';
 import 'package:cashio/features/home/usecases/getting%20data/get_all_transactions.dart';
 import 'package:cashio/features/home/usecases/getting%20data/get_last_3months_total.dart';
-import 'package:cashio/features/home/usecases/getting%20data/get_recent_transaction.dart';
 import 'package:cashio/features/home/usecases/getting%20data/get_total_expenses.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -34,16 +32,6 @@ final getAllTransactionsProvider =
     StreamProvider.family<List<Transaction>, String>((ref, userId) {
       final getTransaction = ref.read(getAllTransactionUseCaseProvider);
       return getTransaction(userId);
-    });
-
-// retrieve 10 recent transactions provider
-final getTransactionsUseCaseProvider = Provider(
-  (ref) => GetRecentTransaction(ref.read(transactionsRepoProvider)),
-);
-final getRecentTransactionsProvider =
-    FutureProvider.family<List<TransactionsDisplay>, String>((ref, userId) {
-      final getTransactions = ref.read(getTransactionsUseCaseProvider);
-      return getTransactions(userId: userId);
     });
 
 // total transaction provider

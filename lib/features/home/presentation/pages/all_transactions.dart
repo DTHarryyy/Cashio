@@ -2,7 +2,6 @@ import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/model/category_model.dart';
 import 'package:cashio/core/provider/category_provider.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
-import 'package:cashio/features/auth/presentation/sign_in_page.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/home/model/transaction.dart';
 import 'package:cashio/features/home/provider/transactions_provider.dart';
@@ -19,14 +18,14 @@ class AllTransactions extends ConsumerStatefulWidget {
 }
 
 class _AllTransactionsState extends ConsumerState<AllTransactions> {
-  List filter = ['All', 'Income', 'Expenses'];
+  List filter = ['All', 'Income', 'Expense'];
   int? selectedvalue = 0;
   @override
   Widget build(BuildContext context) {
     final currentUser = ref.watch(profileProvider);
     return currentUser.when(
       error: (e, _) => Scaffold(body: Text('Youre not loggedin')),
-      loading: () => CustomLoading(),
+      loading: () => Scaffold(body: Center(child: CustomLoading())),
       data: (user) {
         final categoryAsync = ref.watch(getCategoriesProvider);
 
@@ -162,8 +161,7 @@ class FilteredTransactionContent extends StatelessWidget {
                   color: categoryColor.withAlpha(80),
                 ),
 
-                // child: Icon(categoryIcon),
-                child: Icon(Icons.home_rounded),
+                child: Icon(categoryIcon),
               ),
               title: Row(
                 children: [

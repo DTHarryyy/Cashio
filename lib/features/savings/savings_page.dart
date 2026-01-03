@@ -1,5 +1,6 @@
 import 'package:cashio/core/widgets/custom_home_app_bar.dart';
 import 'package:cashio/core/widgets/custom_nav_bar.dart';
+import 'package:cashio/features/home/presentation/widget/custom_drawer.dart';
 import 'package:flutter/material.dart';
 
 class SavingsPage extends StatelessWidget {
@@ -10,7 +11,7 @@ class SavingsPage extends StatelessWidget {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
       key: scaffoldKey,
-
+      drawer: CustomDrawer(),
       bottomNavigationBar: CustomNavBar(),
       appBar: CustomAppBar(scaffoldKey: scaffoldKey),
       body: Center(child: Text('Savings Page')),

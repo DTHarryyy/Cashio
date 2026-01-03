@@ -9,7 +9,6 @@ class CategoryRepository {
     return supabase
         .from('categories')
         .stream(primaryKey: ['id'])
-        .order('created_at', ascending: false)
         .map((data) => data.map((e) => CategoryModel.fromJson(e)).toList());
   }
 }

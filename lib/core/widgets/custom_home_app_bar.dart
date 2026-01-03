@@ -1,7 +1,6 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/widgets/avatar.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -11,9 +10,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: AppColors.surface,
-      title: Text(
-        'Cashio',
-        style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+      title: SizedBox(
+        height: 33,
+        child: Image.asset('assets/images/Fundmap logo 1.png'),
       ),
       centerTitle: true,
       titleSpacing: 0,
@@ -28,7 +27,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actionsPadding: const EdgeInsets.only(right: 10),
       actions: [
-        // TODO: integrate notifications
+        // TODO: integrate notificationsq
         IconButton(
           onPressed: () {},
           icon: Icon(

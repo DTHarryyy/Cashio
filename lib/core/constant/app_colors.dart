@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// Cashio App Colors
 class AppColors {
   // Brand
-  static const Color primary = Colors.blue; // Indigo Blue
+  static const Color primary = Color.fromRGBO(33, 150, 243, 1); // Indigo Blue
   static const Color secondary = Color(0xFF22C55E); // Soft Green
 
   // Backgrounds

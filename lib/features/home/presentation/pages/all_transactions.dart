@@ -178,7 +178,7 @@ class FilteredTransactionContent extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    isIncome ? '+₱$amount' : '-₱$amount',
+                    isIncome ? '+$amount' : '-$amount',
                     style: GoogleFonts.outfit(
                       color: isIncome ? AppColors.success : AppColors.error,
                     ),

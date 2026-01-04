@@ -4,7 +4,7 @@ import 'package:cashio/core/widgets/custom_nav_bar.dart';
 import 'package:cashio/core/widgets/custom_speed_dial.dart';
 import 'package:cashio/features/budgets/presentation/widget/budget_cards.dart';
 import 'package:cashio/features/budgets/provider/budget_provider.dart';
-import 'package:cashio/features/home/presentation/widget/custom_drawer.dart';
+import 'package:cashio/core/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

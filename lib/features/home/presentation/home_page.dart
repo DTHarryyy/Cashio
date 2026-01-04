@@ -7,7 +7,7 @@ import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/home/model/monthly_total.dart';
 import 'package:cashio/features/home/presentation/pages/all_transactions.dart';
 import 'package:cashio/features/home/presentation/widget/balance_card.dart';
-import 'package:cashio/features/home/presentation/widget/custom_drawer.dart';
+import 'package:cashio/core/widgets/custom_drawer.dart';
 import 'package:cashio/core/widgets/custom_home_app_bar.dart';
 import 'package:cashio/core/widgets/custom_nav_bar.dart';
 import 'package:cashio/features/home/presentation/widget/recent_transactions.dart';

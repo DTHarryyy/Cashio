@@ -3,6 +3,7 @@ import 'package:cashio/core/model/category_model.dart';
 import 'package:cashio/core/provider/category_provider.dart';
 import 'package:cashio/core/utils/snackbar.dart';
 import 'package:cashio/core/widgets/custom_date_picker.dart';
+import 'package:cashio/core/widgets/custom_input_field.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/budgets/model/budget.dart';
@@ -19,6 +20,7 @@ class AddBudgetPage extends ConsumerStatefulWidget {
 }
 
 class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
+  final _formKey = GlobalKey<FormState>();
   TextEditingController titleController = TextEditingController();
   TextEditingController amountController = TextEditingController();
   TextEditingController notesController = TextEditingController();
@@ -27,6 +29,7 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
 
   late DateTime startDate;
   late DateTime endDate;
+
   @override
   void initState() {
     super.initState();
@@ -80,100 +83,105 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
                     horizontal: 15,
                     vertical: 10,
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 10,
-                    children: [
-                      CustomInputField(
-                        hint: 'Title',
-                        icon: Icons.title_rounded,
-                        isNumber: false,
-                        controller: titleController,
-                      ),
-                      DropdownButtonFormField(
-                        decoration: InputDecoration(
-                          suffixIcon: Icon(
-                            Icons.arrow_drop_down_rounded,
-                            size: 28,
-                            color: AppColors.primary,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(color: AppColors.primary),
-                          ),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 10,
+                      children: [
+                        CustomInputField(
+                          hint: 'Title',
+                          icon: Icons.title_rounded,
+                          isNumber: false,
+                          controller: titleController,
                         ),
-                        initialValue: categories.first.id,
-                        items: categories.map((data) {
-                          return DropdownMenuItem<String>(
-                            value: data.id,
-                            child: Text(data.name),
-                          );
-                        }).toList(),
-                        onChanged: (value) =>
-                            setState(() => _selectedCategoryId = value),
-                      ),
-                      CustomInputField(
-                        hint: 'Amount',
-                        icon: Icons.attach_money_rounded,
-                        isNumber: true,
-                        controller: amountController,
-                      ),
-                      CustomInputField(
-                        hint: 'Notes(optional)',
-                        icon: Icons.notes_rounded,
-                        isNumber: false,
-                        controller: notesController,
-                      ),
-                      CustomDatePicker(
-                        initialDate: now,
-                        onDateSelected: (value) => endDate = value,
-                      ),
-                      CustomDatePicker(
-                        initialDate: endDate,
-                        onDateSelected: (value) => endDate = value,
-                      ),
-                      // TODO: INTEGRATE FUNCTIONALITY FOR THIS ADDING BUDGET
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                        ),
-                        onPressed: () async {
-                          final double? amountValue = double.tryParse(
-                            amountController.text,
-                          );
-                          try {
-                            await addBudget.call(
-                              Budget(
-                                userId: user!.userId,
-                                name: titleController.text.trim(),
-                                totalAmount: amountValue!,
-                                startDate: startDate,
-                                endDate: endDate,
-                                categoryId: _selectedCategoryId!,
-                              ),
+                        DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            suffixIcon: Icon(
+                              Icons.arrow_drop_down_rounded,
+                              size: 28,
+                              color: AppColors.primary,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: BorderSide(color: AppColors.primary),
+                            ),
+                          ),
+                          initialValue: categories.first.id,
+                          items: categories.map((data) {
+                            return DropdownMenuItem<String>(
+                              value: data.id,
+                              child: Text(data.name),
                             );
+                          }).toList(),
+                          onChanged: (value) =>
+                              setState(() => _selectedCategoryId = value),
+                        ),
+                        CustomInputField(
+                          hint: 'Amount',
+                          icon: Icons.attach_money_rounded,
+                          isNumber: true,
+                          controller: amountController,
+                        ),
+                        CustomInputField(
+                          hint: 'Notes(optional)',
+                          icon: Icons.notes_rounded,
+                          isNumber: false,
+                          controller: notesController,
+                        ),
+                        CustomDatePicker(
+                          initialDate: now,
+                          onDateSelected: (value) => endDate = value,
+                        ),
+                        CustomDatePicker(
+                          initialDate: endDate,
+                          onDateSelected: (value) => endDate = value,
+                        ),
+                        // TODO: INTEGRATE FUNCTIONALITY FOR THIS ADDING BUDGET
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                          ),
+                          onPressed: () async {
+                            final double? amountValue = double.tryParse(
+                              amountController.text,
+                            );
+                            try {
+                              await addBudget.call(
+                                Budget(
+                                  userId: user!.userId,
+                                  name: titleController.text.trim(),
+                                  totalAmount: amountValue!,
+                                  startDate: startDate,
+                                  endDate: endDate,
+                                  categoryId: _selectedCategoryId!,
+                                ),
+                              );
 
-                            if (!context.mounted) return;
-                            AppSnackBar.success(
-                              context,
-                              'Budget added successfully',
-                            );
-                            Navigator.pop(context);
-                          } catch (e) {
-                            debugPrint("AddBudget error $e");
-                          }
-                        },
-                        child: Text(
-                          'Add',
-                          style: GoogleFonts.outfit(color: AppColors.textWhite),
+                              if (!context.mounted) return;
+                              AppSnackBar.success(
+                                context,
+                                'Budget added successfully',
+                              );
+                              Navigator.pop(context);
+                            } catch (e) {
+                              debugPrint("AddBudget error $e");
+                            }
+                          },
+                          child: Text(
+                            'Add',
+                            style: GoogleFonts.outfit(
+                              color: AppColors.textWhite,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -181,45 +189,6 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
           },
         );
       },
-    );
-  }
-}
-
-class CustomInputField extends StatelessWidget {
-  final String hint;
-  final IconData icon;
-  final bool isNumber;
-  final TextEditingController controller;
-
-  const CustomInputField({
-    super.key,
-    required this.hint,
-    required this.icon,
-    required this.isNumber,
-    required this.controller,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      keyboardType: isNumber
-          ? TextInputType.numberWithOptions(decimal: true)
-          : null,
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(horizontal: 15),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25),
-          borderSide: BorderSide(color: AppColors.primary),
-        ),
-        label: Text(hint, style: GoogleFonts.outfit(fontSize: 16)),
-        floatingLabelStyle: GoogleFonts.outfit(
-          fontSize: 13,
-          color: AppColors.textPrimary,
-        ),
-        suffixIcon: Icon(icon, color: AppColors.primary),
-      ),
     );
   }
 }

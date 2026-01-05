@@ -1,10 +1,11 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/model/category_model.dart';
 import 'package:cashio/core/provider/category_provider.dart';
+import 'package:cashio/core/utils/validators.dart';
 import 'package:cashio/core/widgets/custom_date_picker.dart';
+import 'package:cashio/core/widgets/custom_input_field.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/features/budgets/model/budget.dart';
-import 'package:cashio/features/budgets/presentation/pages/add_budget_page.dart';
 import 'package:cashio/features/budgets/provider/budget_provider.dart';
 import 'package:cashio/features/home/model/transaction.dart';
 import 'package:cashio/features/home/presentation/widget/segmented_button.dart';
@@ -65,8 +66,12 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
     final userAsync = ref.watch(profileProvider);
 
+    final titleLabel = _selectedType == TransactionType.income
+        ? 'Income'
+        : 'Expense';
     return userAsync.when(
       error: (e, _) =>
           Scaffold(body: Center(child: Text('Error loading user: $e'))),
@@ -139,170 +144,166 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                   ),
                   body: SingleChildScrollView(
                     padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomInputField(
-                          hint: _selectedType == TransactionType.income
-                              ? 'Income'
-                              : 'Expense',
-                          icon: Icons.title_rounded,
-                          isNumber: false,
-                          controller: _transactionNameController,
-                        ),
-                        const SizedBox(height: 12),
-                        CustomInputField(
-                          hint: 'Amount',
-                          icon: Icons.attach_money_outlined,
-                          isNumber: true,
-                          controller: _amountController,
-                        ),
-                        const SizedBox(height: 12),
-                        CustomInputField(
-                          hint: 'Notes (optional)',
-                          icon: Icons.notes_rounded,
-                          isNumber: false,
-                          controller: _noteController,
-                        ),
-                        const SizedBox(height: 12),
-                        // Category Dropdown
-                        DropdownButtonFormField<CategoryModel>(
-                          initialValue: _selectedCategory,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: AppColors.border,
-                            border: InputBorder.none,
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomInputField(
+                            hint: titleLabel,
+                            icon: Icons.title_rounded,
+                            isNumber: false,
+                            controller: _transactionNameController,
+                            validator: Validators.required(titleLabel),
                           ),
-                          items: _categories.map((category) {
-                            return DropdownMenuItem<CategoryModel>(
-                              value: category,
-                              child: Text(category.name),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            if (value != null) {
-                              setState(() {
-                                _selectedCategory = value;
-                                _selectedBudget = null; // reset budget
-                              });
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        // Budget Dropdown
-                        DropdownButtonFormField<Budget>(
-                          initialValue: _selectedBudget,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: AppColors.border,
-                            border: InputBorder.none,
+                          const SizedBox(height: 12),
+                          CustomInputField(
+                            hint: 'Amount',
+                            icon: Icons.attach_money_outlined,
+                            isNumber: true,
+                            controller: _amountController,
+                            validator: Validators.required('Amount'),
                           ),
-                          hint: Text(
-                            _budgetList
-                                    .where(
-                                      (b) =>
-                                          _selectedCategory != null &&
-                                          b.categoryId == _selectedCategory!.id,
-                                    )
-                                    .isEmpty
-                                ? 'No category available'
-                                : 'Select a budget',
+                          const SizedBox(height: 12),
+                          CustomInputField(
+                            hint: 'Notes (optional)',
+                            icon: Icons.notes_rounded,
+                            isNumber: false,
+                            controller: _noteController,
                           ),
-                          items: _budgetList
-                              .where(
-                                (b) =>
-                                    _selectedCategory != null &&
-                                    b.categoryId == _selectedCategory!.id,
-                              )
-                              .map(
-                                (b) => DropdownMenuItem(
-                                  value: b,
-                                  child: Text(b.name),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (value) {
-                            if (value != null) {
-                              setState(() {
-                                _selectedBudget = value;
-                              });
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        CustomDatePicker(
-                          initialDate: DateTime.now(),
-                          onDateSelected: (value) {
-                            _date = value;
-                          },
-                        ),
-                        const SizedBox(height: 24),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                          ),
-                          onPressed: () async {
-                            setState(() => isLoading = true);
-                            try {
-                              double? amount = double.tryParse(
-                                _amountController.text,
+                          const SizedBox(height: 12),
+                          // Category Dropdown
+                          DropdownButtonFormField<CategoryModel>(
+                            initialValue: _selectedCategory,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: AppColors.border,
+                              border: InputBorder.none,
+                            ),
+                            items: _categories.map((category) {
+                              return DropdownMenuItem<CategoryModel>(
+                                value: category,
+                                child: Text(category.name),
                               );
-                              if (amount == null) {
-                                AppSnackBar.info(
-                                  context,
-                                  'Please enter a valid amount',
-                                );
-                                setState(() => isLoading = false);
-                                return;
+                            }).toList(),
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  _selectedCategory = value;
+                                  _selectedBudget = null; // reset budget
+                                });
                               }
-
-                              if (_selectedCategory == null) {
-                                AppSnackBar.info(
-                                  context,
-                                  'Please select a category',
-                                );
-                                setState(() => isLoading = false);
-                                return;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          // Budget Dropdown
+                          DropdownButtonFormField<Budget>(
+                            initialValue: _selectedBudget,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: AppColors.border,
+                              border: InputBorder.none,
+                            ),
+                            hint: Text(
+                              _budgetList
+                                      .where(
+                                        (b) =>
+                                            _selectedCategory != null &&
+                                            b.categoryId ==
+                                                _selectedCategory!.id,
+                                      )
+                                      .isEmpty
+                                  ? 'No category available'
+                                  : 'Select a budget',
+                            ),
+                            items: _budgetList
+                                .where(
+                                  (b) =>
+                                      _selectedCategory != null &&
+                                      b.categoryId == _selectedCategory!.id,
+                                )
+                                .map(
+                                  (b) => DropdownMenuItem(
+                                    value: b,
+                                    child: Text(b.name),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  _selectedBudget = value;
+                                });
                               }
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          CustomDatePicker(
+                            initialDate: DateTime.now(),
+                            onDateSelected: (value) {
+                              _date = value;
+                            },
+                          ),
+                          const SizedBox(height: 24),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                            ),
+                            onPressed: () async {
+                              setState(() => isLoading = true);
+                              try {
+                                double? amount = double.parse(
+                                  _amountController.text,
+                                );
 
-                              await ref
-                                  .read(addTransactionsProvider)
-                                  .call(
-                                    Transaction(
-                                      transactionName:
-                                          _transactionNameController.text
-                                              .trim(),
-                                      userId: user.userId,
-                                      categoryId: _selectedCategory!.id!,
-                                      budgetId: _selectedBudget?.budgetId,
-                                      amount: amount,
-                                      type: _selectedType.name,
-                                      transactionDate: _date,
-                                    ),
+                                if (_selectedCategory == null) {
+                                  AppSnackBar.info(
+                                    context,
+                                    'Please select a category',
                                   );
-                              if (!context.mounted) return;
-                              AppSnackBar.success(
-                                context,
-                                'Transaction added successfully',
-                              );
-                              Navigator.pop(context);
-                            } catch (e) {
-                              AppSnackBar.error(context, 'Error: $e');
-                            } finally {
-                              setState(() => isLoading = false);
-                            }
-                          },
-                          child: Text(
-                            isLoading
-                                ? 'Adding Transaction...'
-                                : 'Add Transaction',
-                            style: GoogleFonts.outfit(
-                              color: AppColors.textWhite,
-                              fontWeight: FontWeight.w600,
+                                  setState(() => isLoading = false);
+                                  return;
+                                }
+
+                                await ref
+                                    .read(addTransactionsProvider)
+                                    .call(
+                                      Transaction(
+                                        transactionName:
+                                            _transactionNameController.text
+                                                .trim(),
+                                        userId: user.userId,
+                                        categoryId: _selectedCategory!.id!,
+                                        budgetId: _selectedBudget?.budgetId,
+                                        amount: amount,
+                                        type: _selectedType.name,
+                                        transactionDate: _date,
+                                      ),
+                                    );
+                                if (!context.mounted) return;
+                                AppSnackBar.success(
+                                  context,
+                                  'Transaction added successfully',
+                                );
+                                Navigator.pop(context);
+                              } catch (e) {
+                                AppSnackBar.error(context, 'Error: $e');
+                              } finally {
+                                setState(() => isLoading = false);
+                              }
+                            },
+                            child: Text(
+                              isLoading
+                                  ? 'Adding Transaction...'
+                                  : 'Add Transaction',
+                              style: GoogleFonts.outfit(
+                                color: AppColors.textWhite,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );

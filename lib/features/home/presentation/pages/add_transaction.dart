@@ -197,7 +197,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                             items: _categories,
                             labelBuilder: (e) => e.name,
                             validator: (value) {
-                              if (value == null) {
+                              if (_selectedCategory == null) {
                                 return 'Please select a category';
                               }
                               return null;

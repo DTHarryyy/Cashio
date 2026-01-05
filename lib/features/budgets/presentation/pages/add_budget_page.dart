@@ -40,14 +40,13 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
   }
 
   List<CategoryModel> categories = [];
-  String? _selectedCategoryId;
+  CategoryModel? _selectedCategoryId;
   void updateCategories(List<CategoryModel> allCategories) {
     final filtered = allCategories
         .where((c) => c.type == 'expense' && c.name.isNotEmpty)
         .toList();
     setState(() {
       categories = filtered;
-      _selectedCategoryId = filtered.isNotEmpty ? filtered.first.id : null;
     });
   }
 
@@ -107,7 +106,7 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
                           items: categories,
                           labelBuilder: (e) => e.name,
                           validator: (value) {
-                            if (value == null) {
+                            if (_selectedCategoryId == null) {
                               return 'Please select a category';
                             }
                             return null;
@@ -161,7 +160,7 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
                                   totalAmount: amountValue,
                                   startDate: startDate,
                                   endDate: endDate,
-                                  categoryId: _selectedCategoryId!,
+                                  categoryId: _selectedCategoryId!.id!,
                                 ),
                               );
 

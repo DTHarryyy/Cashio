@@ -22,6 +22,7 @@ class CustomDropdown<T> extends StatelessWidget {
     return DropdownButtonFormField<T>(
       validator: validator,
       decoration: InputDecoration(
+        errorStyle: GoogleFonts.outfit(fontSize: 13, color: AppColors.error),
         suffixIcon: Icon(
           Icons.arrow_drop_down_rounded,
           size: 28,
@@ -33,6 +34,7 @@ class CustomDropdown<T> extends StatelessWidget {
           borderSide: BorderSide(color: AppColors.primary),
         ),
       ),
+
       hint: hint == null ? null : Text(hint!, style: GoogleFonts.outfit()),
       items: items.map((e) {
         return DropdownMenuItem(value: e, child: Text(labelBuilder(e)));

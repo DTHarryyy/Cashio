@@ -2,7 +2,9 @@ import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/model/category_model.dart';
 import 'package:cashio/core/provider/category_provider.dart';
 import 'package:cashio/core/utils/snackbar.dart';
+import 'package:cashio/core/utils/validators.dart';
 import 'package:cashio/core/widgets/custom_date_picker.dart';
+import 'package:cashio/core/widgets/custom_dropdown.dart';
 import 'package:cashio/core/widgets/custom_input_field.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
@@ -96,37 +98,28 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
                           icon: Icons.title_rounded,
                           isNumber: false,
                           controller: titleController,
+                          validator: Validators.required('Title'),
                         ),
-                        DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            suffixIcon: Icon(
-                              Icons.arrow_drop_down_rounded,
-                              size: 28,
-                              color: AppColors.primary,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide(color: AppColors.primary),
-                            ),
-                          ),
-                          initialValue: categories.first.id,
-                          items: categories.map((data) {
-                            return DropdownMenuItem<String>(
-                              value: data.id,
-                              child: Text(data.name),
-                            );
-                          }).toList(),
-                          onChanged: (value) =>
+                        CustomDropdown(
+                          valueChange: (value) =>
                               setState(() => _selectedCategoryId = value),
+                          hint: 'Please select category',
+                          items: categories,
+                          labelBuilder: (e) => e.name,
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please select a category';
+                            }
+                            return null;
+                          },
                         ),
+
                         CustomInputField(
                           hint: 'Amount',
                           icon: Icons.attach_money_rounded,
                           isNumber: true,
                           controller: amountController,
+                          validator: Validators.numbers('Amount'),
                         ),
                         CustomInputField(
                           hint: 'Notes(optional)',
@@ -135,21 +128,18 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
                           controller: notesController,
                         ),
                         CustomDatePickerFormField(
-                          initialDate: now,
                           onDateSelected: (value) => startDate = value,
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Please select date';
-                            }
-                            if (value.isBefore(now)) {
-                              return 'Please select a future date';
-                            }
-                            return null;
-                          },
+                          validator: Validators.dateValidator(
+                            'Start date',
+                            true,
+                          ),
                         ),
                         CustomDatePickerFormField(
-                          initialDate: endDate,
                           onDateSelected: (value) => endDate = value,
+                          validator: Validators.dateValidator(
+                            'End date',
+                            false,
+                          ),
                         ),
                         // TODO: INTEGRATE FUNCTIONALITY FOR THIS ADDING BUDGET
                         ElevatedButton(
@@ -157,15 +147,18 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
                             backgroundColor: AppColors.primary,
                           ),
                           onPressed: () async {
-                            final double? amountValue = double.tryParse(
-                              amountController.text,
-                            );
+                            if (!_formKey.currentState!.validate()) {
+                              return;
+                            }
                             try {
+                              final amountValue = double.parse(
+                                amountController.text,
+                              );
                               await addBudget.call(
                                 Budget(
                                   userId: user!.userId,
                                   name: titleController.text.trim(),
-                                  totalAmount: amountValue!,
+                                  totalAmount: amountValue,
                                   startDate: startDate,
                                   endDate: endDate,
                                   categoryId: _selectedCategoryId!,

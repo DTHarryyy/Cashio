@@ -3,6 +3,7 @@ import 'package:cashio/core/model/category_model.dart';
 import 'package:cashio/core/provider/category_provider.dart';
 import 'package:cashio/core/utils/validators.dart';
 import 'package:cashio/core/widgets/custom_date_picker.dart';
+import 'package:cashio/core/widgets/custom_dropdown.dart';
 import 'package:cashio/core/widgets/custom_input_field.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/features/budgets/model/budget.dart';
@@ -39,7 +40,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
   late List<Budget> _budgetList;
   Budget? _selectedBudget;
   bool isLoading = false;
-
+  late List<Budget> selectedCategoryBudget = [];
   // Category dropdown variables
   List<CategoryModel> _categories = [];
   CategoryModel? _selectedCategory;
@@ -59,8 +60,15 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
 
     setState(() {
       _categories = filtered;
-      _selectedCategory = filtered.isNotEmpty ? filtered.first : null;
       _selectedBudget = null;
+    });
+  }
+
+  void updateBudgetsAvailable(CategoryModel selectedCategory) {
+    setState(() {
+      selectedCategoryBudget = _budgetList
+          .where((b) => b.categoryId == selectedCategory.id)
+          .toList();
     });
   }
 
@@ -173,73 +181,47 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                           ),
                           const SizedBox(height: 12),
                           // Category Dropdown
-                          DropdownButtonFormField<CategoryModel>(
-                            initialValue: _selectedCategory,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.border,
-                              border: InputBorder.none,
-                            ),
-                            items: _categories.map((category) {
-                              return DropdownMenuItem<CategoryModel>(
-                                value: category,
-                                child: Text(category.name),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
+                          CustomDropdown(
+                            valueChange: (value) {
                               if (value != null) {
                                 setState(() {
                                   _selectedCategory = value;
-                                  _selectedBudget = null; // reset budget
+                                  _selectedBudget = null;
+                                  updateBudgetsAvailable(value);
                                 });
                               }
                             },
+                            hint: _selectedCategory != null
+                                ? _selectedCategory?.name
+                                : 'Select category',
+                            items: _categories,
+                            labelBuilder: (e) => e.name,
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please select a category';
+                              }
+                              return null;
+                            },
                           ),
+
                           const SizedBox(height: 10),
                           // Budget Dropdown
-                          DropdownButtonFormField<Budget>(
-                            initialValue: _selectedBudget,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.border,
-                              border: InputBorder.none,
-                            ),
-                            hint: Text(
-                              _budgetList
-                                      .where(
-                                        (b) =>
-                                            _selectedCategory != null &&
-                                            b.categoryId ==
-                                                _selectedCategory!.id,
-                                      )
-                                      .isEmpty
-                                  ? 'No category available'
-                                  : 'Select a budget',
-                            ),
-                            items: _budgetList
-                                .where(
-                                  (b) =>
-                                      _selectedCategory != null &&
-                                      b.categoryId == _selectedCategory!.id,
-                                )
-                                .map(
-                                  (b) => DropdownMenuItem(
-                                    value: b,
-                                    child: Text(b.name),
-                                  ),
-                                )
-                                .toList(),
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() {
-                                  _selectedBudget = value;
-                                });
-                              }
-                            },
+                          CustomDropdown(
+                            valueChange: (value) =>
+                                setState(() => _selectedBudget = value),
+                            hint: _selectedBudget != null
+                                ? _selectedBudget!.name
+                                : selectedCategoryBudget.isEmpty
+                                ? _selectedCategory == null
+                                      ? 'No budgets yet (optional)'
+                                      : 'No budgets yet for ${_selectedCategory!.name} (optional)'
+                                : "Select a budget (optional)",
+                            items: selectedCategoryBudget,
+                            labelBuilder: (e) => e.name,
                           ),
+
                           const SizedBox(height: 12),
                           CustomDatePickerFormField(
-                            initialDate: DateTime.now(),
                             onDateSelected: (value) {
                               _date = value;
                             },
@@ -254,6 +236,9 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                               backgroundColor: AppColors.primary,
                             ),
                             onPressed: () async {
+                              if (!formKey.currentState!.validate()) {
+                                return;
+                              }
                               setState(() => isLoading = true);
                               try {
                                 double? amount = double.parse(

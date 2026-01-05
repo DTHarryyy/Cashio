@@ -46,7 +46,7 @@ class CustomDatePickerFormField extends FormField<DateTime> {
                    ),
                    side: BorderSide(
                      color: state.hasError
-                         ? Theme.of(state.context).colorScheme.error
+                         ? AppColors.error
                          : const Color.fromARGB(255, 123, 122, 122),
                    ),
                    shape: RoundedRectangleBorder(
@@ -77,9 +77,9 @@ class CustomDatePickerFormField extends FormField<DateTime> {
                    padding: const EdgeInsets.only(top: 5, left: 16),
                    child: Text(
                      state.errorText!,
-                     style: TextStyle(
-                       color: Theme.of(state.context).colorScheme.error,
-                       fontSize: 12,
+                     style: GoogleFonts.outfit(
+                       color: AppColors.error,
+                       fontSize: 13,
                      ),
                    ),
                  ),

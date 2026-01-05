@@ -28,7 +28,7 @@ class CustomInputField extends StatelessWidget {
 
       decoration: InputDecoration(
         contentPadding: EdgeInsets.symmetric(horizontal: 15),
-
+        errorStyle: GoogleFonts.outfit(fontSize: 13, color: AppColors.error),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25),

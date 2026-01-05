@@ -62,6 +62,7 @@ class _AddGoalsContentState extends ConsumerState<AddGoalsContent> {
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Form(
             key: _formKey,
+
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 10,

@@ -80,22 +80,27 @@ class _AddGoalsContentState extends ConsumerState<AddGoalsContent> {
                   controller: targetAmountController,
                   validator: Validators.numbers('Taget amount'),
                 ),
+                CustomDropdown(
+                  valueChange: (value) =>
+                      setState(() => selectedPriorityLevel = value),
+                  hint: 'Please select priority level',
+                  items: PriorityLevel.values,
+                  labelBuilder: (e) => e.name,
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a priority level';
+                    }
+                    return null;
+                  },
+                ),
                 CustomInputField(
                   hint: 'Notes(optional)',
                   icon: Icons.notes_rounded,
                   isNumber: false,
                   controller: notesController,
                 ),
-                CustomDropdown(
-                  valueChange: (value) =>
-                      setState(() => selectedPriorityLevel = value),
-                  hint: 'Priority level',
-                  items: PriorityLevel.values,
-                  labelBuilder: (e) => e.name,
-                  value: PriorityLevel.high,
-                ),
-                CustomDatePicker(
-                  initialDate: deadline!,
+                CustomDatePickerFormField(
+                  validator: Validators.dateValidator('Deadline', false),
                   onDateSelected: (value) => setState(() => deadline = value),
                 ),
                 Visibility(
@@ -108,10 +113,6 @@ class _AddGoalsContentState extends ConsumerState<AddGoalsContent> {
                   onPressed: () async {
                     try {
                       if (!_formKey.currentState!.validate()) {
-                        return;
-                      }
-                      if (deadline == null) {
-                        AppSnackBar.error(context, 'Input deadline');
                         return;
                       }
                       final amount = double.parse(targetAmountController.text);

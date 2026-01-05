@@ -25,8 +25,10 @@ class CustomInputField extends StatelessWidget {
       keyboardType: isNumber
           ? TextInputType.numberWithOptions(decimal: true)
           : null,
+
       decoration: InputDecoration(
         contentPadding: EdgeInsets.symmetric(horizontal: 15),
+
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25),

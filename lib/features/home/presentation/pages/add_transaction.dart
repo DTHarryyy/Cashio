@@ -238,11 +238,15 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                             },
                           ),
                           const SizedBox(height: 12),
-                          CustomDatePicker(
+                          CustomDatePickerFormField(
                             initialDate: DateTime.now(),
                             onDateSelected: (value) {
                               _date = value;
                             },
+                            validator: Validators.dateValidator(
+                              'Deadline',
+                              false,
+                            ),
                           ),
                           const SizedBox(height: 24),
                           ElevatedButton(

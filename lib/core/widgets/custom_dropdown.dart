@@ -4,23 +4,23 @@ import 'package:google_fonts/google_fonts.dart';
 
 class CustomDropdown<T> extends StatelessWidget {
   final ValueChanged valueChange;
-  final T? value;
   final List<T> items;
   final String? hint;
   final String Function(T item) labelBuilder;
+  final String? Function(T?)? validator;
   const CustomDropdown({
     super.key,
     required this.valueChange,
     required this.hint,
     required this.items,
     required this.labelBuilder,
-    required this.value,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<T>(
-      initialValue: value,
+      validator: validator,
       decoration: InputDecoration(
         suffixIcon: Icon(
           Icons.arrow_drop_down_rounded,

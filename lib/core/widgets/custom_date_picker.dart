@@ -3,69 +3,88 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class CustomDatePicker extends StatefulWidget {
-  final DateTime initialDate;
-  final ValueChanged<DateTime> onDateSelected;
-  final DateTime? firstDate; // optional
-  final DateTime? lastDate; // optional
-
-  const CustomDatePicker({
+class CustomDatePickerFormField extends FormField<DateTime> {
+  CustomDatePickerFormField({
     super.key,
-    required this.initialDate,
-    required this.onDateSelected,
-    this.firstDate,
-    this.lastDate,
-  });
+    super.validator,
+    DateTime? initialDate,
+    required ValueChanged<DateTime> onDateSelected,
+    DateTime? firstDate,
+    DateTime? lastDate,
+    String? hintText,
+    bool autovalidate = false,
+  }) : super(
+         initialValue: initialDate,
+         autovalidateMode: autovalidate
+             ? AutovalidateMode.always
+             : AutovalidateMode.disabled,
+         builder: (field) {
+           // No cast needed
+           final state = field;
 
-  @override
-  State<CustomDatePicker> createState() => _CustomDatePickerState();
-}
-
-class _CustomDatePickerState extends State<CustomDatePicker> {
-  late DateTime dateSelected;
-
-  @override
-  void initState() {
-    super.initState();
-    dateSelected = widget.initialDate; // initialize
-  }
-
-  Future<void> _selectDate() async {
-    final now = DateTime.now();
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: dateSelected,
-      firstDate: widget.firstDate ?? DateTime(now.year - 5),
-      lastDate: widget.lastDate ?? DateTime(now.year + 5),
-    );
-    if (pickedDate != null) {
-      setState(() => dateSelected = pickedDate);
-      widget.onDateSelected(pickedDate);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: _selectDate,
-      style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            DateFormat('dd / MMM / yyyy').format(dateSelected),
-            style: GoogleFonts.outfit(
-              fontSize: 16,
-              color: AppColors.textSecondary,
-            ),
-          ),
-          const SizedBox(width: 8),
-          const Icon(Icons.calendar_month, color: AppColors.primary),
-        ],
-      ),
-    );
-  }
+           return Column(
+             crossAxisAlignment: CrossAxisAlignment.start,
+             children: [
+               OutlinedButton(
+                 onPressed: () async {
+                   final now = DateTime.now();
+                   final pickedDate = await showDatePicker(
+                     context: state.context,
+                     initialDate: state.value ?? initialDate ?? now,
+                     firstDate: firstDate ?? DateTime(now.year - 5),
+                     lastDate: lastDate ?? DateTime(now.year + 5),
+                   );
+                   if (pickedDate != null) {
+                     state.didChange(pickedDate);
+                     onDateSelected(pickedDate);
+                   }
+                 },
+                 style: OutlinedButton.styleFrom(
+                   padding: const EdgeInsets.symmetric(
+                     horizontal: 16,
+                     vertical: 10,
+                   ),
+                   side: BorderSide(
+                     color: state.hasError
+                         ? Theme.of(state.context).colorScheme.error
+                         : const Color.fromARGB(255, 123, 122, 122),
+                   ),
+                   shape: RoundedRectangleBorder(
+                     borderRadius: BorderRadius.circular(30),
+                   ),
+                 ),
+                 child: Row(
+                   mainAxisSize: MainAxisSize.min,
+                   children: [
+                     Text(
+                       state.value != null
+                           ? DateFormat('dd / MMM / yyyy').format(state.value!)
+                           : hintText ?? 'Select a date',
+                       style: GoogleFonts.outfit(
+                         fontSize: 16,
+                         color: state.value != null
+                             ? AppColors.textSecondary
+                             : const Color.fromARGB(255, 62, 63, 64),
+                       ),
+                     ),
+                     const SizedBox(width: 8),
+                     const Icon(Icons.calendar_month, color: AppColors.primary),
+                   ],
+                 ),
+               ),
+               if (state.hasError)
+                 Padding(
+                   padding: const EdgeInsets.only(top: 5, left: 16),
+                   child: Text(
+                     state.errorText!,
+                     style: TextStyle(
+                       color: Theme.of(state.context).colorScheme.error,
+                       fontSize: 12,
+                     ),
+                   ),
+                 ),
+             ],
+           );
+         },
+       );
 }

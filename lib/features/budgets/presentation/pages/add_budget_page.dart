@@ -134,11 +134,20 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
                           isNumber: false,
                           controller: notesController,
                         ),
-                        CustomDatePicker(
+                        CustomDatePickerFormField(
                           initialDate: now,
-                          onDateSelected: (value) => endDate = value,
+                          onDateSelected: (value) => startDate = value,
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please select date';
+                            }
+                            if (value.isBefore(now)) {
+                              return 'Please select a future date';
+                            }
+                            return null;
+                          },
                         ),
-                        CustomDatePicker(
+                        CustomDatePickerFormField(
                           initialDate: endDate,
                           onDateSelected: (value) => endDate = value,
                         ),

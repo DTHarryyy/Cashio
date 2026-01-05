@@ -33,7 +33,6 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        useMaterial3: true,
         appBarTheme: const AppBarTheme(
           elevation: 0,
           surfaceTintColor: Colors.transparent,

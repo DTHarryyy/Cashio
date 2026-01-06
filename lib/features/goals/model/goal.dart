@@ -1,5 +1,5 @@
 class Goal {
-  final String? budgetId;
+  final String? goalId;
   final String title;
   final String userId;
   final String priorityLevel;
@@ -9,7 +9,7 @@ class Goal {
   final String? status;
   final DateTime? dateCreated;
   Goal({
-    this.budgetId,
+    this.goalId,
     required this.title,
     required this.userId,
     required this.targetAmount,
@@ -22,14 +22,19 @@ class Goal {
 
   factory Goal.fromJson(Map<String, dynamic> data) {
     return Goal(
-      budgetId: data['id'],
-      title: data['title'] as String,
-      userId: data['user_id'] as String,
-      targetAmount: (data['target_amount'] as num).toDouble(),
-      priorityLevel: data['priority_level'] as String,
+      goalId: data['id']?.toString(),
+      title: data['title'] ?? '',
+      userId: data['user_id'] ?? '',
+      targetAmount: (data['target_amount'] ?? 0).toDouble(),
+      priorityLevel: data['priority_level'] ?? '',
       notes: data['notes']?.toString(),
-      deadline: DateTime.parse(data['deadline'] as String),
-      dateCreated: data['created_at'],
+      status: data['status']?.toString(),
+      deadline: data['deadline'] != null
+          ? DateTime.tryParse(data['deadline'].toString()) ?? DateTime.now()
+          : DateTime.now(),
+      dateCreated: data['created_at'] != null
+          ? DateTime.tryParse(data['created_at'].toString())
+          : null,
     );
   }
 }

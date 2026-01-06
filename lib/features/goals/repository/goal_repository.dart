@@ -15,4 +15,13 @@ class GoalRepository {
       'notes': goal.notes,
     });
   }
+
+  Stream<List<Goal>> getGoals(String userId) {
+    return supabase
+        .from('goals')
+        .stream(primaryKey: ['id'])
+        .eq('user_id', userId)
+        .order('created_at', ascending: false)
+        .map((data) => data.map((e) => Goal.fromJson(e)).toList());
+  }
 }

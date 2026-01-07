@@ -1,8 +1,11 @@
 import 'package:cashio/core/constant/app_colors.dart';
+import 'package:cashio/core/dialog/custom_dialog.dart';
+import 'package:cashio/core/utils/snackbar.dart';
 import 'package:cashio/core/widgets/custom_home_app_bar.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/core/widgets/custom_nav_bar.dart';
 import 'package:cashio/core/widgets/custom_drawer.dart';
+import 'package:cashio/core/widgets/custom_speed_dial.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/goals/model/goal.dart';
 import 'package:cashio/features/goals/provider/goal_provider.dart';
@@ -35,6 +38,7 @@ class GoalsPage extends ConsumerWidget {
               appBar: CustomAppBar(scaffoldKey: scaffoldKey),
               drawer: CustomDrawer(),
               bottomNavigationBar: CustomNavBar(),
+              floatingActionButton: CustomSpeedDial(),
               body: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 15,
@@ -50,12 +54,12 @@ class GoalsPage extends ConsumerWidget {
   }
 }
 
-class GoalsPageContent extends StatelessWidget {
+class GoalsPageContent extends ConsumerWidget {
   final List<Goal> goals;
   const GoalsPageContent({super.key, required this.goals});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final dateFormmater = DateFormat('MMM/dd/yyy');
 
     final currencyFormatter = NumberFormat.currency(
@@ -80,7 +84,7 @@ class GoalsPageContent extends StatelessWidget {
         final deadline = dateFormmater.format(goal.deadline);
         final priorityLevel = goal.priorityLevel;
         // final status = goal.status;
-        // final budgetId = goal.budgetId;
+        final goalId = goal.goalId;
 
         int daysLeft = goal.deadline.difference(DateTime.now()).inDays;
         return Container(
@@ -113,9 +117,75 @@ class GoalsPageContent extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.more_vert_rounded),
+                  MenuAnchor(
+                    alignmentOffset: Offset(-65, 0),
+
+                    builder:
+                        (
+                          BuildContext context,
+                          MenuController controller,
+                          Widget? child,
+                        ) {
+                          return IconButton(
+                            icon: Icon(
+                              controller.isOpen
+                                  ? Icons.close_rounded
+                                  : Icons.more_horiz_rounded,
+                              size: 18,
+                            ),
+                            onPressed: () {
+                              controller.isOpen
+                                  ? controller.close()
+                                  : controller.open();
+                            },
+                          );
+                        },
+                    style: MenuStyle(
+                      padding: WidgetStatePropertyAll(
+                        EdgeInsets.symmetric(vertical: 0),
+                      ),
+                      backgroundColor: WidgetStatePropertyAll(
+                        AppColors.surface,
+                      ),
+                    ),
+                    menuChildren: [
+                      MenuItemButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Contribute to goal',
+                          style: GoogleFonts.outfit(),
+                        ),
+                      ),
+                      MenuItemButton(
+                        onPressed: () {},
+                        child: Text('Edit goal', style: GoogleFonts.outfit()),
+                      ),
+                      MenuItemButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) => CustomDialog(
+                              title: 'Delete goal',
+                              btnText: 'Delete',
+                              onConfirm: () async {
+                                try {
+                                  ref.read(deleteGoalProvider).call(goalId!);
+                                  AppSnackBar.success(
+                                    context,
+                                    'Goal deleted successfully',
+                                  );
+                                  Navigator.pop(context);
+                                } catch (e) {
+                                  debugPrint('Delete goal error: $e');
+                                }
+                              },
+                            ),
+                          );
+                        },
+                        child: Text('Delete goal', style: GoogleFonts.outfit()),
+                      ),
+                    ],
                   ),
                 ],
               ),

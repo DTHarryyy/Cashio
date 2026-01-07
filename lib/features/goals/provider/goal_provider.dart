@@ -2,6 +2,7 @@ import 'package:cashio/core/provider/supabase_provider.dart';
 import 'package:cashio/features/goals/model/goal.dart';
 import 'package:cashio/features/goals/repository/goal_repository.dart';
 import 'package:cashio/features/goals/usecase/add_goal.dart';
+import 'package:cashio/features/goals/usecase/delete_goal.dart';
 import 'package:cashio/features/goals/usecase/get_goals.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,3 +25,8 @@ final getGoalProvider = StreamProvider.family<List<Goal>, String>((
   final useCase = ref.read(getGoalUseCaseProv);
   return useCase(userId);
 });
+
+// delete goal use case provider
+final deleteGoalProvider = Provider(
+  (ref) => DeleteGoal(ref.read(goalRepoProvider)),
+);

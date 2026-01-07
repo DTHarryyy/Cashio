@@ -9,7 +9,7 @@ class GoalRepository {
     await supabase.from('goals').insert({
       'title': goal.title,
       'user_id': goal.userId,
-      'priority': goal.priorityLevel,
+      'priority_level': goal.priorityLevel,
       'deadline': goal.deadline.toIso8601String(),
       'target_amount': goal.targetAmount,
       'notes': goal.notes,
@@ -23,5 +23,9 @@ class GoalRepository {
         .eq('user_id', userId)
         .order('created_at', ascending: false)
         .map((data) => data.map((e) => Goal.fromJson(e)).toList());
+  }
+
+  Future<void> deleteGoal(String goalId) async {
+    await supabase.from('goals').delete().eq('id', goalId);
   }
 }

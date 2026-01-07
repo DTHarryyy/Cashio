@@ -5,6 +5,8 @@ class BudgetsRepository {
   final SupabaseClient supabase;
   BudgetsRepository(this.supabase);
 
+  // create budget
+
   Future<void> addNewBudget(Budget budget) async {
     await supabase.from('budgets').insert({
       'user_id': budget.userId,
@@ -15,6 +17,7 @@ class BudgetsRepository {
       'category_uuid': budget.categoryId,
     });
   }
+  // read budget
 
   Stream<List<Budget>> getBudget(String userId) {
     return supabase
@@ -23,5 +26,25 @@ class BudgetsRepository {
         .eq('user_id', userId)
         .order('created_at', ascending: false)
         .map((data) => data.map((e) => Budget.fromJson(e)).toList());
+  }
+
+  // update budget
+  Future<void> updateBudget(Budget budget) async {
+    await supabase
+        .from('budgets')
+        .update({
+          'name': budget.name,
+          'total_amount': budget.totalAmount,
+          'start_date': budget.startDate.toIso8601String(),
+          'end_date': budget.endDate.toIso8601String(),
+          'category_uuid': budget.categoryId,
+        })
+        .eq('id', budget.budgetId!);
+  }
+
+  // delete budget
+
+  Future<void> deleteBudget(String budgetId) async {
+    await supabase.from('budgets').delete().eq('id', budgetId);
   }
 }

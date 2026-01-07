@@ -1,12 +1,15 @@
 import 'package:cashio/core/constant/app_colors.dart';
+import 'package:cashio/core/dialog/custom_dialog.dart';
 import 'package:cashio/core/model/category_model.dart';
 import 'package:cashio/features/budgets/model/budget.dart';
+import 'package:cashio/features/budgets/provider/budget_provider.dart';
 import 'package:cashio/features/home/model/transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class BudgetCards extends StatelessWidget {
+class BudgetCards extends ConsumerWidget {
   final List<Transaction> transactions;
   final List<CategoryModel> categoriesData;
   final List<Budget> budgets;
@@ -18,7 +21,7 @@ class BudgetCards extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final categoryMap = {for (var c in categoriesData) c.id: c};
 
     final dateFormatter = DateFormat('MMM dd yyyy');
@@ -93,9 +96,65 @@ class BudgetCards extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.more_vert_rounded),
+                  MenuAnchor(
+                    alignmentOffset: Offset(-65, 0),
+
+                    builder:
+                        (
+                          BuildContext context,
+                          MenuController controller,
+                          Widget? child,
+                        ) {
+                          return IconButton(
+                            icon: Icon(
+                              controller.isOpen
+                                  ? Icons.close_rounded
+                                  : Icons.more_horiz_rounded,
+                              size: 18,
+                            ),
+                            onPressed: () {
+                              controller.isOpen
+                                  ? controller.close()
+                                  : controller.open();
+                            },
+                          );
+                        },
+                    style: MenuStyle(
+                      padding: WidgetStatePropertyAll(
+                        EdgeInsets.symmetric(vertical: 0),
+                      ),
+                      backgroundColor: WidgetStatePropertyAll(
+                        AppColors.surface,
+                      ),
+                    ),
+                    menuChildren: [
+                      MenuItemButton(
+                        onPressed: () {},
+                        child: Text('Edit budget', style: GoogleFonts.outfit()),
+                      ),
+                      MenuItemButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => CustomDialog(
+                              title: 'Delete Budget',
+                              btnText: 'Delete',
+                              onConfirm: () async {
+                                await ref
+                                    .read(deleteBudgetProvider)
+                                    .call(budget.budgetId!);
+                                if (!context.mounted) return;
+                                Navigator.pop(context);
+                              },
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Delete budget',
+                          style: GoogleFonts.outfit(),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

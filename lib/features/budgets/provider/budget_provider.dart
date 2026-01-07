@@ -5,18 +5,26 @@ import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/budgets/model/budget.dart';
 import 'package:cashio/features/budgets/repository/budgets_repository.dart';
 import 'package:cashio/features/budgets/use_case/add_budget.dart';
+import 'package:cashio/features/budgets/use_case/delete_budget.dart';
 import 'package:cashio/features/budgets/use_case/get_budgets.dart';
+import 'package:cashio/features/budgets/use_case/update_budget.dart';
 import 'package:cashio/features/home/model/transaction.dart';
 import 'package:cashio/features/home/provider/transactions_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// budget repository provider
+
 final budgetRepoProvider = Provider(
   (ref) => BudgetsRepository(ref.watch(supabaseProvider)),
 );
+
+// add budget repository provider
+
 final addNewBudgetProvider = Provider(
   (ref) => AddBudget(ref.read(budgetRepoProvider)),
 );
-// get budgets
+
+// get budgets provider
 final getBudgetUseCaseProvider = Provider(
   (ref) => GetBudgets(ref.read(budgetRepoProvider)),
 );
@@ -73,3 +81,13 @@ final budgetPageProvider =
         },
       );
     });
+
+// update budget repository provider
+final updateBudgetProvider = Provider(
+  (ref) => UpdateBudget(ref.read(budgetRepoProvider)),
+);
+
+// delete budget repository provider
+final deleteBudgetProvider = Provider(
+  (ref) => DeleteBudget(ref.read(budgetRepoProvider)),
+);

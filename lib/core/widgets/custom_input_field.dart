@@ -8,6 +8,7 @@ class CustomInputField extends StatelessWidget {
   final bool isNumber;
   final TextEditingController controller;
   final String? Function(String?)? validator;
+  final String? initialValue;
   const CustomInputField({
     super.key,
     required this.hint,
@@ -15,6 +16,7 @@ class CustomInputField extends StatelessWidget {
     required this.isNumber,
     required this.controller,
     this.validator,
+    this.initialValue,
   });
 
   @override

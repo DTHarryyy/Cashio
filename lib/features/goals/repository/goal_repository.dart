@@ -16,6 +16,20 @@ class GoalRepository {
     });
   }
 
+  Future<void> updateGoal(Goal goal) async {
+    await supabase
+        .from('goals')
+        .update({
+          'title': goal.title,
+          'user_id': goal.userId,
+          'priority_level': goal.priorityLevel,
+          'deadline': goal.deadline.toIso8601String(),
+          'target_amount': goal.targetAmount,
+          'notes': goal.notes,
+        })
+        .eq('id', goal.goalId!);
+  }
+
   Stream<List<Goal>> getGoals(String userId) {
     return supabase
         .from('goals')

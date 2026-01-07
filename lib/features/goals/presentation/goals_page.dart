@@ -8,6 +8,7 @@ import 'package:cashio/core/widgets/custom_drawer.dart';
 import 'package:cashio/core/widgets/custom_speed_dial.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/goals/model/goal.dart';
+import 'package:cashio/features/goals/presentation/pages/goal_form_page.dart';
 import 'package:cashio/features/goals/provider/goal_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -157,7 +158,22 @@ class GoalsPageContent extends ConsumerWidget {
                         ),
                       ),
                       MenuItemButton(
-                        onPressed: () {},
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => GoalFormPage(
+                              goal: Goal(
+                                goalId: goal.goalId,
+                                title: title,
+                                userId: goal.userId,
+                                targetAmount: goal.targetAmount,
+                                priorityLevel: priorityLevel,
+                                notes: goal.notes,
+                                deadline: goal.deadline,
+                              ),
+                            ),
+                          ),
+                        ),
                         child: Text('Edit goal', style: GoogleFonts.outfit()),
                       ),
                       MenuItemButton(

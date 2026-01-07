@@ -15,8 +15,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 enum PriorityLevel { high, low }
 
-class AddGoalPage extends ConsumerWidget {
-  const AddGoalPage({super.key});
+class GoalFormPage extends ConsumerWidget {
+  final Goal? goal;
+  const GoalFormPage({super.key, this.goal});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,36 +27,58 @@ class AddGoalPage extends ConsumerWidget {
       error: (e, _) => Scaffold(body: Center(child: Text("User error: $e"))),
       loading: () => Scaffold(body: Center(child: CustomLoading())),
       data: (user) {
-        return AddGoalsContent(user: user!);
+        return GoalFormPageContent(user: user!, goal: goal);
       },
     );
   }
 }
 
-class AddGoalsContent extends ConsumerStatefulWidget {
+class GoalFormPageContent extends ConsumerStatefulWidget {
   final AppUser user;
-  const AddGoalsContent({super.key, required this.user});
+  final Goal? goal;
+  const GoalFormPageContent({super.key, required this.user, this.goal});
 
   @override
-  ConsumerState<AddGoalsContent> createState() => _AddGoalsContentState();
+  ConsumerState<GoalFormPageContent> createState() =>
+      _GoalFormPageContentState();
 }
 
-class _AddGoalsContentState extends ConsumerState<AddGoalsContent> {
+class _GoalFormPageContentState extends ConsumerState<GoalFormPageContent> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController titleController = TextEditingController();
-  TextEditingController targetAmountController = TextEditingController();
+  late TextEditingController titleController;
+  late TextEditingController targetAmountController;
   TextEditingController notesController = TextEditingController();
 
-  PriorityLevel selectedPriorityLevel = PriorityLevel.high;
-  DateTime? deadline = DateTime.now();
+  PriorityLevel? selectedPriorityLevel;
+  late DateTime? deadline;
 
   String? errorMsg;
+  @override
+  void initState() {
+    super.initState();
+    titleController = TextEditingController(text: widget.goal?.title ?? '');
+    targetAmountController = TextEditingController(
+      text: widget.goal?.targetAmount.toString() ?? '',
+    );
+    selectedPriorityLevel = widget.goal != null
+        ? PriorityLevel.values.firstWhere(
+            (e) => e.name == widget.goal!.priorityLevel,
+            orElse: () => PriorityLevel.high,
+          )
+        : PriorityLevel.high;
+    deadline = widget.goal?.deadline;
+    notesController = TextEditingController(text: widget.goal?.notes ?? '');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Add Goal', style: GoogleFonts.outfit()),
+        title: Text(
+          widget.goal == null ? 'Add goal' : 'Edit ${widget.goal?.title}',
+          style: GoogleFonts.outfit(),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -79,9 +102,10 @@ class _AddGoalsContentState extends ConsumerState<AddGoalsContent> {
                   icon: Icons.attach_money_rounded,
                   isNumber: true,
                   controller: targetAmountController,
-                  validator: Validators.numbers('Taget amount'),
+                  validator: Validators.numbers('Target amount'),
                 ),
                 CustomDropdown(
+                  initialValue: selectedPriorityLevel,
                   valueChange: (value) =>
                       setState(() => selectedPriorityLevel = value),
                   hint: 'Please select priority level',
@@ -101,39 +125,42 @@ class _AddGoalsContentState extends ConsumerState<AddGoalsContent> {
                   controller: notesController,
                 ),
                 CustomDatePickerFormField(
+                  initialDate: deadline,
                   validator: Validators.dateValidator('Deadline', false),
                   onDateSelected: (value) => setState(() => deadline = value),
                 ),
-                Visibility(
-                  visible: errorMsg != null ? true : false,
-                  child: Text(errorMsg.toString(), style: GoogleFonts.outfit()),
-                ),
+                if (errorMsg != null)
+                  Text(errorMsg!, style: GoogleFonts.outfit()),
 
                 CustomButton(
-                  hint: 'Add',
+                  hint: widget.goal == null ? 'Add' : 'Update',
                   onPressed: () async {
                     try {
-                      if (!_formKey.currentState!.validate()) {
-                        return;
-                      }
-                      final amount = double.parse(targetAmountController.text);
-                      await ref
-                          .read(addGoalProvider)
-                          .call(
-                            Goal(
-                              title: titleController.text,
-                              userId: widget.user.userId,
-                              targetAmount: amount,
-                              priorityLevel: selectedPriorityLevel.name,
-                              deadline: deadline!,
-                            ),
-                          );
+                      if (!_formKey.currentState!.validate()) return;
 
+                      final amount = double.parse(targetAmountController.text);
+
+                      final newGoal = Goal(
+                        goalId: widget.goal?.goalId,
+                        title: titleController.text.trim(),
+                        userId: widget.user.userId,
+                        targetAmount: amount,
+                        priorityLevel: selectedPriorityLevel!.name,
+                        notes: notesController.text.trim().isEmpty
+                            ? null
+                            : notesController.text.trim(),
+                        deadline: deadline!,
+                      );
+                      if (widget.goal != null) {
+                        await ref.read(updateGoalProvider).call(newGoal);
+                      } else {
+                        await ref.read(addGoalProvider).call(newGoal);
+                      }
                       if (!context.mounted) return;
                       AppSnackBar.success(context, 'Goal sucessfully added');
                       Navigator.pop(context);
                     } catch (e) {
-                      debugPrint("Add goal error: $e");
+                      debugPrint("Goal form error: $e");
                     }
                   },
                 ),

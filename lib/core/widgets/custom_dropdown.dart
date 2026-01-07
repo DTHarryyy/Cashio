@@ -8,6 +8,7 @@ class CustomDropdown<T> extends StatelessWidget {
   final String? hint;
   final String Function(T item) labelBuilder;
   final String? Function(T?)? validator;
+  final T? initialValue;
   const CustomDropdown({
     super.key,
     required this.valueChange,
@@ -15,11 +16,13 @@ class CustomDropdown<T> extends StatelessWidget {
     required this.items,
     required this.labelBuilder,
     this.validator,
+    this.initialValue,
   });
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<T>(
+      initialValue: initialValue,
       validator: validator,
       decoration: InputDecoration(
         errorStyle: GoogleFonts.outfit(fontSize: 13, color: AppColors.error),

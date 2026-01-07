@@ -70,6 +70,36 @@ class _GoalFormPageContentState extends ConsumerState<GoalFormPageContent> {
     notesController = TextEditingController(text: widget.goal?.notes ?? '');
   }
 
+  Future<void> onSubmit() async {
+    try {
+      if (!_formKey.currentState!.validate()) return;
+
+      final amount = double.parse(targetAmountController.text);
+
+      final newGoal = Goal(
+        goalId: widget.goal?.goalId,
+        title: titleController.text.trim(),
+        userId: widget.user.userId,
+        targetAmount: amount,
+        priorityLevel: selectedPriorityLevel!.name,
+        notes: notesController.text.trim().isEmpty
+            ? null
+            : notesController.text.trim(),
+        deadline: deadline!,
+      );
+      if (widget.goal != null) {
+        await ref.read(updateGoalProvider).call(newGoal);
+      } else {
+        await ref.read(addGoalProvider).call(newGoal);
+      }
+      if (!mounted) return;
+      AppSnackBar.success(context, 'Goal sucessfully added');
+      Navigator.pop(context);
+    } catch (e) {
+      debugPrint("Goal form error: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,35 +164,7 @@ class _GoalFormPageContentState extends ConsumerState<GoalFormPageContent> {
 
                 CustomButton(
                   hint: widget.goal == null ? 'Add' : 'Update',
-                  onPressed: () async {
-                    try {
-                      if (!_formKey.currentState!.validate()) return;
-
-                      final amount = double.parse(targetAmountController.text);
-
-                      final newGoal = Goal(
-                        goalId: widget.goal?.goalId,
-                        title: titleController.text.trim(),
-                        userId: widget.user.userId,
-                        targetAmount: amount,
-                        priorityLevel: selectedPriorityLevel!.name,
-                        notes: notesController.text.trim().isEmpty
-                            ? null
-                            : notesController.text.trim(),
-                        deadline: deadline!,
-                      );
-                      if (widget.goal != null) {
-                        await ref.read(updateGoalProvider).call(newGoal);
-                      } else {
-                        await ref.read(addGoalProvider).call(newGoal);
-                      }
-                      if (!context.mounted) return;
-                      AppSnackBar.success(context, 'Goal sucessfully added');
-                      Navigator.pop(context);
-                    } catch (e) {
-                      debugPrint("Goal form error: $e");
-                    }
-                  },
+                  onPressed: onSubmit,
                 ),
               ],
             ),

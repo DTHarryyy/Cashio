@@ -15,7 +15,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AddBudgetPage extends ConsumerStatefulWidget {
-  const AddBudgetPage({super.key});
+  final Budget? budget;
+  const AddBudgetPage({super.key, this.budget});
 
   @override
   ConsumerState<AddBudgetPage> createState() => _AddBudgetPageState();
@@ -23,9 +24,9 @@ class AddBudgetPage extends ConsumerStatefulWidget {
 
 class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController titleController = TextEditingController();
-  TextEditingController amountController = TextEditingController();
-  TextEditingController notesController = TextEditingController();
+  late TextEditingController titleController;
+  late TextEditingController amountController;
+  late TextEditingController notesController;
 
   DateTime now = DateTime.now();
 
@@ -35,12 +36,21 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
   @override
   void initState() {
     super.initState();
-    startDate = now;
-    endDate = DateTime(now.year, now.month + 1);
+    titleController = TextEditingController(text: widget.budget?.name ?? '');
+    amountController = TextEditingController(
+      text: widget.budget != null ? widget.budget!.totalAmount.toString() : '',
+    );
+    _selectedCategoryId = widget.budget?.categoryId;
+    notesController = TextEditingController(text: widget.budget?.notes ?? '');
+
+    startDate =
+        widget.budget?.startDate ?? DateTime(now.year, now.month, now.day);
+    endDate =
+        widget.budget?.endDate ?? DateTime(now.year, now.month + 1, now.day);
   }
 
   List<CategoryModel> categories = [];
-  CategoryModel? _selectedCategoryId;
+  String? _selectedCategoryId;
   void updateCategories(List<CategoryModel> allCategories) {
     final filtered = allCategories
         .where((c) => c.type == 'expense' && c.name.isNotEmpty)
@@ -74,7 +84,7 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
               appBar: AppBar(
                 centerTitle: true,
                 title: Text(
-                  'Add new budget',
+                  widget.budget == null ? 'Add new budget' : 'Edit  budget',
                   style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
                 ),
               ),
@@ -100,8 +110,13 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
                           validator: Validators.required('Title'),
                         ),
                         CustomDropdown(
+                          initialValue: widget.budget != null
+                              ? categories.firstWhere(
+                                  (cat) => cat.id == widget.budget!.categoryId,
+                                )
+                              : null,
                           valueChange: (value) =>
-                              setState(() => _selectedCategoryId = value),
+                              setState(() => _selectedCategoryId = value.id),
                           hint: 'Please select category',
                           items: categories,
                           labelBuilder: (e) => e.name,
@@ -127,13 +142,17 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
                           controller: notesController,
                         ),
                         CustomDatePickerFormField(
+                          initialDate: widget.budget?.startDate,
                           onDateSelected: (value) => startDate = value,
-                          validator: Validators.dateValidator(
-                            'Start date',
-                            true,
-                          ),
+                          validator: widget.budget == null
+                              ? Validators.dateValidator('Start date', true)
+                              : Validators.updateDateValidator(
+                                  'Start date',
+                                  widget.budget!.startDate,
+                                ),
                         ),
                         CustomDatePickerFormField(
+                          initialDate: widget.budget?.endDate,
                           onDateSelected: (value) => endDate = value,
                           validator: Validators.dateValidator(
                             'End date',
@@ -149,20 +168,47 @@ class _AddBudgetPageState extends ConsumerState<AddBudgetPage> {
                             if (!_formKey.currentState!.validate()) {
                               return;
                             }
+
                             try {
                               final amountValue = double.parse(
                                 amountController.text,
                               );
-                              await addBudget.call(
-                                Budget(
-                                  userId: user!.userId,
-                                  name: titleController.text.trim(),
-                                  totalAmount: amountValue,
-                                  startDate: startDate,
-                                  endDate: endDate,
-                                  categoryId: _selectedCategoryId!.id!,
-                                ),
+
+                              final newBudget = Budget(
+                                budgetId: widget.budget?.budgetId,
+                                userId: user!.userId,
+                                name: titleController.text.trim(),
+                                totalAmount: amountValue,
+                                startDate: startDate,
+                                endDate: endDate,
+                                categoryId: _selectedCategoryId!,
+                                notes: notesController.text.trim(),
                               );
+                              if (widget.budget != null) {
+                                // update budget
+                                await ref
+                                    .read(updateBudgetProvider)
+                                    .call(newBudget);
+                                if (!context.mounted) return;
+                                AppSnackBar.success(
+                                  context,
+                                  'Budget updated successfully',
+                                );
+                                Navigator.pop(context);
+                                return;
+                              } else {
+                                // add new budget
+                                await addBudget.call(
+                                  Budget(
+                                    userId: user.userId,
+                                    name: titleController.text.trim(),
+                                    totalAmount: amountValue,
+                                    startDate: startDate,
+                                    endDate: endDate,
+                                    categoryId: _selectedCategoryId!,
+                                  ),
+                                );
+                              }
 
                               if (!context.mounted) return;
                               AppSnackBar.success(

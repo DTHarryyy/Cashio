@@ -7,6 +7,7 @@ class Budget {
   final DateTime endDate;
   final String categoryId;
   final DateTime? createdAt;
+  final String? notes;
   Budget({
     this.budgetId,
     required this.userId,
@@ -16,6 +17,7 @@ class Budget {
     required this.endDate,
     required this.categoryId,
     this.createdAt,
+    this.notes,
   });
 
   /// From Supabase JSON
@@ -29,6 +31,7 @@ class Budget {
       endDate: DateTime.parse(data['end_date']),
       categoryId: data['category_uuid'].toString(),
       createdAt: DateTime.parse(data['created_at']),
+      notes: data['notes']?.toString(),
     );
   }
 }

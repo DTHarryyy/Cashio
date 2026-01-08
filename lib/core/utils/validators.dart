@@ -45,4 +45,21 @@ class Validators {
       return null;
     };
   }
+
+  static DateValidator updateDateValidator(
+    String fieldName,
+    DateTime dateStarted,
+  ) {
+    return (value) {
+      if (value == null) {
+        return 'Please select date';
+      }
+      final selectedDate = DateTime(value.year, value.month, value.day);
+
+      if (dateStarted.isAfter(selectedDate)) {
+        return 'Please select a future date';
+      }
+      return null;
+    };
+  }
 }

@@ -1,7 +1,9 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/dialog/custom_dialog.dart';
 import 'package:cashio/core/model/category_model.dart';
+import 'package:cashio/core/utils/snackbar.dart';
 import 'package:cashio/features/budgets/model/budget.dart';
+import 'package:cashio/features/budgets/presentation/pages/budget_form_page.dart';
 import 'package:cashio/features/budgets/provider/budget_provider.dart';
 import 'package:cashio/features/home/model/transaction.dart';
 import 'package:flutter/material.dart';
@@ -35,8 +37,6 @@ class BudgetCards extends ConsumerWidget {
       separatorBuilder: (context, index) => SizedBox(height: 10),
       itemCount: budgets.length,
       itemBuilder: (context, index) {
-        // mapping category
-
         // initialize budget item
         final budget = budgets[index];
 
@@ -45,6 +45,7 @@ class BudgetCards extends ConsumerWidget {
         double totalSpend = transactions
             .where((t) => t.budgetId == budget.budgetId)
             .fold(0, (sum, t) => sum + t.amount);
+
         // variables for ui / display
         final categoryIcon = category?.icon ?? Icons.help_rounded;
         final categoryName = category?.name ?? 'Other';
@@ -58,11 +59,6 @@ class BudgetCards extends ConsumerWidget {
         final spendPecentage = (totalSpend / budget.totalAmount) * 100;
         final totalRemaining = currencyFormatter.format(
           budget.totalAmount - totalSpend,
-        );
-        debugPrint(
-          'BUDGET ${budget.budgetId} | '
-          'TX COUNT: ${transactions.where((t) => t.budgetId == budget.budgetId).length} | '
-          'TOTAL: ${transactions.where((t) => t.budgetId == budget.budgetId).fold(0.0, (s, t) => s + t.amount)}',
         );
 
         return Container(
@@ -129,7 +125,15 @@ class BudgetCards extends ConsumerWidget {
                     ),
                     menuChildren: [
                       MenuItemButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  AddBudgetPage(budget: budget),
+                            ),
+                          );
+                        },
                         child: Text('Edit budget', style: GoogleFonts.outfit()),
                       ),
                       MenuItemButton(
@@ -144,6 +148,10 @@ class BudgetCards extends ConsumerWidget {
                                     .read(deleteBudgetProvider)
                                     .call(budget.budgetId!);
                                 if (!context.mounted) return;
+                                AppSnackBar.success(
+                                  context,
+                                  'Budget successfully deleted',
+                                );
                                 Navigator.pop(context);
                               },
                             ),

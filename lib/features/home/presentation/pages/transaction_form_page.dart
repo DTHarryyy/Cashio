@@ -20,7 +20,8 @@ import 'package:google_fonts/google_fonts.dart';
 enum TransactionType { expense, income }
 
 class AddTransactionPage extends ConsumerStatefulWidget {
-  const AddTransactionPage({super.key});
+  final Transaction? transaction;
+  const AddTransactionPage({super.key, this.transaction});
 
   @override
   ConsumerState<AddTransactionPage> createState() => _AddTransactionPageState();
@@ -42,7 +43,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
   bool isLoading = false;
   late List<Budget> selectedCategoryBudget = [];
   // Category dropdown variables
-  List<CategoryModel> _categories = [];
+  late List<CategoryModel> _categories;
   CategoryModel? _selectedCategory;
 
   @override
@@ -51,6 +52,12 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
     _transactionNameController.dispose();
     _noteController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _categories = [];
   }
 
   void _updateCategories(List<CategoryModel> allCategories) {

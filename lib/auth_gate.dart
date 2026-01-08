@@ -1,4 +1,5 @@
 import 'package:cashio/app_router.dart';
+import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/features/auth/presentation/sign_in_page.dart';
 import 'package:cashio/features/auth/provider/auth_state_provider.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class AuthGate extends ConsumerWidget {
         }
       },
       error: (e, stck) => Text('There must be an erro in logging in '),
-      loading: () => CircularProgressIndicator(),
+      loading: () => Scaffold(body: Center(child: CustomLoading())),
     );
   }
 }

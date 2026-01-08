@@ -15,23 +15,24 @@ class BudgetCards extends ConsumerWidget {
   final List<Transaction> transactions;
   final List<CategoryModel> categoriesData;
   final List<Budget> budgets;
-  const BudgetCards({
+  BudgetCards({
     super.key,
     required this.transactions,
     required this.categoriesData,
     required this.budgets,
   });
 
+  final currencyFormatter = NumberFormat.currency(
+    locale: 'en_PH',
+    symbol: '₱',
+    decimalDigits: 2,
+  );
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final categoryMap = {for (var c in categoriesData) c.id: c};
 
     final dateFormatter = DateFormat('MMM dd yyyy');
-    final currencyFormatter = NumberFormat.currency(
-      locale: 'en_PH',
-      symbol: '₱',
-      decimalDigits: 2,
-    );
 
     return ListView.separated(
       separatorBuilder: (context, index) => SizedBox(height: 10),
@@ -93,7 +94,7 @@ class BudgetCards extends ConsumerWidget {
                     ),
                   ),
                   MenuAnchor(
-                    alignmentOffset: Offset(-65, 0),
+                    alignmentOffset: Offset(-43, 0),
 
                     builder:
                         (
@@ -124,6 +125,21 @@ class BudgetCards extends ConsumerWidget {
                       ),
                     ),
                     menuChildren: [
+                      MenuItemButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  AddBudgetPage(budget: budget),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Add expenses',
+                          style: GoogleFonts.outfit(),
+                        ),
+                      ),
                       MenuItemButton(
                         onPressed: () {
                           Navigator.push(
@@ -226,7 +242,7 @@ class BudgetCards extends ConsumerWidget {
               ),
               SizedBox(height: 5),
               LinearProgressIndicator(
-                value: totalSpend / 1000,
+                value: totalSpend / budget.totalAmount,
                 backgroundColor: AppColors.background,
                 minHeight: 10,
                 borderRadius: BorderRadius.circular(30),

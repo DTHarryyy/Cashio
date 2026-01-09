@@ -4,7 +4,7 @@ import 'package:cashio/features/auth/presentation/sign_in_page.dart';
 import 'package:cashio/features/auth/presentation/widgets/custom_text_field.dart';
 import 'package:cashio/features/auth/presentation/widgets/other_login_provider.dart';
 import 'package:cashio/features/auth/provider/auth_provider.dart';
-import 'package:cashio/features/home/presentation/home_page.dart';
+import 'package:cashio/features/dashboard/presentation/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';

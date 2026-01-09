@@ -1,5 +1,5 @@
-import 'package:cashio/features/home/model/transaction.dart';
-import 'package:cashio/features/home/repository/transactions_repository.dart';
+import 'package:cashio/features/dashboard/model/transaction.dart';
+import 'package:cashio/features/transactions/repository/transactions_repository.dart';
 
 class GetAllTransactions {
   final TransactionsRepository repo;

@@ -20,17 +20,20 @@ class CustomNavBar extends ConsumerWidget {
 
       destinations: const [
         NavigationDestination(
-          icon: Icon(Icons.home),
-          selectedIcon: Icon(Icons.home_rounded, color: AppColors.background),
-          label: 'Home',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.bar_chart_rounded),
+          icon: Icon(Icons.dashboard_rounded),
           selectedIcon: Icon(
-            Icons.bar_chart_rounded,
+            Icons.dashboard_rounded,
             color: AppColors.background,
           ),
-          label: 'Analytics',
+          label: 'Dashboard',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.swap_vert_rounded),
+          selectedIcon: Icon(
+            Icons.swap_vert_rounded,
+            color: AppColors.background,
+          ),
+          label: 'Transactions',
         ),
         NavigationDestination(
           icon: Icon(Icons.pie_chart_rounded),

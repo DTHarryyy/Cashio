@@ -1,5 +1,5 @@
-import 'package:cashio/features/home/model/monthly_total.dart';
-import 'package:cashio/features/home/repository/transactions_repository.dart';
+import 'package:cashio/features/dashboard/model/monthly_total.dart';
+import 'package:cashio/features/transactions/repository/transactions_repository.dart';
 
 class GetLast3monthsTotal {
   final TransactionsRepository repo;

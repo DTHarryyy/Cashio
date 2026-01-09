@@ -1,6 +1,7 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/widgets/avatar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -12,7 +13,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: AppColors.surface,
       title: SizedBox(
         height: 33,
-        child: Image.asset('assets/images/Fundmap logo 1.png'),
+        child: Text(
+          'Fundmap',
+          style: GoogleFonts.roboto(
+            fontSize: 26,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
+        ),
       ),
       centerTitle: true,
       titleSpacing: 0,

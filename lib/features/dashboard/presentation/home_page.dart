@@ -4,14 +4,14 @@ import 'package:cashio/core/widgets/custom_speed_dial.dart';
 import 'package:cashio/features/auth/model/app_user.dart';
 import 'package:cashio/features/auth/presentation/sign_in_page.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
-import 'package:cashio/features/home/model/monthly_total.dart';
-import 'package:cashio/features/home/presentation/pages/all_transactions.dart';
-import 'package:cashio/features/home/presentation/widget/balance_card.dart';
+import 'package:cashio/features/dashboard/model/monthly_total.dart';
+import 'package:cashio/features/dashboard/presentation/widget/balance_card.dart';
 import 'package:cashio/core/widgets/custom_drawer.dart';
 import 'package:cashio/core/widgets/custom_home_app_bar.dart';
 import 'package:cashio/core/widgets/custom_nav_bar.dart';
-import 'package:cashio/features/home/presentation/widget/recent_transactions.dart';
-import 'package:cashio/features/home/provider/transactions_provider.dart';
+import 'package:cashio/features/dashboard/presentation/widget/recent_transactions.dart';
+import 'package:cashio/features/transactions/provider/transactions_provider.dart';
+import 'package:cashio/features/transactions/transactions_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -135,7 +135,7 @@ class _HomePageContentsState extends ConsumerState<HomePageContents> {
                 GestureDetector(
                   onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AllTransactions()),
+                    MaterialPageRoute(builder: (context) => TransactionsPage()),
                   ),
                   child: Text(
                     'see all',

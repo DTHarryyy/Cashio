@@ -1,27 +1,33 @@
 import 'package:cashio/core/constant/app_colors.dart';
+import 'package:cashio/core/dialog/custom_dialog.dart';
 import 'package:cashio/core/model/category_model.dart';
 import 'package:cashio/core/provider/category_provider.dart';
+import 'package:cashio/core/utils/snackbar.dart';
+import 'package:cashio/core/widgets/custom_drawer.dart';
+import 'package:cashio/core/widgets/custom_home_app_bar.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
+import 'package:cashio/core/widgets/custom_nav_bar.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
-import 'package:cashio/features/home/model/transaction.dart';
-import 'package:cashio/features/home/provider/transactions_provider.dart';
+import 'package:cashio/features/dashboard/model/transaction.dart';
+import 'package:cashio/features/transactions/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class AllTransactions extends ConsumerStatefulWidget {
-  const AllTransactions({super.key});
+class TransactionsPage extends ConsumerStatefulWidget {
+  const TransactionsPage({super.key});
 
   @override
-  ConsumerState<AllTransactions> createState() => _AllTransactionsState();
+  ConsumerState<TransactionsPage> createState() => _TransactionsPageState();
 }
 
-class _AllTransactionsState extends ConsumerState<AllTransactions> {
+class _TransactionsPageState extends ConsumerState<TransactionsPage> {
   List filter = ['All', 'Income', 'Expense'];
   int? selectedvalue = 0;
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     final currentUser = ref.watch(profileProvider);
     return currentUser.when(
       error: (e, _) => Scaffold(body: Text('Youre not loggedin')),
@@ -55,14 +61,11 @@ class _AllTransactionsState extends ConsumerState<AllTransactions> {
                         return type == filterType;
                       }).toList();
                 return Scaffold(
-                  appBar: AppBar(
-                    centerTitle: true,
-                    title: Text(
-                      'Transaction',
-                      style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  body: Padding(
+                  appBar: CustomAppBar(scaffoldKey: scaffoldKey),
+                  bottomNavigationBar: const CustomNavBar(),
+                  drawer: CustomDrawer(),
+                  body: Container(
+                    // decoration: const BoxDecoration(color: AppColors.surface),
                     padding: const EdgeInsets.symmetric(
                       vertical: 5,
                       horizontal: 15,
@@ -70,6 +73,7 @@ class _AllTransactionsState extends ConsumerState<AllTransactions> {
                     child: Column(
                       spacing: 10,
                       children: [
+                        // filter chips
                         Row(
                           spacing: 5,
                           children: List<Widget>.generate(3, (index) {
@@ -116,7 +120,7 @@ class _AllTransactionsState extends ConsumerState<AllTransactions> {
   }
 }
 
-class FilteredTransactionContent extends StatelessWidget {
+class FilteredTransactionContent extends ConsumerWidget {
   final List<CategoryModel> categoryData;
   final List<Transaction> filteredTransaction;
   const FilteredTransactionContent({
@@ -126,7 +130,7 @@ class FilteredTransactionContent extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final currencyFormatter = NumberFormat.currency(
       locale: 'en_PH',
       symbol: '₱',
@@ -154,56 +158,106 @@ class FilteredTransactionContent extends StatelessWidget {
           final date = formatter.format(transaction.transactionDate!);
           final bool isIncome = categoryType == 'income';
 
-          return Material(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(8),
-            child: ListTile(
-              leading: Container(
-                height: 40,
-                width: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: categoryColor.withAlpha(80),
-                ),
-
-                child: Icon(categoryIcon),
-              ),
-              title: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      name,
-                      style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Text(
-                    isIncome ? '+$amount' : '-$amount',
-                    style: GoogleFonts.outfit(
-                      color: isIncome ? AppColors.success : AppColors.error,
-                    ),
-                  ),
-                ],
-              ),
-              subtitle: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(date),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: categoryColor,
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-
-                    child: Text(
-                      categoryName,
-                      style: GoogleFonts.outfit(color: AppColors.surface),
-                    ),
-                  ),
-                ],
-              ),
+          return MenuAnchor(
+            alignmentOffset: Offset(0, -40),
+            style: MenuStyle(
+              backgroundColor: WidgetStatePropertyAll(AppColors.surface),
             ),
+            menuChildren: [
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.edit_rounded),
+                child: const Text('Edit transaction'),
+                onPressed: () {
+                  // add to card logic
+                },
+              ),
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.delete_outline),
+                child: const Text('Delete'),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => CustomDialog(
+                      title: 'Delete Transaction',
+                      btnText: 'Delete',
+                      onConfirm: () async {
+                        await ref
+                            .read(deleteTransactionProvider)
+                            .call(transaction.id!);
+                        if (!context.mounted) return;
+                        AppSnackBar.success(
+                          context,
+                          'Transaction successfully deleted',
+                        );
+                        Navigator.pop(context);
+                      },
+                    ),
+                  );
+                },
+              ),
+            ],
+            builder: (context, controller, child) {
+              return Material(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(8),
+                child: ListTile(
+                  onLongPress: () {
+                    controller.open();
+                  },
+
+                  leading: Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: categoryColor.withAlpha(80),
+                    ),
+
+                    child: Icon(categoryIcon),
+                  ),
+                  title: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          name,
+                          style: GoogleFonts.outfit(
+                            fontWeight: FontWeight.w600,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        isIncome ? '+$amount' : '-$amount',
+                        style: GoogleFonts.outfit(
+                          color: isIncome ? AppColors.success : AppColors.error,
+                        ),
+                      ),
+                    ],
+                  ),
+                  subtitle: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(date),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: categoryColor,
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+
+                        child: Text(
+                          categoryName,
+                          style: GoogleFonts.outfit(color: AppColors.surface),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           );
         },
       ),

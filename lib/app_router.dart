@@ -1,8 +1,8 @@
-import 'package:cashio/features/home/presentation/home_page.dart';
+import 'package:cashio/features/dashboard/presentation/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cashio/core/provider/page_index_provider.dart';
-import 'package:cashio/features/analytics/analytics_page.dart';
+import 'package:cashio/features/transactions/transactions_page.dart';
 import 'package:cashio/features/budgets/presentation/budget_page.dart';
 import 'package:cashio/features/goals/presentation/goals_page.dart';
 import 'package:cashio/features/savings/savings_page.dart';
@@ -14,7 +14,7 @@ class AppRouter extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     const pages = [
       HomePage(),
-      AnalyticsPage(),
+      TransactionsPage(),
       BudgetPage(),
       SavingsPage(),
       GoalsPage(),

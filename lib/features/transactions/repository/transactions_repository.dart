@@ -1,5 +1,5 @@
-import 'package:cashio/features/home/model/monthly_total.dart';
-import 'package:cashio/features/home/model/transaction.dart';
+import 'package:cashio/features/dashboard/model/monthly_total.dart';
+import 'package:cashio/features/dashboard/model/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -89,6 +89,15 @@ class TransactionsRepository {
       debugPrint('Error fetching monthly totals: $e');
       debugPrintStack(stackTrace: st);
       return [];
+    }
+  }
+
+  // DELETE THIS TRANSACTION
+  Future<void> deleteTransaction(String transactionId) async {
+    try {
+      await supabase.from('transactions').delete().eq('id', transactionId);
+    } on PostgrestException catch (e) {
+      throw ('Failed to delete transaction: ${e.message}');
     }
   }
 }

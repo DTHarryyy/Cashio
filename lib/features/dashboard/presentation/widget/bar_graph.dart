@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:cashio/features/home/model/monthly_total.dart';
+import 'package:cashio/features/dashboard/model/monthly_total.dart';
 
 class BarGraph extends ConsumerWidget {
   final List<MonthlyTotal> monthlyTotal;

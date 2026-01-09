@@ -177,7 +177,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                             icon: Icons.attach_money_outlined,
                             isNumber: true,
                             controller: _amountController,
-                            validator: Validators.required('Amount'),
+                            validator: Validators.numbers('Amount'),
                           ),
                           const SizedBox(height: 12),
                           CustomInputField(
@@ -234,7 +234,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                             },
                             validator: Validators.dateValidator(
                               'Deadline',
-                              false,
+                              true,
                             ),
                           ),
                           const SizedBox(height: 24),

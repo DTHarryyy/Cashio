@@ -1,7 +1,7 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/features/budgets/presentation/pages/budget_form_page.dart';
 import 'package:cashio/features/goals/presentation/pages/goal_form_page.dart';
-import 'package:cashio/features/dashboard/presentation/pages/transaction_form_page.dart';
+import 'package:cashio/features/transactions/presentation/transaction_form_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -35,7 +35,9 @@ class CustomSpeedDial extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AddTransactionPage()),
+              MaterialPageRoute(
+                builder: (context) => TransactionFormPage(transaction: null),
+              ),
             );
           },
         ),

@@ -1,0 +1,9 @@
+import 'package:cashio/features/dashboard/model/transaction.dart';
+import 'package:cashio/features/transactions/repository/transactions_repository.dart';
+
+class UpdateTransaction {
+  final TransactionsRepository repo;
+  UpdateTransaction(this.repo);
+
+  Future<void> call(Transaction transac) => repo.updateTransaction(transac);
+}

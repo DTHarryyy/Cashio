@@ -92,6 +92,26 @@ class TransactionsRepository {
     }
   }
 
+  Future<void> updateTransaction(Transaction transac) async {
+    try {
+      await supabase
+          .from('transactions')
+          .update({
+            'transaction_name': transac.transactionName,
+            'user_id': transac.userId,
+            'category_id': transac.categoryId,
+            'budget_id': transac.budgetId,
+            'amount': transac.amount,
+            'type': transac.type,
+            'description': transac.description,
+            'transaction_date': transac.transactionDate?.toIso8601String(),
+          })
+          .eq('id', transac.id!);
+    } on PostgrestException catch (e) {
+      throw ('Failed to add transaction: $e');
+    }
+  }
+
   // DELETE THIS TRANSACTION
   Future<void> deleteTransaction(String transactionId) async {
     try {

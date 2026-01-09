@@ -2,7 +2,18 @@ typedef Validator = String? Function(String? value);
 
 typedef DateValidator = String? Function(DateTime? value);
 
+typedef DropDownValidator = String? Function(Object? value);
+
 class Validators {
+  static DropDownValidator dropDownRequire(String fieldName) {
+    return (value) {
+      if (value == null || value.toString().trim().isEmpty) {
+        return '$fieldName is required';
+      }
+      return null;
+    };
+  }
+
   static Validator required(String fieldName) {
     return (value) {
       if (value == null || value.trim().isEmpty) {
@@ -19,6 +30,15 @@ class Validators {
       }
       if (double.tryParse(value) == null) {
         return '$fieldName must be a valid number';
+      }
+      return null;
+    };
+  }
+
+  static DateValidator dateRequired(String fieldName) {
+    return (value) {
+      if (value == null) {
+        return 'Please select date';
       }
       return null;
     };

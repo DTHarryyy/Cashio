@@ -8,6 +8,7 @@ import 'package:cashio/features/transactions/usecases/delete/delete_transactions
 import 'package:cashio/features/transactions/usecases/getting%20data/get_all_transactions.dart';
 import 'package:cashio/features/transactions/usecases/getting%20data/get_last_3months_total.dart';
 import 'package:cashio/features/transactions/usecases/getting%20data/get_total_expenses.dart';
+import 'package:cashio/features/transactions/usecases/update/update_transaction.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // transactions repository provider
@@ -77,10 +78,12 @@ final monthlyTotalProvider = FutureProvider.family<List<MonthlyTotal>, String>((
   return usecase.call(userId);
 });
 
-/*
-  DELETE TRANSACTION PROVIDER
-*/
+// UPDATE TRANSACTION PROVIDER
+final updateTransactionProvider = Provider(
+  (ref) => UpdateTransaction(ref.read(transactionsRepoProvider)),
+);
 
+// DELETE TRANSACTION PROVIDER
 final deleteTransactionProvider = Provider(
   (ref) => DeleteTransactions(ref.read(transactionsRepoProvider)),
 );

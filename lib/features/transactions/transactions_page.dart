@@ -10,7 +10,7 @@ import 'package:cashio/core/widgets/custom_nav_bar.dart';
 import 'package:cashio/core/widgets/custom_speed_dial.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/dashboard/model/transaction.dart';
-import 'package:cashio/features/transactions/presentatino/transaction_edit_form_page.dart';
+import 'package:cashio/features/transactions/presentation/transaction_form_page.dart';
 import 'package:cashio/features/transactions/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -177,12 +177,14 @@ class FilteredTransactionContent extends ConsumerWidget {
                     categoryId: transaction.categoryId,
                     amount: transaction.amount,
                     type: transaction.type,
+                    id: transaction.id,
+                    transactionDate: transaction.transactionDate,
                   );
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          TransactionEditFormPage(transaction: transac),
+                          TransactionFormPage(transaction: transac),
                     ),
                   );
                 },

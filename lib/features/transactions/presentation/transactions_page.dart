@@ -169,7 +169,7 @@ class FilteredTransactionContent extends ConsumerWidget {
             menuChildren: [
               MenuItemButton(
                 leadingIcon: const Icon(Icons.edit_rounded),
-                child: const Text('Edit transaction'),
+                child: const Text('Edit'),
                 onPressed: () {
                   final transac = Transaction(
                     transactionName: name,

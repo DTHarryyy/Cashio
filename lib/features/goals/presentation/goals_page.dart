@@ -6,8 +6,11 @@ import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/core/widgets/custom_nav_bar.dart';
 import 'package:cashio/core/widgets/custom_drawer.dart';
 import 'package:cashio/core/widgets/custom_speed_dial.dart';
+import 'package:cashio/features/auth/provider/current_user_profile.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
+import 'package:cashio/features/goals/model/fund.dart';
 import 'package:cashio/features/goals/model/goal.dart';
+import 'package:cashio/features/goals/presentation/pages/contribute_dialog.dart';
 import 'package:cashio/features/goals/presentation/pages/goal_form_page.dart';
 import 'package:cashio/features/goals/provider/goal_provider.dart';
 import 'package:flutter/material.dart';
@@ -151,7 +154,13 @@ class GoalsPageContent extends ConsumerWidget {
                     ),
                     menuChildren: [
                       MenuItemButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) =>
+                                ContributeDialog(goalId: goal.goalId!),
+                          );
+                        },
                         child: Text(
                           'Contribute to goal',
                           style: GoogleFonts.outfit(),

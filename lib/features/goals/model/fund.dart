@@ -14,11 +14,11 @@ class Fund {
 
   factory Fund.fromJson(Map<String, dynamic> data) {
     return Fund(
-      id: data['id'],
-      userId: data['user_id'],
-      amount: data['amount'],
+      id: data['id']?.toString(),
+      userId: data['user_id'].toString(),
+      amount: (data['amount'] as num).toDouble(),
       goalId: data['goal_id'],
-      createdAt: data['created_at'],
+      createdAt: DateTime.parse(data['created_at'] as String),
     );
   }
 }

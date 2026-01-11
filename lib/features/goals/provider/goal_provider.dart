@@ -1,5 +1,7 @@
 import 'package:cashio/core/provider/supabase_provider.dart';
+import 'package:cashio/features/auth/provider/current_user_profile.dart';
 import 'package:cashio/features/goals/model/goal.dart';
+import 'package:cashio/features/goals/provider/goal_fund_provider.dart';
 import 'package:cashio/features/goals/repository/goal_repository.dart';
 import 'package:cashio/features/goals/usecase/add_goal.dart';
 import 'package:cashio/features/goals/usecase/delete_goal.dart';
@@ -36,3 +38,17 @@ final deleteGoalProvider = Provider(
 final updateGoalProvider = Provider(
   (ref) => UpdateGoal(ref.read(goalRepoProvider)),
 );
+
+// Compute Goal Funds total per id
+
+final goalFundTotalByGoalIdProvider =
+    Provider.family<AsyncValue<double>, String>((ref, goalId) {
+      final fundsAsync = ref.watch(
+        getGoalFundsProvider(ref.watch(currentUserProfileProvider)!.userId),
+      );
+      return fundsAsync.whenData(
+        (funds) => funds
+            .where((fund) => fund.goalId == goalId)
+            .fold(0, (sum, fund) => sum + fund.amount),
+      );
+    });

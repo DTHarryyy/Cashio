@@ -12,4 +12,12 @@ class GoalFundsRepository {
       'amount': fund.amount,
     });
   }
+
+  Stream<List<Fund>> getGoalFunds(String userId) {
+    return supabase
+        .from('goal_funds')
+        .stream(primaryKey: ['id'])
+        .eq('user_id', userId)
+        .map((data) => data.map((e) => Fund.fromJson(e)).toList());
+  }
 }

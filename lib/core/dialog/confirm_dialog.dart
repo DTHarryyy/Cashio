@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CustomDialog extends ConsumerWidget {
+class ConfirmDialog extends ConsumerWidget {
   final String title;
   final String btnText;
   final VoidCallback onConfirm;
-  const CustomDialog({
+  const ConfirmDialog({
     super.key,
     required this.title,
     required this.btnText,

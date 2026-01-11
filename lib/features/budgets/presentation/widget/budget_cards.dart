@@ -1,5 +1,5 @@
 import 'package:cashio/core/constant/app_colors.dart';
-import 'package:cashio/core/dialog/custom_dialog.dart';
+import 'package:cashio/core/dialog/confirm_dialog.dart';
 import 'package:cashio/core/model/category_model.dart';
 import 'package:cashio/core/utils/snackbar.dart';
 import 'package:cashio/features/budgets/model/budget.dart';
@@ -156,7 +156,7 @@ class BudgetCards extends ConsumerWidget {
                         onPressed: () {
                           showDialog(
                             context: context,
-                            builder: (context) => CustomDialog(
+                            builder: (context) => ConfirmDialog(
                               title: 'Delete Budget',
                               btnText: 'Delete',
                               onConfirm: () async {

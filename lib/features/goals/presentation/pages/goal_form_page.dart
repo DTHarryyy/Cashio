@@ -4,9 +4,7 @@ import 'package:cashio/core/widgets/custom_button.dart';
 import 'package:cashio/core/widgets/custom_date_picker.dart';
 import 'package:cashio/core/widgets/custom_dropdown.dart';
 import 'package:cashio/core/widgets/custom_input_field.dart';
-import 'package:cashio/core/widgets/custom_loading.dart';
-import 'package:cashio/features/auth/model/app_user.dart';
-import 'package:cashio/features/auth/provider/user_profile_provider.dart';
+import 'package:cashio/features/auth/provider/current_user_profile.dart';
 import 'package:cashio/features/goals/model/goal.dart';
 import 'package:cashio/features/goals/provider/goal_provider.dart';
 import 'package:flutter/material.dart';
@@ -15,35 +13,15 @@ import 'package:google_fonts/google_fonts.dart';
 
 enum PriorityLevel { high, low }
 
-class GoalFormPage extends ConsumerWidget {
+class GoalFormPage extends ConsumerStatefulWidget {
   final Goal? goal;
   const GoalFormPage({super.key, this.goal});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final userAsync = ref.watch(profileProvider);
-
-    return userAsync.when(
-      error: (e, _) => Scaffold(body: Center(child: Text("User error: $e"))),
-      loading: () => Scaffold(body: Center(child: CustomLoading())),
-      data: (user) {
-        return GoalFormPageContent(user: user!, goal: goal);
-      },
-    );
-  }
+  ConsumerState<GoalFormPage> createState() => _GoalFormPageState();
 }
 
-class GoalFormPageContent extends ConsumerStatefulWidget {
-  final AppUser user;
-  final Goal? goal;
-  const GoalFormPageContent({super.key, required this.user, this.goal});
-
-  @override
-  ConsumerState<GoalFormPageContent> createState() =>
-      _GoalFormPageContentState();
-}
-
-class _GoalFormPageContentState extends ConsumerState<GoalFormPageContent> {
+class _GoalFormPageState extends ConsumerState<GoalFormPage> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController titleController;
   late TextEditingController targetAmountController;
@@ -70,7 +48,7 @@ class _GoalFormPageContentState extends ConsumerState<GoalFormPageContent> {
     notesController = TextEditingController(text: widget.goal?.notes ?? '');
   }
 
-  Future<void> onSubmit() async {
+  Future<void> onSubmit(String userId) async {
     try {
       if (!_formKey.currentState!.validate()) return;
 
@@ -79,7 +57,7 @@ class _GoalFormPageContentState extends ConsumerState<GoalFormPageContent> {
       final newGoal = Goal(
         goalId: widget.goal?.goalId,
         title: titleController.text.trim(),
-        userId: widget.user.userId,
+        userId: userId,
         targetAmount: amount,
         priorityLevel: selectedPriorityLevel!.name,
         notes: notesController.text.trim().isEmpty
@@ -102,6 +80,7 @@ class _GoalFormPageContentState extends ConsumerState<GoalFormPageContent> {
 
   @override
   Widget build(BuildContext context) {
+    final userId = ref.watch(currentUserProfileProvider)!.userId;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -164,7 +143,7 @@ class _GoalFormPageContentState extends ConsumerState<GoalFormPageContent> {
 
                 CustomButton(
                   hint: widget.goal == null ? 'Add' : 'Update',
-                  onPressed: onSubmit,
+                  onPressed: () => onSubmit(userId),
                 ),
               ],
             ),

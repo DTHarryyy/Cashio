@@ -5,7 +5,7 @@ import 'package:cashio/core/widgets/custom_button.dart';
 import 'package:cashio/core/widgets/custom_input_field.dart';
 import 'package:cashio/features/auth/provider/current_user_profile.dart';
 import 'package:cashio/features/goals/model/fund.dart';
-import 'package:cashio/features/transactions/provider/goal_fund_provider.dart';
+import 'package:cashio/features/goals/provider/goal_fund_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';

@@ -1,4 +1,5 @@
 import 'package:cashio/features/goals/model/fund.dart';
+import 'package:cashio/features/transactions/model/transaction.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GoalFundsRepository {
@@ -13,11 +14,16 @@ class GoalFundsRepository {
     });
   }
 
-  Stream<List<Fund>> getGoalFunds(String userId) {
+  Stream<List<Transaction>> getGoalFunds(String userId) {
     return supabase
-        .from('goal_funds')
+        .from('transactions')
         .stream(primaryKey: ['id'])
         .eq('user_id', userId)
-        .map((data) => data.map((e) => Fund.fromJson(e)).toList());
+        .map(
+          (data) => data
+              .where((t) => t['type'] == 'transfer')
+              .map((e) => Transaction.fromJson(e))
+              .toList(),
+        );
   }
 }

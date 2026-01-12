@@ -1,5 +1,5 @@
 import 'package:cashio/features/dashboard/model/monthly_total.dart';
-import 'package:cashio/features/dashboard/model/transaction.dart';
+import 'package:cashio/features/transactions/model/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -40,6 +40,7 @@ class TransactionsRepository {
         'budget_id': transac.budgetId,
         'amount': transac.amount,
         'type': transac.type,
+        'goal_id': transac.goalId,
         'description': transac.description,
         'transaction_date': transac.transactionDate?.toIso8601String(),
       });
@@ -55,7 +56,12 @@ class TransactionsRepository {
         .stream(primaryKey: ['id'])
         .eq('user_id', userId)
         .order('created_at', ascending: false)
-        .map((data) => data.map((e) => Transaction.fromJson(e)).toList());
+        .map(
+          (data) => data
+              .where((t) => t['type'] != 'transfer')
+              .map((e) => Transaction.fromJson(e))
+              .toList(),
+        );
   }
 
   // get total expenses / income

@@ -9,7 +9,7 @@ import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/core/widgets/custom_nav_bar.dart';
 import 'package:cashio/core/widgets/custom_speed_dial.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
-import 'package:cashio/features/dashboard/model/transaction.dart';
+import 'package:cashio/features/transactions/model/transaction.dart';
 import 'package:cashio/features/transactions/presentation/transaction_form_page.dart';
 import 'package:cashio/features/transactions/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +60,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                     : transactions.where((t) {
                         final type = t.type.toLowerCase();
                         final filterType = selectedFilter.toLowerCase();
-                        return type == filterType;
+                        return type == filterType && t.type != 'transfer';
                       }).toList();
                 return Scaffold(
                   appBar: CustomAppBar(scaffoldKey: scaffoldKey),
@@ -76,7 +76,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                     child: Column(
                       spacing: 10,
                       children: [
-                        // filter chips 
+                        // filter chips
                         Row(
                           spacing: 5,
                           children: List<Widget>.generate(3, (index) {
@@ -150,7 +150,7 @@ class FilteredTransactionContent extends ConsumerWidget {
           final category = categoryMap[transaction.categoryId];
 
           final amount = currencyFormatter.format(transaction.amount);
-          final name = transaction.transactionName;
+          final name = transaction.transactionName ?? '';
           final categoryName = category?.name ?? 'Other';
           final categoryColor =
               category?.color ?? const Color.fromARGB(255, 221, 158, 135);
@@ -158,7 +158,9 @@ class FilteredTransactionContent extends ConsumerWidget {
           final categoryType = transaction.type;
 
           final formatter = DateFormat('MMM dd yyyy');
-          final date = formatter.format(transaction.transactionDate!);
+          final date = formatter.format(
+            transaction.transactionDate ?? DateTime.now(),
+          );
           final bool isIncome = categoryType == 'income';
 
           return MenuAnchor(

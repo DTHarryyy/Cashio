@@ -8,7 +8,7 @@ import 'package:cashio/features/budgets/use_case/add_budget.dart';
 import 'package:cashio/features/budgets/use_case/delete_budget.dart';
 import 'package:cashio/features/budgets/use_case/get_budgets.dart';
 import 'package:cashio/features/budgets/use_case/update_budget.dart';
-import 'package:cashio/features/dashboard/model/transaction.dart';
+import 'package:cashio/features/transactions/model/transaction.dart';
 import 'package:cashio/features/transactions/provider/transactions_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

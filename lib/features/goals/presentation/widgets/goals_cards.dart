@@ -44,7 +44,7 @@ class GoalsCards extends ConsumerWidget {
         final goalId = goal.goalId;
 
         int daysLeft = goal.deadline.difference(DateTime.now()).inDays;
-
+        bool isCompleted = goal.status == 'completed';
         final totalAmount = ref.watch(goalFundTotalByGoalIdProvider(goalId!));
         return totalAmount.when(
           error: (e, _) => Text('Total goal fund error: $e'),
@@ -117,8 +117,11 @@ class GoalsCards extends ConsumerWidget {
                             onPressed: () {
                               showDialog(
                                 context: context,
-                                builder: (context) =>
-                                    ContributeDialog(goalId: goal.goalId!),
+                                builder: (context) => ContributeDialog(
+                                  goalId: goal.goalId!,
+                                  currentAmount: total,
+                                  targetAmount: goal.targetAmount,
+                                ),
                               );
                             },
                             child: Text(
@@ -260,10 +263,28 @@ class GoalsCards extends ConsumerWidget {
                       Expanded(
                         child: Text(deadline, style: GoogleFonts.outfit()),
                       ),
-                      Text(
-                        '${totalPecentage.toStringAsFixed(1)}%',
-                        style: GoogleFonts.outfit(),
-                      ),
+
+                      isCompleted
+                          ? Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.success.withAlpha(40),
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 15,
+                                vertical: 5,
+                              ),
+                              child: Text(
+                                'Completed',
+                                style: GoogleFonts.outfit(
+                                  color: AppColors.success,
+                                ),
+                              ),
+                            )
+                          : Text(
+                              '${totalPecentage.toStringAsFixed(1)}%',
+                              style: GoogleFonts.outfit(),
+                            ),
                     ],
                   ),
                   SizedBox(height: 5),
@@ -272,7 +293,9 @@ class GoalsCards extends ConsumerWidget {
                     backgroundColor: AppColors.background,
                     minHeight: 10,
                     borderRadius: BorderRadius.circular(30),
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.button),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      isCompleted ? AppColors.success : AppColors.button,
+                    ),
                   ),
                 ],
               ),

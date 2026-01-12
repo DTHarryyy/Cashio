@@ -10,7 +10,7 @@ import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/features/auth/provider/current_user_profile.dart';
 import 'package:cashio/features/budgets/model/budget.dart';
 import 'package:cashio/features/budgets/provider/budget_provider.dart';
-import 'package:cashio/features/dashboard/model/transaction.dart';
+import 'package:cashio/features/transactions/model/transaction.dart';
 import 'package:cashio/features/transactions/provider/transactions_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

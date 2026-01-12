@@ -1,6 +1,6 @@
 import 'package:cashio/core/provider/supabase_provider.dart';
 import 'package:cashio/features/dashboard/model/monthly_total.dart';
-import 'package:cashio/features/dashboard/model/transaction.dart';
+import 'package:cashio/features/transactions/model/transaction.dart';
 import 'package:cashio/features/transactions/repository/transactions_repository.dart';
 import 'package:cashio/features/transactions/usecases/adding%20data/add_categories.dart';
 import 'package:cashio/features/transactions/usecases/adding%20data/add_transaction.dart';

@@ -1,8 +1,8 @@
 import 'package:cashio/core/provider/supabase_provider.dart';
-import 'package:cashio/features/goals/model/fund.dart';
 import 'package:cashio/features/goals/repository/goal_funds_repository.dart';
 import 'package:cashio/features/goals/usecase/add_goal_fund.dart';
 import 'package:cashio/features/goals/usecase/get_goals_funds.dart';
+import 'package:cashio/features/transactions/model/transaction.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final goalFundRepoProvider = Provider(
@@ -18,7 +18,7 @@ final addGoalFundProvider = Provider(
 final goalFundUseCaseProv = Provider(
   (ref) => GetGoalsFunds(ref.watch(goalFundRepoProvider)),
 );
-final getGoalFundsProvider = StreamProvider.family<List<Fund>, String>((
+final getGoalFundsProvider = StreamProvider.family<List<Transaction>, String>((
   ref,
   userId,
 ) {

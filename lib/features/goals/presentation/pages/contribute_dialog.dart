@@ -4,19 +4,28 @@ import 'package:cashio/core/utils/validators.dart';
 import 'package:cashio/core/widgets/custom_button.dart';
 import 'package:cashio/core/widgets/custom_input_field.dart';
 import 'package:cashio/features/auth/provider/current_user_profile.dart';
-import 'package:cashio/features/goals/model/fund.dart';
-import 'package:cashio/features/goals/provider/goal_fund_provider.dart';
+import 'package:cashio/features/goals/provider/goal_provider.dart';
+import 'package:cashio/features/transactions/model/transaction.dart';
+import 'package:cashio/features/transactions/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ContributeDialog extends ConsumerWidget {
   final String goalId;
-  const ContributeDialog({super.key, required this.goalId});
+  final double currentAmount;
+  final double targetAmount;
+  const ContributeDialog({
+    super.key,
+    required this.goalId,
+    required this.currentAmount,
+    required this.targetAmount,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userId = ref.watch(currentUserProfileProvider)!.userId;
+
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     final TextEditingController amountController = TextEditingController();
     return AlertDialog(
@@ -46,13 +55,20 @@ class ContributeDialog extends ConsumerWidget {
                 try {
                   final amount = double.parse(amountController.text.trim());
 
-                  final newFund = Fund(
+                  final newFund = Transaction(
                     userId: userId,
                     amount: amount,
                     goalId: goalId,
+                    type: 'transfer',
                   );
+                  await ref.read(addTransactionsProvider).call(newFund);
 
-                  await ref.read(addGoalFundProvider).call(newFund);
+                  if ((currentAmount + amount) >= targetAmount) {
+                    // TODO: update complete goal status
+                    await ref
+                        .read(updateGoalStatusProvider)
+                        .call('completed', goalId);
+                  }
                   if (!context.mounted) return;
                   AppSnackBar.success(context, 'Fund added successfully');
                   Navigator.pop(context);

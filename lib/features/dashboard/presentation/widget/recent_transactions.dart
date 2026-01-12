@@ -6,7 +6,7 @@ import 'package:cashio/core/provider/category_provider.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/features/auth/model/app_user.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
-import 'package:cashio/features/dashboard/model/transaction.dart';
+import 'package:cashio/features/transactions/model/transaction.dart';
 import 'package:cashio/features/transactions/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -71,11 +71,13 @@ class RecentTransactions extends ConsumerWidget {
         final categoryMap = {for (var c in categoryData) c.id: c};
         final transaction = transactions[index];
         final category = categoryMap[transaction.categoryId];
-        final name = transaction.transactionName.toUpperCase();
+        final name = transaction.transactionName?.toUpperCase() ?? '';
         final amount = transaction.amount.toString();
 
         final formatter = DateFormat('MMM dd yyyy');
-        final date = formatter.format(transaction.transactionDate!);
+        final date = formatter.format(
+          transaction.transactionDate ?? DateTime.now(),
+        );
         final categoryType = transaction.type;
 
         final categoryName = category?.name ?? 'dsasd';

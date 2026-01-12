@@ -5,7 +5,7 @@ import 'package:cashio/core/utils/snackbar.dart';
 import 'package:cashio/features/budgets/model/budget.dart';
 import 'package:cashio/features/budgets/presentation/pages/budget_form_page.dart';
 import 'package:cashio/features/budgets/provider/budget_provider.dart';
-import 'package:cashio/features/dashboard/model/transaction.dart';
+import 'package:cashio/features/transactions/model/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';

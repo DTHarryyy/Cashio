@@ -7,6 +7,7 @@ import 'package:cashio/features/goals/usecase/add_goal.dart';
 import 'package:cashio/features/goals/usecase/delete_goal.dart';
 import 'package:cashio/features/goals/usecase/get_goals.dart';
 import 'package:cashio/features/goals/usecase/update_goal.dart';
+import 'package:cashio/features/goals/usecase/update_status.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // goal repository provider
@@ -37,6 +38,10 @@ final deleteGoalProvider = Provider(
 //final update goal use case provider
 final updateGoalProvider = Provider(
   (ref) => UpdateGoal(ref.read(goalRepoProvider)),
+);
+//final update goal status use case provider
+final updateGoalStatusProvider = Provider(
+  (ref) => UpdateStatus(ref.read(goalRepoProvider)),
 );
 
 // Compute Goal Funds total per id

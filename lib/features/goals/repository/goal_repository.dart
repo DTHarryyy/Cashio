@@ -30,6 +30,10 @@ class GoalRepository {
         .eq('id', goal.goalId!);
   }
 
+  Future<void> updateStatus(String status, String goalId) async {
+    await supabase.from('goals').update({'status': status}).eq('id', goalId);
+  }
+
   Stream<List<Goal>> getGoals(String userId) {
     return supabase
         .from('goals')

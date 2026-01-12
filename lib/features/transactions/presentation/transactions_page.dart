@@ -76,7 +76,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                     child: Column(
                       spacing: 10,
                       children: [
-                        // filter chips
+                        // filter chips 
                         Row(
                           spacing: 5,
                           children: List<Widget>.generate(3, (index) {

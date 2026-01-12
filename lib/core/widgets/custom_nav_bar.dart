@@ -17,7 +17,7 @@ class CustomNavBar extends ConsumerWidget {
       selectedIndex: pageIndex,
       onDestinationSelected: (value) =>
           ref.read(pageValueProvider.notifier).changePage(value),
-
+      
       destinations: const [
         NavigationDestination(
           icon: Icon(Icons.dashboard_rounded),
@@ -45,11 +45,6 @@ class CustomNavBar extends ConsumerWidget {
           label: 'Budget',
         ),
         NavigationDestination(
-          icon: Icon(Icons.savings),
-          selectedIcon: Icon(Icons.savings, color: AppColors.background),
-          label: 'Savings',
-        ),
-        NavigationDestination(
           icon: Icon(Icons.track_changes),
           selectedIcon: Icon(
             Icons.pie_chart_rounded,
@@ -58,7 +53,9 @@ class CustomNavBar extends ConsumerWidget {
           ),
           label: 'Goals',
         ),
+        
       ],
+      
     );
   }
 }

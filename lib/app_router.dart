@@ -5,7 +5,6 @@ import 'package:cashio/core/provider/page_index_provider.dart';
 import 'package:cashio/features/transactions/presentation/transactions_page.dart';
 import 'package:cashio/features/budgets/presentation/budget_page.dart';
 import 'package:cashio/features/goals/presentation/goals_page.dart';
-import 'package:cashio/features/savings/savings_page.dart';
 
 class AppRouter extends ConsumerWidget {
   const AppRouter({super.key});
@@ -16,7 +15,6 @@ class AppRouter extends ConsumerWidget {
       HomePage(),
       TransactionsPage(),
       BudgetPage(),
-      SavingsPage(),
       GoalsPage(),
     ];
     final currentPage = ref.watch(pageValueProvider);

@@ -1,4 +1,5 @@
 import 'package:cashio/core/constant/app_colors.dart';
+import 'package:cashio/core/provider/cash_balance_provider.dart';
 import 'package:cashio/core/utils/snackbar.dart';
 import 'package:cashio/core/utils/validators.dart';
 import 'package:cashio/core/widgets/custom_button.dart';
@@ -62,7 +63,9 @@ class ContributeDialog extends ConsumerWidget {
                     type: 'transfer',
                   );
                   await ref.read(addTransactionsProvider).call(newFund);
-
+                  await ref
+                      .read(lessExpenseInBalanceProvider)
+                      .call(userId, amount);
                   if ((currentAmount + amount) >= targetAmount) {
                     // TODO: update complete goal status
                     await ref

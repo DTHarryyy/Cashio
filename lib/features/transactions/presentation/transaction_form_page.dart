@@ -1,4 +1,5 @@
 import 'package:cashio/core/model/category_model.dart';
+import 'package:cashio/core/provider/cash_balance_provider.dart';
 import 'package:cashio/core/provider/category_provider.dart';
 import 'package:cashio/core/utils/snackbar.dart';
 import 'package:cashio/core/utils/validators.dart';
@@ -105,6 +106,12 @@ class _TransactionFormPageState extends ConsumerState<TransactionFormPage> {
       await ref.read(addTransactionsProvider).call(newTransaction);
     } else {
       await ref.read(updateTransactionProvider).call(newTransaction);
+    }
+
+    if (selectedTransactionType.name == 'income') {
+      await ref.read(addIncomeInBalanceProvider).call(userId, amount);
+    } else {
+      await ref.read(lessExpenseInBalanceProvider).call(userId, amount);
     }
 
     if (!mounted) return;

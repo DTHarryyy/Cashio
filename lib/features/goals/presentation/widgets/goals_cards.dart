@@ -81,106 +81,110 @@ class GoalsCards extends ConsumerWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      MenuAnchor(
-                        alignmentOffset: Offset(-65, 0),
+                      if (!isCompleted)
+                        MenuAnchor(
+                          alignmentOffset: Offset(-65, 0),
 
-                        builder:
-                            (
-                              BuildContext context,
-                              MenuController controller,
-                              Widget? child,
-                            ) {
-                              return IconButton(
-                                icon: Icon(
-                                  controller.isOpen
-                                      ? Icons.close_rounded
-                                      : Icons.more_horiz_rounded,
-                                  size: 18,
-                                ),
-                                onPressed: () {
-                                  controller.isOpen
-                                      ? controller.close()
-                                      : controller.open();
-                                },
-                              );
-                            },
-                        style: MenuStyle(
-                          padding: WidgetStatePropertyAll(
-                            EdgeInsets.symmetric(vertical: 0),
-                          ),
-                          backgroundColor: WidgetStatePropertyAll(
-                            AppColors.surface,
-                          ),
-                        ),
-                        menuChildren: [
-                          MenuItemButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => ContributeDialog(
-                                  goalId: goal.goalId!,
-                                  currentAmount: total,
-                                  targetAmount: goal.targetAmount,
-                                ),
-                              );
-                            },
-                            child: Text(
-                              'Contribute to goal',
-                              style: GoogleFonts.outfit(),
+                          builder:
+                              (
+                                BuildContext context,
+                                MenuController controller,
+                                Widget? child,
+                              ) {
+                                return IconButton(
+                                  icon: Icon(
+                                    controller.isOpen
+                                        ? Icons.close_rounded
+                                        : Icons.more_horiz_rounded,
+                                    size: 18,
+                                  ),
+                                  onPressed: () {
+                                    controller.isOpen
+                                        ? controller.close()
+                                        : controller.open();
+                                  },
+                                );
+                              },
+                          style: MenuStyle(
+                            padding: WidgetStatePropertyAll(
+                              EdgeInsets.symmetric(vertical: 0),
+                            ),
+                            backgroundColor: WidgetStatePropertyAll(
+                              AppColors.surface,
                             ),
                           ),
-                          MenuItemButton(
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => GoalFormPage(
-                                  goal: Goal(
-                                    goalId: goal.goalId,
-                                    title: title,
-                                    userId: goal.userId,
+                          menuChildren: [
+                            MenuItemButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => ContributeDialog(
+                                    goalId: goal.goalId!,
+                                    currentAmount: total,
                                     targetAmount: goal.targetAmount,
-                                    priorityLevel: priorityLevel,
-                                    notes: goal.notes,
-                                    deadline: goal.deadline,
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                'Contribute to goal',
+                                style: GoogleFonts.outfit(),
+                              ),
+                            ),
+
+                            MenuItemButton(
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => GoalFormPage(
+                                    goal: Goal(
+                                      goalId: goal.goalId,
+                                      title: title,
+                                      userId: goal.userId,
+                                      targetAmount: goal.targetAmount,
+                                      priorityLevel: priorityLevel,
+                                      notes: goal.notes,
+                                      deadline: goal.deadline,
+                                    ),
                                   ),
                                 ),
                               ),
+                              child: Text(
+                                'Edit goal',
+                                style: GoogleFonts.outfit(),
+                              ),
                             ),
-                            child: Text(
-                              'Edit goal',
-                              style: GoogleFonts.outfit(),
+                            MenuItemButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) => ConfirmDialog(
+                                    title: 'Delete goal',
+                                    btnText: 'Delete',
+                                    onConfirm: () async {
+                                      try {
+                                        ref
+                                            .read(deleteGoalProvider)
+                                            .call(goalId);
+                                        AppSnackBar.success(
+                                          context,
+                                          'Goal deleted successfully',
+                                        );
+                                        Navigator.pop(context);
+                                      } catch (e) {
+                                        debugPrint('Delete goal error: $e');
+                                      }
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                'Delete goal',
+                                style: GoogleFonts.outfit(),
+                              ),
                             ),
-                          ),
-                          MenuItemButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) => ConfirmDialog(
-                                  title: 'Delete goal',
-                                  btnText: 'Delete',
-                                  onConfirm: () async {
-                                    try {
-                                      ref.read(deleteGoalProvider).call(goalId);
-                                      AppSnackBar.success(
-                                        context,
-                                        'Goal deleted successfully',
-                                      );
-                                      Navigator.pop(context);
-                                    } catch (e) {
-                                      debugPrint('Delete goal error: $e');
-                                    }
-                                  },
-                                ),
-                              );
-                            },
-                            child: Text(
-                              'Delete goal',
-                              style: GoogleFonts.outfit(),
-                            ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
                     ],
                   ),
                   SizedBox(height: 5),

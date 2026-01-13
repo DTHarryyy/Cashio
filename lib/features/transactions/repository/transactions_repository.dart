@@ -126,4 +126,5 @@ class TransactionsRepository {
       throw ('Failed to delete transaction: ${e.message}');
     }
   }
+
 }

@@ -6,6 +6,7 @@ import 'package:cashio/features/budgets/model/budget.dart';
 import 'package:cashio/features/budgets/presentation/pages/budget_form_page.dart';
 import 'package:cashio/features/budgets/provider/budget_provider.dart';
 import 'package:cashio/features/transactions/model/transaction.dart';
+import 'package:cashio/features/transactions/presentation/transaction_form_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -130,8 +131,7 @@ class BudgetCards extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  AddBudgetPage(budget: budget),
+                              builder: (context) => TransactionFormPage(),
                             ),
                           );
                         },

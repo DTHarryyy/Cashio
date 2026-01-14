@@ -1,5 +1,6 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/widgets/avatar.dart';
+import 'package:cashio/features/notifications/notification_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -35,9 +36,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actionsPadding: const EdgeInsets.only(right: 10),
       actions: [
-        // TODO: integrate notificationsq
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationPage()),
+            );
+          },
           icon: Icon(
             Icons.notifications_none_rounded,
             color: AppColors.textSecondary,

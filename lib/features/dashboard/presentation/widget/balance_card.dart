@@ -1,5 +1,6 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/features/dashboard/model/monthly_total.dart';
+import 'package:cashio/features/dashboard/presentation/pages/finance_pie_chart.dart';
 import 'package:cashio/features/dashboard/presentation/widget/bar_graph.dart';
 import 'package:cashio/features/dashboard/presentation/widget/stat_row.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class BalanceCard extends ConsumerWidget {
       decimalDigits: 2,
     );
     return Container(
-      height: 200,
+      constraints: BoxConstraints(maxHeight: 230),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -84,7 +85,14 @@ class BalanceCard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 12),
                 // Chart
-                Expanded(child: BarGraph(monthlyTotal: monthlyTotal)),
+                Expanded(
+                  child: FinancePieChart(
+                    income: 123,
+                    expense: 123,
+                    savings: 123,
+                    balance: 123,
+                  ),
+                ),
               ],
             ),
           ),

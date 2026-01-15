@@ -5,6 +5,7 @@ import 'package:cashio/features/auth/model/app_user.dart';
 import 'package:cashio/features/auth/presentation/sign_in_page.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/dashboard/model/monthly_total.dart';
+import 'package:cashio/features/dashboard/presentation/pages/finance_pie_chart.dart';
 import 'package:cashio/features/dashboard/presentation/widget/balance_card.dart';
 import 'package:cashio/core/widgets/custom_drawer.dart';
 import 'package:cashio/core/widgets/custom_home_app_bar.dart';
@@ -121,7 +122,7 @@ class _HomePageContentsState extends ConsumerState<HomePageContents> {
               totalBalance: widget.totalBalance,
               monthlyTotal: widget.monthlyTotal,
             ),
-
+            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

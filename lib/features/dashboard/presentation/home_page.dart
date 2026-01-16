@@ -5,7 +5,7 @@ import 'package:cashio/features/auth/model/app_user.dart';
 import 'package:cashio/features/auth/presentation/sign_in_page.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/dashboard/model/monthly_total.dart';
-import 'package:cashio/features/dashboard/presentation/pages/finance_pie_chart.dart';
+import 'package:cashio/features/dashboard/presentation/pages/account_overview.dart';
 import 'package:cashio/features/dashboard/presentation/widget/balance_card.dart';
 import 'package:cashio/core/widgets/custom_drawer.dart';
 import 'package:cashio/core/widgets/custom_home_app_bar.dart';
@@ -110,8 +110,8 @@ class _HomePageContentsState extends ConsumerState<HomePageContents> {
       appBar: CustomAppBar(scaffoldKey: _scaffoldKey),
       bottomNavigationBar: CustomNavBar(),
       floatingActionButton: CustomSpeedDial(),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           spacing: 10,
@@ -122,7 +122,7 @@ class _HomePageContentsState extends ConsumerState<HomePageContents> {
               totalBalance: widget.totalBalance,
               monthlyTotal: widget.monthlyTotal,
             ),
-            
+            AccountOverview(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -145,7 +145,7 @@ class _HomePageContentsState extends ConsumerState<HomePageContents> {
                 ),
               ],
             ),
-            const Expanded(child: RecentTransactions()),
+            const SizedBox(height: 300, child: RecentTransactions()),
           ],
         ),
       ),

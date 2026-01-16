@@ -1,7 +1,6 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/features/dashboard/model/monthly_total.dart';
 import 'package:cashio/features/dashboard/presentation/pages/finance_pie_chart.dart';
-import 'package:cashio/features/dashboard/presentation/widget/bar_graph.dart';
 import 'package:cashio/features/dashboard/presentation/widget/stat_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -95,7 +95,9 @@ class _TransactionFormPageState extends ConsumerState<TransactionFormPage> {
       categoryId: selectedCategory!,
       amount: amount,
       type: selectedTransactionType.name,
-      description: notesController.text.trim(),
+      description: notesController.text.trim().isEmpty
+          ? null
+          : notesController.text.trim(),
       budgetId: selectedBudget,
       transactionDate: selectedDate,
     );

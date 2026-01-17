@@ -12,7 +12,6 @@ class MonthlyOverview {
   });
 
   factory MonthlyOverview.fromJson(Map<String, dynamic> json) {
-    print(json);
     return MonthlyOverview(
       monthStart: DateTime.parse(json['month_start'] as String),
       income: (json['income'] as num).toDouble(),

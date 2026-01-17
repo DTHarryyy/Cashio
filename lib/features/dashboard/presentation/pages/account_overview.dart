@@ -1,7 +1,6 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/features/auth/provider/current_user_profile.dart';
 import 'package:cashio/features/dashboard/provider/analytics_provider.dart';
-import 'package:cashio/features/dashboard/model/account_overview.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,11 +38,12 @@ class AccountOverview extends ConsumerWidget {
           return FlSpot(index, month.expense.toDouble());
         }).toList();
 
-        final balanceSpots = monthly.asMap().entries.map((entry) {
-          final index = entry.key.toDouble();
-          final month = entry.value;
-          return FlSpot(index, month.balance.toDouble());
-        }).toList();
+        // TODO: integrate balace  in accoutn overview when needed
+        // final balanceSpots = monthly.asMap().entries.map((entry) {
+        //   final index = entry.key.toDouble();
+        //   final month = entry.value;
+        //   return FlSpot(index, month.balance.toDouble());
+        // }).toList();
 
         // Calculate dynamic maxY for chart to prevent overflow
         final maxIncome = monthly
@@ -101,6 +101,17 @@ class AccountOverview extends ConsumerWidget {
                         barWidth: 2,
                         color: AppColors.success,
                         dotData: FlDotData(show: false),
+                        belowBarData: BarAreaData(
+                          show: true,
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              AppColors.success,
+                              AppColors.surface.withAlpha(60),
+                            ],
+                          ),
+                        ),
                       ),
                       // Expense line
                       LineChartBarData(
@@ -109,24 +120,27 @@ class AccountOverview extends ConsumerWidget {
                         barWidth: 2,
                         color: AppColors.error,
                         dotData: FlDotData(show: false),
-                      ),
-                      // Balance line
-                      LineChartBarData(
-                        spots: balanceSpots,
-                        isCurved: true,
-                        barWidth: 2,
-                        color: AppColors.primary,
-                        dotData: FlDotData(show: false),
-                      ),
-                    ],
-                    betweenBarsData: [
-                      BetweenBarsData(
-                        fromIndex: 0,
-                        toIndex: 1,
-                        color: const Color.fromARGB(255, 151, 246, 230),
+                        belowBarData: BarAreaData(
+                          show: true,
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              AppColors.error,
+                              AppColors.surface.withAlpha(60),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
 
+                    // betweenBarsData: [
+                    //   BetweenBarsData(
+                    //     fromIndex: 0,
+                    //     toIndex: 1,
+                    //     color: const Color.fromARGB(255, 151, 246, 230),
+                    //   ),
+                    // ],
                     titlesData: FlTitlesData(
                       bottomTitles: AxisTitles(
                         sideTitles: SideTitles(

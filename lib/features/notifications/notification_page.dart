@@ -20,9 +20,7 @@ class NotificationPage extends StatelessWidget {
           'Notifications',
           style: GoogleFonts.outfit(fontSize: 20, fontWeight: FontWeight.w600),
         ),
-        actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.settings_rounded)),
-        ],
+      
       ),
       body: SingleChildScrollView(
         child: Container(

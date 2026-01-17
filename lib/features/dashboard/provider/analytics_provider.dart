@@ -8,6 +8,7 @@ final analyticsRepoProvider = Provider(
   (ref) => AnalyticsRepository(ref.watch(supabaseProvider)),
 );
 
+// GET LAST 12 MONTHS
 final getMonthlyOverviewUsecaseProvider = Provider(
   (ref) => GetMonthlyOverview(ref.watch(analyticsRepoProvider)),
 );

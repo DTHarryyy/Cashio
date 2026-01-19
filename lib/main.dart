@@ -35,10 +35,10 @@ class MyApp extends ConsumerWidget {
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
           elevation: 0,
-          surfaceTintColor: Colors.transparent,
+          surfaceTintColor: Color.fromARGB(0, 95, 84, 84),
         ),
       ),
       home: const AuthGate(),
     );
   }
-} 
+}

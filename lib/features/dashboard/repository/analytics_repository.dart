@@ -6,6 +6,7 @@ class AnalyticsRepository {
   final SupabaseClient supabase;
   AnalyticsRepository(this.supabase);
 
+    
   Future<List<MonthlyOverview>> getMonthlyOverview(String userId) async {
     try {
       final response = await supabase.rpc(

@@ -1,10 +1,12 @@
+import 'package:cashio/auth_gate.dart';
 import 'package:cashio/core/utils/snackbar.dart';
 import 'package:cashio/core/widgets/ct_button.dart';
+import 'package:cashio/features/auth/model/app_user.dart';
 import 'package:cashio/features/auth/presentation/sign_in_page.dart';
 import 'package:cashio/features/auth/presentation/widgets/custom_text_field.dart';
 import 'package:cashio/features/auth/presentation/widgets/other_login_provider.dart';
 import 'package:cashio/features/auth/provider/auth_provider.dart';
-import 'package:cashio/features/dashboard/presentation/home_page.dart';
+import 'package:cashio/features/auth/provider/current_user_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -130,15 +132,22 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                             final email = emailController.text.trim();
                             final password = passwordController.text.trim();
                             try {
-                              await ref
+                              final user = await ref
                                   .read(signUpProvider)
                                   .call(username, email, password);
 
                               if (!context.mounted) return;
+                              ref
+                                  .read(currentUserProfileProvider.notifier)
+                                  .state = AppUser(
+                                userId: user!.id,
+                                email: email,
+                                username: username,
+                              );
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => HomePage(),
+                                  builder: (context) => AuthGate(),
                                 ),
                               );
                             } catch (e) {

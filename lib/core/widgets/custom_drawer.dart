@@ -1,5 +1,6 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/widgets/avatar.dart';
+import 'package:cashio/features/auth/presentation/sign_in_page.dart';
 import 'package:cashio/features/auth/provider/auth_provider.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/core/dialog/confirm_dialog.dart';
@@ -66,10 +67,19 @@ class CustomDrawer extends ConsumerWidget {
                           onConfirm: () async {
                             try {
                               await ref.read(signOutProvider).call();
-                              if (!context.mounted) return;
-                              Navigator.pop(context);
                             } catch (e) {
                               debugPrint('Error signing out: $e');
+                            } finally {
+                              // ignore: control_flow_in_finally
+                              if (!context.mounted) return;
+
+                              Navigator.pop(context);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignInPage(),
+                                ),
+                              );
                             }
                           },
                         ),

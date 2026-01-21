@@ -127,11 +127,8 @@ class _SignUpPageState extends ConsumerState<SignInPage> {
                               } catch (e) {
                                 AppSnackBar.error(context, 'Error: $e/');
                               }
-
-                              Future.delayed(const Duration(seconds: 2), () {
-                                setState(() => isLoading = false);
-                              });
                             }
+                            setState(() => isLoading = false);
                           },
                   ),
                 ),

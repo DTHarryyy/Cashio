@@ -19,4 +19,13 @@ class MonthlyOverview {
       balance: (json['balance'] as num).toDouble(),
     );
   }
+
+  factory MonthlyOverview.empty() {
+    return MonthlyOverview(
+      monthStart: DateTime.now(),
+      income: 0,
+      expense: 0,
+      balance: 0,
+    );
+  }
 }

@@ -5,5 +5,5 @@ class GetBalance {
   final BalaceRepository repo;
   GetBalance(this.repo);
 
-  Stream<List<Balance>> call(String userId) => repo.getBalance(userId);
+  Stream<Balance?> call(String userId) => repo.getBalance(userId);
 }

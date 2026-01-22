@@ -7,28 +7,6 @@ class TransactionsRepository {
   final SupabaseClient supabase;
   TransactionsRepository(this.supabase);
 
-  // add category
-
-  Future<String> addCategory(
-    String name,
-    String transactionType,
-    IconData icon,
-    Color color,
-  ) async {
-    final categoryRes = await supabase
-        .from('categories')
-        .insert({
-          'category_name': name,
-          'category_icon': icon.codePoint,
-          'color': color.toARGB32(),
-          'type': transactionType,
-        })
-        .select()
-        .single();
-
-    return categoryRes['id'];
-  }
-
   // add atransactiosn of user
 
   Future<void> addTransaction(Transaction transac) async {

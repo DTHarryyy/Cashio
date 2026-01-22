@@ -116,12 +116,7 @@ class _HomePageContentsState extends ConsumerState<HomePageContents> {
           mainAxisAlignment: MainAxisAlignment.start,
           spacing: 10,
           children: [
-            BalanceCard(
-              income: widget.income,
-              expenses: widget.expense,
-              totalBalance: widget.totalBalance,
-              monthlyTotal: widget.monthlyTotal,
-            ),
+            BalanceCard(),
             AccountOverview(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

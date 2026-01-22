@@ -12,7 +12,7 @@ final balanceRepoProvider = Provider(
 final getBalanceUseCaseProvider = Provider(
   (ref) => GetBalance(ref.watch(balanceRepoProvider)),
 );
-final getBalanceProvider = StreamProvider.family<List<Balance>, String>((
+final getBalanceProvider = StreamProvider.family<Balance?, String>((
   ref,
   userId,
 ) {

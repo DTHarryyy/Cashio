@@ -1,5 +1,6 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/features/auth/provider/current_user_profile.dart';
+import 'package:cashio/features/dashboard/model/account_overview.dart';
 import 'package:cashio/features/dashboard/provider/analytics_provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -26,13 +27,17 @@ class AccountOverview extends ConsumerWidget {
       error: (e, _) => Center(child: Text('Account overview error: $e')),
       data: (monthly) {
         // Create chart spots dynamically
-        final incomeSpots = monthly.asMap().entries.map((entry) {
+        final chartData = monthly.isNotEmpty
+            ? monthly
+            : List.generate(12, (index) => MonthlyOverview.empty());
+
+        final incomeSpots = chartData.asMap().entries.map((entry) {
           final index = entry.key.toDouble();
           final month = entry.value;
           return FlSpot(index, month.income.toDouble());
         }).toList();
 
-        final expenseSpots = monthly.asMap().entries.map((entry) {
+        final expenseSpots = chartData.asMap().entries.map((entry) {
           final index = entry.key.toDouble();
           final month = entry.value;
           return FlSpot(index, month.expense.toDouble());
@@ -45,23 +50,17 @@ class AccountOverview extends ConsumerWidget {
         //   return FlSpot(index, month.balance.toDouble());
         // }).toList();
 
-        // Calculate dynamic maxY for chart to prevent overflow
-        final maxIncome = monthly
-            .map((m) => m.income)
-            .reduce((a, b) => a > b ? a : b);
-        final maxExpense = monthly
-            .map((m) => m.expense)
-            .reduce((a, b) => a > b ? a : b);
-        final maxBalance = monthly
-            .map((m) => m.balance)
-            .reduce((a, b) => a > b ? a : b);
+        final maxIncome = chartData.fold<double>(
+          0,
+          (prev, m) => m.income > prev ? m.income : prev,
+        );
+        final maxExpense = chartData.fold<double>(
+          0,
+          (prev, m) => m.expense > prev ? m.expense : prev,
+        );
+
         final maxY =
-            [
-              maxIncome,
-              maxExpense,
-              maxBalance,
-            ].reduce((a, b) => a > b ? a : b) *
-            1.1;
+            [maxIncome, maxExpense].reduce((a, b) => a > b ? a : b) * 1.1;
 
         return Container(
           padding: const EdgeInsets.only(top: 15, right: 20, bottom: 15),
@@ -78,105 +77,123 @@ class AccountOverview extends ConsumerWidget {
                   fontSize: 18,
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                'Balance: ${monthly.last.balance.toString()}',
-                style: GoogleFonts.outfit(fontSize: 14),
-              ),
               const SizedBox(height: 16),
               AspectRatio(
                 aspectRatio: 1.5,
-                child: LineChart(
-                  LineChartData(
-                    minY: 0,
-                    maxY: maxY,
-                    clipData: FlClipData.all(),
-                    borderData: FlBorderData(show: false),
-                    lineTouchData: LineTouchData(enabled: true),
-                    lineBarsData: [
-                      // Income line
-                      LineChartBarData(
-                        spots: incomeSpots,
-                        isCurved: true,
-                        barWidth: 2,
-                        color: AppColors.success,
-                        dotData: FlDotData(show: false),
-                        belowBarData: BarAreaData(
+                child: Stack(
+                  children: [
+                    LineChart(
+                      LineChartData(
+                        minY: 0,
+                        maxY: maxY,
+                        clipData: FlClipData.all(),
+                        borderData: FlBorderData(
                           show: true,
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              AppColors.success,
-                              AppColors.surface.withAlpha(60),
-                            ],
+                          border: const Border(
+                            left: BorderSide(color: Colors.grey, width: 0.5),
+                            bottom: BorderSide(color: Colors.grey, width: 0.5),
                           ),
                         ),
-                      ),
-                      // Expense line
-                      LineChartBarData(
-                        spots: expenseSpots,
-                        isCurved: true,
-                        barWidth: 2,
-                        color: AppColors.error,
-                        dotData: FlDotData(show: false),
-                        belowBarData: BarAreaData(
-                          show: true,
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              AppColors.error,
-                              AppColors.surface.withAlpha(60),
-                            ],
-                          ),
+                        lineTouchData: LineTouchData(
+                          enabled: monthly.isNotEmpty,
                         ),
-                      ),
-                    ],
-
-                    // betweenBarsData: [
-                    //   BetweenBarsData(
-                    //     fromIndex: 0,
-                    //     toIndex: 1,
-                    //     color: const Color.fromARGB(255, 151, 246, 230),
-                    //   ),
-                    // ],
-                    titlesData: FlTitlesData(
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          interval: 1,
-                          getTitlesWidget: (value, meta) {
-                            final index = value.toInt();
-                            if (index < 0 || index >= monthly.length) {
-                              return const SizedBox();
-                            }
-                            final monthName = DateFormat.MMM().format(
-                              monthly[index].monthStart,
-                            );
-                            return SideTitleWidget(
-                              meta: meta,
-                              space: 4,
-                              child: Text(
-                                monthName,
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
+                        lineBarsData: monthly.isNotEmpty
+                            ? [
+                                // Income line
+                                LineChartBarData(
+                                  spots: incomeSpots,
+                                  isCurved: true,
+                                  barWidth: 2,
+                                  color: AppColors.success,
+                                  dotData: FlDotData(show: false),
+                                  belowBarData: BarAreaData(
+                                    show: true,
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        AppColors.success.withAlpha(30),
+                                        AppColors.surface.withAlpha(60),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                                // Expense line
+                                LineChartBarData(
+                                  spots: expenseSpots,
+                                  isCurved: true,
+                                  barWidth: 2,
+                                  color: AppColors.error,
+                                  dotData: FlDotData(show: false),
+                                  belowBarData: BarAreaData(
+                                    show: true,
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        AppColors.error.withAlpha(30),
+                                        AppColors.surface.withAlpha(60),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ]
+                            : [], // empty if no data
+                        titlesData: FlTitlesData(
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              interval: 1,
+                              getTitlesWidget: (value, meta) {
+                                final index = value.toInt();
+                                if (index < 0 || index >= chartData.length) {
+                                  return const SizedBox();
+                                }
+                                final monthName = DateFormat.MMM().format(
+                                  chartData[index].monthStart,
+                                );
+                                return SideTitleWidget(
+                                  meta: meta,
+                                  space: 4,
+                                  child: Text(
+                                    monthName,
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 30,
+                            ),
+                          ),
+                          topTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
                         ),
-                      ),
-
-                      topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
+                        gridData: FlGridData(show: monthly.isNotEmpty),
                       ),
                     ),
-                  ),
+                    if (!monthly.any((m) => m.income > 0 || m.expense > 0))
+                      Center(
+                        child: Text(
+                          'No transactions yet',
+                          style: GoogleFonts.outfit(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ],

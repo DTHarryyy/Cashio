@@ -2,7 +2,6 @@ import 'package:cashio/core/provider/supabase_provider.dart';
 import 'package:cashio/features/dashboard/model/monthly_total.dart';
 import 'package:cashio/features/transactions/model/transaction.dart';
 import 'package:cashio/features/transactions/repository/transactions_repository.dart';
-import 'package:cashio/features/transactions/usecases/adding%20data/add_categories.dart';
 import 'package:cashio/features/transactions/usecases/adding%20data/add_transaction.dart';
 import 'package:cashio/features/transactions/usecases/delete/delete_transactions.dart';
 import 'package:cashio/features/transactions/usecases/getting%20data/get_all_transactions.dart';
@@ -14,11 +13,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // transactions repository provider
 final transactionsRepoProvider = Provider(
   (ref) => TransactionsRepository(ref.read(supabaseProvider)),
-);
-
-// add categories  provider
-final addCategoriesProvider = Provider(
-  (ref) => AddCategories(ref.read(transactionsRepoProvider)),
 );
 
 // add transactions provider

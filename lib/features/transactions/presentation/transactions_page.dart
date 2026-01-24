@@ -11,6 +11,7 @@ import 'package:cashio/core/widgets/custom_speed_dial.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/transactions/model/transaction.dart';
 import 'package:cashio/features/transactions/presentation/transaction_form_page.dart';
+import 'package:cashio/features/transactions/presentation/widgets/transactions_empty_state.dart';
 import 'package:cashio/features/transactions/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,6 +28,8 @@ class TransactionsPage extends ConsumerStatefulWidget {
 class _TransactionsPageState extends ConsumerState<TransactionsPage> {
   List filter = ['All', 'Income', 'Expense'];
   int? selectedvalue = 0;
+  bool isTransactionEmpty = false;
+
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -53,6 +56,9 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
               loading: () => CustomLoading(),
               data: (transactions) {
                 // TODO: display empty widget
+                if (transactions.isEmpty) {
+                  setState(() => isTransactionEmpty = true);
+                }
                 final String selectedFilter = filter[selectedvalue!];
 
                 final filteredTransaction = selectedFilter == 'All'
@@ -67,52 +73,55 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                   bottomNavigationBar: const CustomNavBar(),
                   drawer: CustomDrawer(),
                   floatingActionButton: CustomSpeedDial(),
-                  body: Container(
-                    // decoration: const BoxDecoration(color: AppColors.surface),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 5,
-                      horizontal: 15,
-                    ),
-                    child: Column(
-                      spacing: 10,
-                      children: [
-                        // filter chips
-                        Row(
-                          spacing: 5,
-                          children: List<Widget>.generate(3, (index) {
-                            return ChoiceChip(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadiusGeometry.circular(35),
-                              ),
-                              label: Text(
-                                filter[index],
-                                style: GoogleFonts.outfit(
-                                  color: selectedvalue == index
-                                      ? AppColors.textWhite
-                                      : null,
-                                ),
-                              ),
-                              checkmarkColor: selectedvalue == index
-                                  ? AppColors.textWhite
-                                  : null,
-                              selected: selectedvalue == index,
-                              selectedColor: AppColors.primary,
+                  body: isTransactionEmpty
+                      ? TransactionsEmptyState()
+                      : Container(
+                          // decoration: const BoxDecoration(color: AppColors.surface),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 5,
+                            horizontal: 15,
+                          ),
+                          child: Column(
+                            spacing: 10,
+                            children: [
+                              // filter chips
+                              Row(
+                                spacing: 5,
+                                children: List<Widget>.generate(3, (index) {
+                                  return ChoiceChip(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadiusGeometry.circular(35),
+                                    ),
+                                    label: Text(
+                                      filter[index],
+                                      style: GoogleFonts.outfit(
+                                        color: selectedvalue == index
+                                            ? AppColors.textWhite
+                                            : null,
+                                      ),
+                                    ),
+                                    checkmarkColor: selectedvalue == index
+                                        ? AppColors.textWhite
+                                        : null,
+                                    selected: selectedvalue == index,
+                                    selectedColor: AppColors.primary,
 
-                              onSelected: (bool selected) {
-                                setState(() {
-                                  selectedvalue = selected ? index : 0;
-                                });
-                              },
-                            );
-                          }).toList(),
+                                    onSelected: (bool selected) {
+                                      setState(() {
+                                        selectedvalue = selected ? index : 0;
+                                      });
+                                    },
+                                  );
+                                }).toList(),
+                              ),
+                              FilteredTransactionContent(
+                                categoryData: categoryData,
+                                filteredTransaction: filteredTransaction,
+                              ),
+                            ],
+                          ),
                         ),
-                        FilteredTransactionContent(
-                          categoryData: categoryData,
-                          filteredTransaction: filteredTransaction,
-                        ),
-                      ],
-                    ),
-                  ),
                 );
               },
             );

@@ -43,7 +43,28 @@ class RecentTransactions extends ConsumerWidget {
               loading: () => Container(color: AppColors.surface),
               data: (transactions) {
                 if (transactions.isEmpty) {
-                  return const Text('no expenses yet');
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'No transactions yet!',
+                        style: GoogleFonts.outfit(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        'Your income and expense records will appear here once you start adding transactions.',
+                        style: GoogleFonts.outfit(
+                          fontSize: 14,
+                          color: const Color.fromARGB(255, 104, 105, 105),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  );
                 }
                 return _transactionsContent(
                   context,
@@ -86,6 +107,7 @@ class RecentTransactions extends ConsumerWidget {
             category?.color ?? const Color.fromARGB(255, 221, 158, 135);
 
         final isIncome = categoryType == 'income';
+
         return Material(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(8),

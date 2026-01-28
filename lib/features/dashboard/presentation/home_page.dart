@@ -1,6 +1,5 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
-import 'package:cashio/core/widgets/custom_speed_dial.dart';
 import 'package:cashio/features/auth/model/app_user.dart';
 import 'package:cashio/features/auth/presentation/sign_in_page.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
@@ -103,13 +102,12 @@ class _HomePageContentsState extends ConsumerState<HomePageContents> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: false,
+      extendBody: true,
       key: _scaffoldKey,
       drawer: const CustomDrawer(),
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(scaffoldKey: _scaffoldKey),
       bottomNavigationBar: CustomNavBar(),
-      floatingActionButton: CustomSpeedDial(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(

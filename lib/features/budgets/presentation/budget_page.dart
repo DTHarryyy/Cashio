@@ -2,7 +2,6 @@ import 'package:cashio/core/widgets/c_filter_clip.dart';
 import 'package:cashio/core/widgets/custom_home_app_bar.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/core/widgets/custom_nav_bar.dart';
-import 'package:cashio/core/widgets/custom_speed_dial.dart';
 import 'package:cashio/features/budgets/model/budget.dart';
 import 'package:cashio/features/budgets/presentation/widget/budget_cards.dart';
 import 'package:cashio/features/budgets/provider/budget_provider.dart';
@@ -46,7 +45,6 @@ class _BudgetPageState extends ConsumerState<BudgetPage> {
           appBar: CustomAppBar(scaffoldKey: scaffoldKey),
           drawer: CustomDrawer(),
           bottomNavigationBar: CustomNavBar(),
-          floatingActionButton: CustomSpeedDial(),
           body: Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
             child: Column(

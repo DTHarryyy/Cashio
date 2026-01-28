@@ -8,12 +8,22 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
+      // IMPORTANT:
       systemNavigationBarColor: AppColors.surface,
       systemNavigationBarIconBrightness: Brightness.dark,
+
+      // prevents Android from forcing a dark scrim for contrast
+      systemNavigationBarContrastEnforced: false,
+
+      // optional: remove divider line if you see one
+      systemNavigationBarDividerColor: AppColors.surface,
     ),
   );
 

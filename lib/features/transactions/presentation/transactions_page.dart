@@ -7,7 +7,6 @@ import 'package:cashio/core/widgets/custom_drawer.dart';
 import 'package:cashio/core/widgets/custom_home_app_bar.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
 import 'package:cashio/core/widgets/custom_nav_bar.dart';
-import 'package:cashio/core/widgets/custom_speed_dial.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
 import 'package:cashio/features/transactions/model/transaction.dart';
 import 'package:cashio/features/transactions/presentation/transaction_form_page.dart';
@@ -72,7 +71,6 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                   appBar: CustomAppBar(scaffoldKey: scaffoldKey),
                   bottomNavigationBar: const CustomNavBar(),
                   drawer: CustomDrawer(),
-                  floatingActionButton: CustomSpeedDial(),
                   body: isTransactionEmpty
                       ? TransactionsEmptyState()
                       : Container(

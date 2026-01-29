@@ -15,30 +15,27 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
     final user = ref.watch(currentUserProfileProvider);
     return AppBar(
       backgroundColor: AppColors.surface,
-      title: SizedBox(
-        height: 33,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Hi, ${user?.username.toString() ?? 'Username'}",
-              style: GoogleFonts.roboto(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-                height: 1,
-              ),
+      title: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Hi, ${user?.username.toString() ?? 'Username'}",
+            style: GoogleFonts.roboto(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+              height: 1,
             ),
-            Text(
-              'Welcome Back!',
-              style: GoogleFonts.roboto(
-                fontSize: 14,
-                color: const Color.fromARGB(255, 153, 154, 156),
-              ),
+          ),
+          Text(
+            'Welcome Back!',
+            style: GoogleFonts.roboto(
+              fontSize: 14,
+              color: const Color.fromARGB(255, 153, 154, 156),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       titleSpacing: 0,
 

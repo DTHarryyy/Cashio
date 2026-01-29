@@ -71,6 +71,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                   appBar: CustomAppBar(scaffoldKey: scaffoldKey),
                   bottomNavigationBar: const CustomNavBar(),
                   drawer: CustomDrawer(),
+                  backgroundColor: AppColors.surface,
                   body: isTransactionEmpty
                       ? TransactionsEmptyState()
                       : Container(

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 class BudgetCards extends ConsumerWidget {
   final List<Transaction> transactions;
@@ -31,6 +32,43 @@ class BudgetCards extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (budgets.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: Lottie.asset(
+                'assets/lottiefiles/Calculate.json',
+                height: 250,
+
+                fit: BoxFit.cover,
+              ),
+            ),
+
+            Text(
+              'No budgets yet!',
+              style: GoogleFonts.outfit(
+                fontSize: 28,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            Text(
+              'You haven’t created any budgets. Start by adding one to track your spending and reach your savings goals.',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.outfit(
+                fontSize: 14,
+                color: const Color.fromARGB(255, 104, 105, 105),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
     final categoryMap = {for (var c in categoriesData) c.id: c};
 
     final dateFormatter = DateFormat('MMM dd yyyy');

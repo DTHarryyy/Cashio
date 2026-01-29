@@ -1,3 +1,4 @@
+import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/widgets/c_filter_clip.dart';
 import 'package:cashio/core/widgets/custom_home_app_bar.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
@@ -45,6 +46,7 @@ class _BudgetPageState extends ConsumerState<BudgetPage> {
           appBar: CustomAppBar(scaffoldKey: scaffoldKey),
           drawer: CustomDrawer(),
           bottomNavigationBar: CustomNavBar(),
+          backgroundColor: AppColors.surface,
           body: Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
             child: Column(

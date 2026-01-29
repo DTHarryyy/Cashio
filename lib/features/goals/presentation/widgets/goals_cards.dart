@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 class GoalsCards extends ConsumerWidget {
   final List<Goal> goals;
@@ -25,8 +26,41 @@ class GoalsCards extends ConsumerWidget {
       decimalDigits: 2,
     );
     if (goals.isEmpty) {
-      // TODO: display empty state when no data
-      return Center(child: Text('No available goals'));
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: Lottie.asset(
+                'assets/lottiefiles/Money Saving.json',
+                height: 250,
+
+                fit: BoxFit.cover,
+              ),
+            ),
+
+            Text(
+              'No goals yet!',
+              style: GoogleFonts.outfit(
+                fontSize: 28,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            Text(
+              'Set your first savings goal to stay motivated and track your progress.',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.outfit(
+                fontSize: 14,
+                color: const Color.fromARGB(255, 104, 105, 105),
+              ),
+            ),
+          ],
+        ),
+      );
     }
     return ListView.separated(
       separatorBuilder: (context, index) => SizedBox(height: 10),

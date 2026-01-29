@@ -15,14 +15,11 @@ Future<void> main() async {
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
-      // IMPORTANT:
       systemNavigationBarColor: AppColors.surface,
       systemNavigationBarIconBrightness: Brightness.dark,
 
-      // prevents Android from forcing a dark scrim for contrast
       systemNavigationBarContrastEnforced: false,
 
-      // optional: remove divider line if you see one
       systemNavigationBarDividerColor: AppColors.surface,
     ),
   );

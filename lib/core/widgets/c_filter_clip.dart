@@ -22,6 +22,7 @@ class CFilterClip extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusGeometry.circular(35),
           ),
+          backgroundColor: const Color.fromARGB(255, 248, 249, 250),
           label: Text(
             filter[index],
             style: GoogleFonts.outfit(

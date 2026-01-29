@@ -102,7 +102,7 @@ class _HomePageContentsState extends ConsumerState<HomePageContents> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
+      extendBody: false,
       key: _scaffoldKey,
       drawer: const CustomDrawer(),
       backgroundColor: AppColors.background,

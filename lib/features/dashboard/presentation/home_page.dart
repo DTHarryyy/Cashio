@@ -1,5 +1,6 @@
 import 'package:cashio/core/constant/app_colors.dart';
 import 'package:cashio/core/widgets/custom_loading.dart';
+import 'package:cashio/core/widgets/floating_button.dart';
 import 'package:cashio/features/auth/model/app_user.dart';
 import 'package:cashio/features/auth/presentation/sign_in_page.dart';
 import 'package:cashio/features/auth/provider/user_profile_provider.dart';
@@ -108,6 +109,7 @@ class _HomePageContentsState extends ConsumerState<HomePageContents> {
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(scaffoldKey: _scaffoldKey),
       bottomNavigationBar: CustomNavBar(),
+      floatingActionButton: const FloatingButton(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(

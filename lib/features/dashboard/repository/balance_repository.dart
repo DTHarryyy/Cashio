@@ -10,6 +10,9 @@ class BalaceRepository {
         .from('balance')
         .stream(primaryKey: ['user_id'])
         .eq('user_id', userId)
-        .map((data) => data.isNotEmpty ? Balance.fromJson(data.first) : null);
+        .map((rows) {
+          if (rows.isEmpty) return null;
+          return Balance.fromJson(rows.first);
+        });
   }
 }

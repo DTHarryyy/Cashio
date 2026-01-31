@@ -46,106 +46,92 @@ class _BalanceCardView extends StatelessWidget {
 
     final w = MediaQuery.sizeOf(context).width;
 
-    // Responsive knobs (keeps it from overflowing on small phones)
     final titleSize = w < 360 ? 13.0 : 14.0;
     final amountSize = w < 360 ? 32.0 : 38.0;
     final statValueSize = w < 360 ? 14.0 : 16.0;
     final padding = w < 360 ? 14.0 : 16.0;
 
-    // Show the right-side ring only when there's enough width
     final showRing = w >= 360;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Container(
-          width: double.infinity,
-          // Avoid overflows: let height be flexible but bounded
-          constraints: const BoxConstraints(minHeight: 180),
-          padding: EdgeInsets.all(padding),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(22),
-            gradient: LinearGradient(
-              colors: [
-                AppColors.primary,
-                const Color.fromARGB(255, 139, 64, 238).withAlpha(140),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withAlpha(55),
-                blurRadius: 18,
-                offset: const Offset(0, 10),
-              ),
-            ],
+    return Container(
+      width: double.infinity,
+      constraints: const BoxConstraints(minHeight: 180),
+      padding: EdgeInsets.all(padding),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(22),
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primary,
+            const Color.fromARGB(255, 139, 64, 238).withAlpha(140),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withAlpha(55),
+            blurRadius: 18,
+            offset: const Offset(0, 10),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Text(
-                      'Total Balance',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.outfit(
-                        color: Colors.white.withAlpha(204),
-                        fontSize: titleSize,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const _Pill(
-                    icon: Icons.verified_user_outlined,
-                    text: 'Summary',
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-
-              // Big amount - never overflow
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
+              Flexible(
                 child: Text(
-                  currency.format(totalBalance),
+                  'Total Balance',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.outfit(
-                    fontSize: amountSize,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                    letterSpacing: -0.6,
-                    height: 1.05,
+                    color: Colors.white.withAlpha(204),
+                    fontSize: titleSize,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-
-              const SizedBox(height: 14),
-
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: _StatsColumn(
-                      currency: currency,
-                      totalIncome: totalIncome,
-                      totalExpenses: totalExpenses,
-                      statValueSize: statValueSize,
-                    ),
-                  ),
-                  if (showRing) ...[
-                    const SizedBox(width: 12),
-                    _MiniRing(income: totalIncome, expense: totalExpenses),
-                  ],
-                ],
-              ),
+              const _Pill(icon: Icons.verified_user_outlined, text: 'Summary'),
             ],
           ),
-        );
-      },
+          const SizedBox(height: 10),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              currency.format(totalBalance),
+              style: GoogleFonts.outfit(
+                fontSize: amountSize,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+                letterSpacing: -0.6,
+                height: 1.05,
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: _StatsColumn(
+                  currency: currency,
+                  totalIncome: totalIncome,
+                  totalExpenses: totalExpenses,
+                  statValueSize: statValueSize,
+                ),
+              ),
+              if (showRing) ...[
+                const SizedBox(width: 12),
+                _MiniRing(income: totalIncome, expense: totalExpenses),
+              ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -165,14 +151,12 @@ class _StatsColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Wrap prevents overflow if screen is tight; it will go to next line gracefully.
     return Wrap(
       spacing: 10,
       runSpacing: 10,
       children: [
         SizedBox(
-          width:
-              220, // a "preferred" width; Wrap will move it if not enough space
+          width: 220,
           child: _StatTile(
             label: 'Income',
             value: currency.format(totalIncome),
@@ -209,48 +193,62 @@ class _MiniRing extends StatelessWidget {
     final ratio = total == 0 ? 0.0 : (income / total).clamp(0.0, 1.0);
 
     return Container(
-      width: 78,
-      height: 78,
-      padding: const EdgeInsets.all(8),
+      width: 86,
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       decoration: BoxDecoration(
         color: Colors.white.withAlpha(26),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: Colors.white.withAlpha(31)),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              CircularProgressIndicator(
-                value: ratio,
-                strokeWidth: 8,
-                backgroundColor: Colors.white.withAlpha(31),
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Colors.white.withAlpha(230),
+          SizedBox(
+            width: 54,
+            height: 54,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                CircularProgressIndicator(
+                  value: 1,
+                  strokeWidth: 8,
+                  backgroundColor: Colors.transparent,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Colors.white.withAlpha(35),
+                  ),
                 ),
-              ),
-              Text(
-                '${(ratio * 100).round()}%',
-                style: GoogleFonts.outfit(
-                  color: Colors.white.withAlpha(235),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
+                CircularProgressIndicator(
+                  value: ratio,
+                  strokeWidth: 8,
+                  strokeCap: StrokeCap.round,
+                  backgroundColor: Colors.transparent,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Colors.white.withAlpha(230),
+                  ),
                 ),
-              ),
-            ],
+                Text(
+                  '${(ratio * 100).round()}%',
+                  style: GoogleFonts.outfit(
+                    color: Colors.white.withAlpha(235),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    height: 1.0,
+                  ),
+                ),
+              ],
+            ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 6),
           Text(
             'Income ratio',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: GoogleFonts.outfit(
-              color: Colors.white.withAlpha(235),
+              color: Colors.white.withAlpha(200),
               fontSize: 11,
               fontWeight: FontWeight.w700,
+              height: 1.0,
             ),
-            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
@@ -299,6 +297,7 @@ class _StatTile extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   label,
@@ -308,6 +307,7 @@ class _StatTile extends StatelessWidget {
                     color: Colors.white.withAlpha(180),
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
+                    height: 1.0,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -320,6 +320,7 @@ class _StatTile extends StatelessWidget {
                     fontSize: valueFontSize,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.2,
+                    height: 1.0,
                   ),
                 ),
               ],
@@ -364,6 +365,10 @@ class _Pill extends StatelessWidget {
   }
 }
 
+/* ===========================
+   ✅ Shimmer Skeleton (No packages)
+   =========================== */
+
 class _BalanceCardSkeleton extends StatelessWidget {
   const _BalanceCardSkeleton();
 
@@ -371,6 +376,7 @@ class _BalanceCardSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     final w = MediaQuery.sizeOf(context).width;
     final padding = w < 360 ? 14.0 : 16.0;
+    final showRing = w >= 360;
 
     return Container(
       width: double.infinity,
@@ -387,23 +393,197 @@ class _BalanceCardSkeleton extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
       ),
+      child: _Shimmer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // title row
+            Row(
+              children: const [
+                _SkelLine(width: 120, height: 14),
+                Spacer(),
+                _SkelPill(width: 88, height: 26),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // big number
+            const _SkelLine(width: 220, height: 38),
+            const SizedBox(height: 14),
+
+            // tiles + ring
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: const [
+                      SizedBox(width: 220, child: _SkelTile(height: 56)),
+                      SizedBox(width: 220, child: _SkelTile(height: 56)),
+                    ],
+                  ),
+                ),
+                if (showRing) ...const [SizedBox(width: 12), _SkelRing()],
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Shimmer extends StatefulWidget {
+  final Widget child;
+  const _Shimmer({required this.child});
+
+  @override
+  State<_Shimmer> createState() => _ShimmerState();
+}
+
+class _ShimmerState extends State<_Shimmer>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c;
+
+  @override
+  void initState() {
+    super.initState();
+    _c = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Base + highlight colors tuned for your gradient background
+    final base = Colors.white.withAlpha(26);
+    final highlight = Colors.white.withAlpha(70);
+
+    return AnimatedBuilder(
+      animation: _c,
+      builder: (_, _) {
+        return ShaderMask(
+          blendMode: BlendMode.srcATop,
+          shaderCallback: (rect) {
+            final t = _c.value; // 0..1
+            // move highlight from left -> right
+            final startX = -1.0 + (2.0 * t);
+            final endX = startX + 1.0;
+
+            return LinearGradient(
+              begin: Alignment(startX, 0),
+              end: Alignment(endX, 0),
+              colors: [base, highlight, base],
+              stops: const [0.25, 0.5, 0.75],
+            ).createShader(rect);
+          },
+          child: widget.child,
+        );
+      },
+    );
+  }
+}
+
+/* Skeleton pieces */
+
+class _SkelLine extends StatelessWidget {
+  final double width;
+  final double height;
+  const _SkelLine({required this.width, required this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.white.withAlpha(32),
+        borderRadius: BorderRadius.circular(999),
+      ),
+    );
+  }
+}
+
+class _SkelTile extends StatelessWidget {
+  final double height;
+  const _SkelTile({required this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.white.withAlpha(32),
+        borderRadius: BorderRadius.circular(16),
+      ),
+    );
+  }
+}
+
+class _SkelPill extends StatelessWidget {
+  final double width;
+  final double height;
+  const _SkelPill({required this.width, required this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.white.withAlpha(32),
+        borderRadius: BorderRadius.circular(999),
+      ),
+    );
+  }
+}
+
+class _SkelRing extends StatelessWidget {
+  const _SkelRing();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 86,
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withAlpha(32),
+        borderRadius: BorderRadius.circular(18),
+      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: const [
-          _SkelLine(width: 120, height: 14),
-          SizedBox(height: 14),
-          _SkelLine(width: 220, height: 38),
-          SizedBox(height: 16),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: [
-              SizedBox(width: 220, child: _SkelBox(height: 56)),
-              SizedBox(width: 220, child: _SkelBox(height: 56)),
-            ],
-          ),
+          _SkelCircle(size: 54),
+          SizedBox(height: 10),
+          _SkelLine(width: 70, height: 10),
         ],
+      ),
+    );
+  }
+}
+
+class _SkelCircle extends StatelessWidget {
+  final double size;
+  const _SkelCircle({required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: Colors.white.withAlpha(32),
+        shape: BoxShape.circle,
       ),
     );
   }
@@ -447,40 +627,6 @@ class _BalanceCardError extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _SkelLine extends StatelessWidget {
-  final double width;
-  final double height;
-  const _SkelLine({required this.width, required this.height});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        color: Colors.white.withAlpha(32),
-        borderRadius: BorderRadius.circular(999),
-      ),
-    );
-  }
-}
-
-class _SkelBox extends StatelessWidget {
-  final double height;
-  const _SkelBox({required this.height});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      decoration: BoxDecoration(
-        color: Colors.white.withAlpha(32),
-        borderRadius: BorderRadius.circular(16),
       ),
     );
   }

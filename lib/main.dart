@@ -9,34 +9,17 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Keep SystemChrome minimal here (optional)
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: AppColors.surface,
-      systemNavigationBarIconBrightness: Brightness.dark,
-
-      systemNavigationBarContrastEnforced: false,
-
-      systemNavigationBarDividerColor: AppColors.surface,
-    ),
-  );
-
-  await dotenv.load(fileName: ".env");
-  await Supabase.initialize(
-    url: 'https://ibwdzfckngmbtmmtgorg.supabase.co',
-    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
-  );
-  runApp(ProviderScope(child: const MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -45,7 +28,58 @@ class MyApp extends ConsumerWidget {
           surfaceTintColor: Color.fromARGB(0, 95, 84, 84),
         ),
       ),
-      home: const AuthGate(),
+      home: const AppBootstrapper(),
+    );
+  }
+}
+
+class AppBootstrapper extends StatefulWidget {
+  const AppBootstrapper({super.key});
+
+  @override
+  State<AppBootstrapper> createState() => _AppBootstrapperState();
+}
+
+class _AppBootstrapperState extends State<AppBootstrapper> {
+  late final Future<void> _initFuture = _init();
+
+  Future<void> _init() async {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: AppColors.surface,
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarContrastEnforced: false,
+        systemNavigationBarDividerColor: AppColors.surface,
+      ),
+    );
+
+    await dotenv.load(fileName: ".env");
+
+    await Supabase.initialize(
+      url: 'https://ibwdzfckngmbtmmtgorg.supabase.co',
+      anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<void>(
+      future: _initFuture,
+      builder: (context, snap) {
+        if (snap.connectionState != ConnectionState.done) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snap.hasError) {
+          return Scaffold(
+            body: Center(child: Text('Init error: ${snap.error}')),
+          );
+        }
+        return const AuthGate();
+      },
     );
   }
 }

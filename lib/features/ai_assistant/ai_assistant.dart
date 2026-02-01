@@ -98,7 +98,6 @@ class _AiAssistantState extends State<AiAssistant> {
         centerTitle: true,
       ),
 
-      // so the input moves up when keyboard opens
       resizeToAvoidBottomInset: true,
 
       body: SafeArea(

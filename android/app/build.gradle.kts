@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.cashio"
+    namespace = "com.yourcompany.fundmap"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

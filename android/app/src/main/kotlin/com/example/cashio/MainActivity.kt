@@ -1,4 +1,4 @@
-package com.example.cashio
+package com.yourcompany.fundmap
 
 import io.flutter.embedding.android.FlutterActivity
 
